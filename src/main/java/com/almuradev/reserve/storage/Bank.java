@@ -40,6 +40,14 @@ public class Bank {
 	}
 
 	/**
+	 * Sets the balance in this bank to the amount specified.
+	 * @param balance The amount to set.
+	 */
+	public void setBalance(double balance) {
+		this.balance = balance;
+	}
+
+	/**
 	 * Returns the current balance within this Bank.
 	 * @return The current amount this bank has.
 	 */
