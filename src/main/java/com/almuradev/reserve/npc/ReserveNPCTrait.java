@@ -17,9 +17,20 @@
  * You should have received a copy of the GNU General Public License. If not,
  * see <http://www.gnu.org/licenses/> for the GNU General Public License.
  */
-package com.almuradev.reserve;
+package com.almuradev.reserve.npc;
 
-import org.bukkit.event.Listener;
+import net.citizensnpcs.api.event.NPCClickEvent;
+import net.citizensnpcs.api.trait.Trait;
 
-public class ReserveListener implements Listener {
+import org.bukkit.event.EventHandler;
+
+public class ReserveNPCTrait extends Trait {
+	public ReserveNPCTrait() {
+		super("banker");
+	}
+
+	@EventHandler
+	public void onRightClick(NPCClickEvent event) {
+		//Open Bank GUI here
+	}
 }

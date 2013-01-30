@@ -19,7 +19,18 @@
  */
 package com.almuradev.reserve;
 
+import com.almuradev.reserve.npc.ReserveNPCTrait;
+
+import net.citizensnpcs.api.CitizensAPI;
+import net.citizensnpcs.api.trait.TraitInfo;
+
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class ReservePlugin extends JavaPlugin {
+	@Override
+	public void onEnable() {
+		//Register the 'Banker' Trait.
+		//To set the NPC to that trait, select it and do /trait banker
+		CitizensAPI.getTraitFactory().registerTrait(TraitInfo.create(ReserveNPCTrait.class));
+	}
 }
