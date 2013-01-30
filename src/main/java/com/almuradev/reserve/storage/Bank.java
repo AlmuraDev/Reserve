@@ -19,16 +19,25 @@
  */
 package com.almuradev.reserve.storage;
 
+import java.util.Collections;
+import java.util.List;
+
 import org.bukkit.World;
 
 public class Bank {
 	private final String holder;
+	private final List<String> users;
 	private final World world;
 	private double balance;
 
-	public Bank(World world, String holder) {
+	public Bank(World world, String holder, List<String> users) {
 		this.world = world;
 		this.holder = holder;
+		this.users = users;
+	}
+
+	public Bank(World world, String holder) {
+		this(world, holder, Collections.<String>emptyList());
 	}
 
 	/**
@@ -64,13 +73,21 @@ public class Bank {
 	}
 
 	/**
-	 * Returns the owner of this bank. This String is unique, no two players can have the exact same name.
+	 * Returns the holder of this bank. This String is unique, no two holders can have the exact same name.
 	 * <p/>
 	 * This should solve the offline/online player dilemma that has plagued many other plugins.
 	 * @return The name of the current holder.
 	 */
 	public String getHolder() {
 		return holder;
+	}
+
+	/**
+	 * Returns the users that can access this bank.
+	 * @return A list of names of users that can access this bank.
+	 */
+	public List<String> getUsers() {
+		return users;
 	}
 
 	@Override

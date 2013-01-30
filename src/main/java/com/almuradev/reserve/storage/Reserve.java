@@ -36,7 +36,7 @@ public class Reserve {
 	 * @param amount The amount to add.
 	 * @return The bank account that was added.
 	 */
-	public Bank addAccount(World world, String holder, double amount) {
+	public Bank addAccount(World world, String holder, List<String> users, double amount) {
 		if (world == null || holder == null || holder.isEmpty()) {
 			throw new NullPointerException("Specified world or holder is null!");
 		}
@@ -48,11 +48,15 @@ public class Reserve {
 			}
 		}
 		if (bank == null) {
-			bank = new Bank(world, holder);
+			bank = new Bank(world, holder, users);
 			BANKS.add(bank);
 		}
 		bank.add(amount);
 		return bank;
+	}
+
+	public Bank addAccount(World world, String holder, double amount) {
+		return addAccount(world, holder, Collections.<String>emptyList(), amount);
 	}
 
 	/**
@@ -86,10 +90,53 @@ public class Reserve {
 	}
 
 	/**
+	 * Transfers account from one holder to another. If the new holder already has an account, this will merge the
+	 * balances together.
+	 *
+	 * If mergeUsers is set to true, this will also merge in the users from the current holder's account into the users
+	 * of the new account holder.
+	 * @param oldWorld The current world this account is in.
+	 * @param currentHolder The current holder's name of the account.
+	 * @param newWorld The new world that the new holder has the account in.
+	 * @param newholder The new holder of this account's name.
+	 * @param mergeBalances True to merge the two balances. If false, the new account's balance will only be applied.
+	 * @param mergeUsers If true, will merge in users from the old account in with the new one.
+	 * @param transferWorld If true, the old world associated with the account will be changed to the new one.
+	 */
+	public void transferAccount(World oldWorld, String currentHolder, World newWorld, String newholder, boolean mergeBalances, boolean mergeUsers, boolean transferWorld) {
+		if (oldWorld == null || currentHolder == null || newholder == null || currentHolder.isEmpty() || newholder.isEmpty()) {
+			throw new NullPointerException("The previous world is null or the previous holder or the current holder's names are either null or empty!");
+		}
+
+		final Bank old = getAccount(oldWorld, currentHolder);
+		if (old == null) {
+			throw new NullPointerException("Previous account holder didn't exist!");
+		}
+		final Bank existing = getAccount(newWorld, newholder);
+		final World transferedWorld = transferWorld == true ? newWorld : oldWorld;
+		final List<String> transferedUsers = old.getUsers();
+		double balance = old.getBalance();
+		if (existing != null) {
+			if (mergeUsers) {
+				transferedUsers.addAll(old.getUsers());
+			}
+			if (mergeBalances) {
+				balance = balance + old.getBalance();
+			}
+		}
+		forceAdd(transferedWorld, newholder, transferedUsers, balance);
+	}
+
+	/**
 	 * Retrieves all accounts in the reserve.
 	 * @return All accounts in the reserve.
 	 */
 	public List<Bank> retrieveAccounts() {
 		return Collections.unmodifiableList(BANKS);
+	}
+
+	private void forceAdd(World world, String holder, List<String> users, double balance) {
+		removeAccount(world, holder);
+		addAccount(world, holder, users, balance);
 	}
 }

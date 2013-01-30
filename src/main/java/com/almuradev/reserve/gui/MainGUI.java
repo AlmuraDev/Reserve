@@ -39,12 +39,16 @@ import org.getspout.spoutapi.player.SpoutPlayer;
 
 public class MainGUI extends GenericPopup {
 
-	private ReservePlugin mainGUI;
-	private SpoutPlayer sPlayer;
-	private Bank playerBank = ReservePlugin.getReserve().getAccount(sPlayer.getWorld(), sPlayer.getName());	
+	private final ReservePlugin plugin;
+	private final SpoutPlayer sPlayer;
+	private final Bank playerBank;
 
-	public MainGUI(ReservePlugin main, SpoutPlayer who) {
-
+	public MainGUI(ReservePlugin plugin, SpoutPlayer sPlayer) {
+		this.plugin = plugin;
+		this.sPlayer = sPlayer;
+		//Check if playerBank is null here and handle appropriately. May want to check this BEFORE you get to actually
+		//constructing the GUI (ie in the right click of a NPC).
+		this.playerBank = plugin.getReserve().getAccount(sPlayer.getWorld(), sPlayer.getName());
 		GenericTexture border = new GenericTexture("http://www.almuramc.com/images/playerplus.png");
 		border.setAnchor(WidgetAnchor.CENTER_CENTER);
 		border.setPriority(RenderPriority.High);
@@ -80,7 +84,7 @@ public class MainGUI extends GenericPopup {
 		makeWithdraw.setEnabled(sPlayer.hasPermission("reserve.withdraw") && playerBank != null);
 		closeAccount.setEnabled(sPlayer.hasPermission("reserve.closeaccount") && playerBank != null) ;
 		
-		attachWidgets(mainGUI, border, gl, createAccount, makeDeposit, makeWithdraw, closeAccount, close);
+		attachWidgets(plugin, border, gl, createAccount, makeDeposit, makeWithdraw, closeAccount, close);
 		
 		sPlayer.getMainScreen().closePopup();
 		sPlayer.getMainScreen().attachPopupScreen(this);
@@ -105,9 +109,9 @@ public class MainGUI extends GenericPopup {
 			//new closeAccountGUI(mainGUI, sPlayer, true);				
 			break;
 		case 5:
-			Screen screen = ((SpoutPlayer) getPlayer()).getMainScreen();
+			Screen screen = getPlayer().getMainScreen(); //Oh god Mike...null screens :'(.
 			screen.removeWidget(this);				
-			((SpoutPlayer) getPlayer()).closeActiveWindow();
+			getPlayer().closeActiveWindow();
 			break;
 		}
 	}
