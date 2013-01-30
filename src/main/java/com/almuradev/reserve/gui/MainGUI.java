@@ -23,6 +23,9 @@
  */
 package com.almuradev.reserve.gui;
 
+import java.text.NumberFormat;
+import java.util.Locale;
+
 import com.almuradev.reserve.ReservePlugin;
 import com.almuradev.reserve.storage.Bank;
 import com.almuradev.reserve.storage.Reserve;
@@ -42,50 +45,62 @@ public class MainGUI extends GenericPopup {
 	private final ReservePlugin plugin;
 	private final SpoutPlayer sPlayer;
 	private final Bank playerBank;
+	private static NumberFormat numForm;
+	private static Locale caLoc = new Locale("en", "US");
 
 	public MainGUI(ReservePlugin plugin, SpoutPlayer sPlayer) {
 		this.plugin = plugin;
-		this.sPlayer = sPlayer;
+		this.sPlayer = sPlayer;		
 		//Check if playerBank is null here and handle appropriately. May want to check this BEFORE you get to actually
 		//constructing the GUI (ie in the right click of a NPC).
 		this.playerBank = plugin.getReserve().getAccount(sPlayer.getWorld(), sPlayer.getName());
 		GenericTexture border = new GenericTexture("http://www.almuramc.com/images/playerplus.png");
 		border.setAnchor(WidgetAnchor.CENTER_CENTER);
 		border.setPriority(RenderPriority.High);
-		border.setWidth(170).setHeight(150);
+		border.setWidth(170).setHeight(170);
 		border.shiftXPos(-85).shiftYPos(-80);
 
 		GenericLabel gl = new GenericLabel("Almura Bank");
 		gl.setScale(1.2F);
 		gl.setAnchor(WidgetAnchor.CENTER_CENTER);
 		gl.setHeight(15).setWidth(GenericLabel.getStringWidth(gl.getText()));
-		gl.shiftXPos(-70).shiftYPos(-70);
-		
+		gl.shiftXPos(-40).shiftYPos(-70);
+
+		if (playerBank != null) {
+			final String plat = numForm.format(playerBank.getTotalBalance());		
+			GenericLabel balanceLabel = new GenericLabel();
+			gl.setScale(1.0F);
+			gl.setAnchor(WidgetAnchor.CENTER_CENTER);
+			gl.setText("Bank Balance: " + plat);
+			gl.setHeight(15).setWidth(GenericLabel.getStringWidth(gl.getText()));
+			gl.shiftXPos(-70).shiftYPos(-50);
+		}
+
 		GenericButton createAccount = new CommandButton(this, 1, "Open New Account");
 		GenericButton makeDeposit = new CommandButton(this, 2, "Make Deposit");
 		GenericButton makeWithdraw = new CommandButton(this, 3, "Make Withdraw");
 		GenericButton closeAccount = new CommandButton(this, 4, "Close Account");
 		GenericButton close = new CommandButton(this, 5, "Close");
-		
+
 		createAccount.setAnchor(WidgetAnchor.CENTER_CENTER);
 		makeDeposit.setAnchor(WidgetAnchor.CENTER_CENTER);
 		makeWithdraw.setAnchor(WidgetAnchor.CENTER_CENTER);
 		closeAccount.setAnchor(WidgetAnchor.CENTER_CENTER);
 		close.setAnchor(WidgetAnchor.CENTER_CENTER);
-		
-		createAccount.setHeight(16).setWidth(120).shiftXPos(-60).shiftYPos(-40);
-		makeDeposit.setHeight(16).setWidth(120).shiftXPos(-60).shiftYPos(-20);
-		makeWithdraw.setHeight(16).setWidth(120).shiftXPos(-60).shiftYPos(0);
-		closeAccount.setHeight(16).setWidth(120).shiftXPos(-60).shiftYPos(20);
-		close.setHeight(16).setWidth(40).shiftXPos(20).shiftYPos(48);
-	
+
+		createAccount.setHeight(16).setWidth(120).shiftXPos(-60).shiftYPos(-20);
+		makeDeposit.setHeight(16).setWidth(120).shiftXPos(-60).shiftYPos(0);
+		makeWithdraw.setHeight(16).setWidth(120).shiftXPos(-60).shiftYPos(20);
+		closeAccount.setHeight(16).setWidth(120).shiftXPos(-60).shiftYPos(40);
+		close.setHeight(16).setWidth(40).shiftXPos(20).shiftYPos(68);
+
 		createAccount.setEnabled(sPlayer.hasPermission("reserve.createaccount") && playerBank == null);
 		makeDeposit.setEnabled(sPlayer.hasPermission("reserve.deposit") && playerBank != null);
 		makeWithdraw.setEnabled(sPlayer.hasPermission("reserve.withdraw") && playerBank != null);
 		closeAccount.setEnabled(sPlayer.hasPermission("reserve.closeaccount") && playerBank != null) ;
-		
+
 		attachWidgets(plugin, border, gl, createAccount, makeDeposit, makeWithdraw, closeAccount, close);
-		
+
 		sPlayer.getMainScreen().closePopup();
 		sPlayer.getMainScreen().attachPopupScreen(this);
 	}
@@ -109,9 +124,9 @@ public class MainGUI extends GenericPopup {
 			//new closeAccountGUI(mainGUI, sPlayer, true);				
 			break;
 		case 5:
-			Screen screen = getPlayer().getMainScreen(); //Oh god Mike...null screens :'(.
+			Screen screen = sPlayer.getMainScreen();
 			screen.removeWidget(this);				
-			getPlayer().closeActiveWindow();
+			sPlayer.closeActiveWindow();
 			break;
 		}
 	}

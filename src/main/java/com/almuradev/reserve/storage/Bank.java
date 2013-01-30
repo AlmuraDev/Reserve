@@ -112,4 +112,10 @@ public class Bank {
 	public String toString() {
 		return "Bank{holder= " + holder + ", world= " + world + ", balance= " + balance + "}";
 	}
+
+	// Needs rest of method.
+	public double getTotalBalance() {
+		
+		return 123456789;
+	}
 }
