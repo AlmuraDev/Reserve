@@ -8,7 +8,7 @@ import org.bukkit.entity.Player;
 public class ReserveManager {
 	private static final ArrayList<Bank> BANKS = new ArrayList<>();
 
-	public Bank put(World world, Player player, double amount) {
+	public Bank addAccount(World world, Player player, double amount) {
 		if (world == null || player == null) {
 			throw new NullPointerException("Specified world or player is null!");
 		}
@@ -27,7 +27,7 @@ public class ReserveManager {
 		return bank;
 	}
 
-	public Bank get(World world, Player player) {
+	public Bank getAccount(World world, Player player) {
 		if (world == null || player == null) {
 			throw new NullPointerException("Specified world or player is null!");
 		}
@@ -39,8 +39,8 @@ public class ReserveManager {
 		return null;
 	}
 
-	public Bank remove(World world, Player player) {
-		final Bank bank = get(world, player);
+	public Bank removeAccount(World world, Player player) {
+		final Bank bank = getAccount(world, player);
 		BANKS.remove(bank);
 		return bank;
 	}
