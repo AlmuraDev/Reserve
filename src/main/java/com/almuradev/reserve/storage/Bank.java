@@ -65,7 +65,7 @@ public class Bank {
 
 	/**
 	 * Returns the owner of this bank. This String is unique, no two players can have the exact same name.
-	 *
+	 * <p/>
 	 * This should solve the offline/online player dilemma that has plagued many other plugins.
 	 * @return The name of the current holder.
 	 */
