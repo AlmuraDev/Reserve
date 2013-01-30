@@ -74,38 +74,20 @@ public class MainGUI extends GenericPopup {
 		makeWithdraw.setHeight(16).setWidth(120).shiftXPos(-60).shiftYPos(0);
 		closeAccount.setHeight(16).setWidth(120).shiftXPos(-60).shiftYPos(20);
 		close.setHeight(16).setWidth(40).shiftXPos(20).shiftYPos(48);
-
-		if (sPlayer.hasPermission("reserve.createaccount") && playerBank == null) {
-			createAccount.setEnabled(true);
-		} else {
-			createAccount.setEnabled(false);
-		}
-
-		if (sPlayer.hasPermission("reserve.deposit") && playerBank != null) {
-			makeDeposit.setEnabled(true);
-		} else {
-			makeDeposit.setEnabled(false);
-		}
-		if (sPlayer.hasPermission("reserve.withdraw") && playerBank != null) {
-			makeWithdraw.setEnabled(true);
-		} else {
-			makeWithdraw.setEnabled(false);
-		}
-
-		if (sPlayer.hasPermission("reserve.closeaccount") && playerBank != null) {
-			closeAccount.setEnabled(true) ;
-		} else {
-			closeAccount.setEnabled(false);
-		}		
-
+	
+		createAccount.setEnabled(sPlayer.hasPermission("reserve.createaccount") && playerBank == null);
+		makeDeposit.setEnabled(sPlayer.hasPermission("reserve.deposit") && playerBank != null);
+		makeWithdraw.setEnabled(sPlayer.hasPermission("reserve.withdraw") && playerBank != null);
+		closeAccount.setEnabled(sPlayer.hasPermission("reserve.closeaccount") && playerBank != null) ;
+		
 		attachWidgets(mainGUI, border, gl, createAccount, makeDeposit, makeWithdraw, closeAccount, close);
 		
 		sPlayer.getMainScreen().closePopup();
 		sPlayer.getMainScreen().attachPopupScreen(this);
 	}
 
-	public void onClickCommand(int dir) {
-		switch (dir) {
+	public void onClickCommand(int commandGoal) {
+		switch (commandGoal) {
 		case 1: //Create
 			sPlayer.getMainScreen().closePopup();
 			//new createAccountGUI(mainGUI, sPlayer, true);
