@@ -31,6 +31,9 @@ public class ReserveNPCTrait extends Trait {
 
 	@EventHandler
 	public void onRightClick(NPCClickEvent event) {
+		if (event.getNPC() != this.getNPC()) {
+			return;
+		}
 		//Open Bank GUI here
 	}
 }
