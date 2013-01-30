@@ -21,6 +21,7 @@ package com.almuradev.reserve;
 
 import com.almuradev.reserve.npc.ReserveNPCTrait;
 import com.almuradev.reserve.storage.Reserve;
+import com.almuradev.reserve.task.TaxTask;
 
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.trait.TraitInfo;
@@ -39,6 +40,7 @@ public class ReservePlugin extends JavaPlugin {
 		//Register the 'Banker' Trait.
 		//To set the NPC to that trait, select it and do /trait banker
 		CitizensAPI.getTraitFactory().registerTrait(TraitInfo.create(ReserveNPCTrait.class));
+		getServer().getScheduler().scheduleSyncRepeatingTask(this, new TaxTask(this, reserve), 0, 0); //TODO Config values for tax delay.
 	}
 
 	public static Reserve getReserve() {

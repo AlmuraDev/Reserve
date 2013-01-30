@@ -20,6 +20,8 @@
 package com.almuradev.reserve.storage;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 import org.bukkit.World;
 
@@ -81,5 +83,13 @@ public class Reserve {
 		final Bank bank = getAccount(world, holder);
 		BANKS.remove(bank);
 		return bank;
+	}
+
+	/**
+	 * Retrieves all accounts in the reserve.
+	 * @return All accounts in the reserve.
+	 */
+	public List<Bank> retrieveAccounts() {
+		return Collections.unmodifiableList(BANKS);
 	}
 }
