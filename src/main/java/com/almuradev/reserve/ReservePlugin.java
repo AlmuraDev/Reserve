@@ -23,12 +23,18 @@ import com.almuradev.reserve.npc.ReserveNPCTrait;
 import com.almuradev.reserve.storage.Reserve;
 import com.almuradev.reserve.task.InterestTask;
 import com.almuradev.reserve.task.TaxTask;
+import com.almuradev.reserve.gui.MainGUI;
 
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.trait.TraitInfo;
 
+import org.bukkit.ChatColor;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitScheduler;
+import org.getspout.spoutapi.player.SpoutPlayer;
 
 public class ReservePlugin extends JavaPlugin {
 	private static final Reserve reserve;
@@ -49,5 +55,22 @@ public class ReservePlugin extends JavaPlugin {
 
 	public static Reserve getReserve() {
 		return reserve;
+	}
+	
+	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {		
+		Player player = null;
+		if (sender instanceof Player) {
+			player = (Player) sender;
+		}
+
+		if (cmd.getName().equalsIgnoreCase("reserve")) {
+			if (player == null) {
+				sender.sendMessage("Reserve cannot be opened from the server console.");
+			} else {				
+				((SpoutPlayer) sender).getMainScreen().attachPopupScreen(new MainGUI(this,(SpoutPlayer) sender));				
+			}
+			return true;
+		}
+		return false;
 	}
 }

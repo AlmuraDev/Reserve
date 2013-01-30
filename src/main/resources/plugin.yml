@@ -7,3 +7,10 @@ website: ${project.organization.url}
 main: ${mainClass}
 depend: [Citizens, Spout, Vault]
 load: POSTWORLD
+
+commands:   
+  reserve:
+    description: HelpRequest command.    
+    usage: /reserve [player]
+    permission: reserve.use
+    permissions-message: You don't have <permission>
