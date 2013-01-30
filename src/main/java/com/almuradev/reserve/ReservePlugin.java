@@ -21,12 +21,14 @@ package com.almuradev.reserve;
 
 import com.almuradev.reserve.npc.ReserveNPCTrait;
 import com.almuradev.reserve.storage.Reserve;
+import com.almuradev.reserve.task.InterestTask;
 import com.almuradev.reserve.task.TaxTask;
 
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.trait.TraitInfo;
 
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitScheduler;
 
 public class ReservePlugin extends JavaPlugin {
 	private static final Reserve reserve;
@@ -40,7 +42,9 @@ public class ReservePlugin extends JavaPlugin {
 		//Register the 'Banker' Trait.
 		//To set the NPC to that trait, select it and do /trait banker
 		CitizensAPI.getTraitFactory().registerTrait(TraitInfo.create(ReserveNPCTrait.class));
-		getServer().getScheduler().scheduleSyncRepeatingTask(this, new TaxTask(this, reserve), 0, 0); //TODO Config values for tax delay.
+		final BukkitScheduler scheduler = getServer().getScheduler();
+		scheduler.scheduleSyncRepeatingTask(this, new TaxTask(this, reserve), 0, 0); //TODO Config values for tax delay.
+		scheduler.scheduleSyncRepeatingTask(this, new InterestTask(this, reserve), 0, 0); //TODO Config values for interest delay.
 	}
 
 	public static Reserve getReserve() {
