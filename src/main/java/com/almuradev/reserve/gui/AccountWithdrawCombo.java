@@ -19,39 +19,20 @@
  */
 package com.almuradev.reserve.gui;
 
-import org.getspout.spoutapi.event.screen.ButtonClickEvent;
-import org.getspout.spoutapi.gui.GenericButton;
+import org.getspout.spoutapi.gui.GenericComboBox;
 
-public class CommandButton extends GenericButton{
-	private Object gui;
-	private int commandGoal;
-	
-	public CommandButton(Object gui, int commandGoal, String text) {
-		super(text);
-		this.gui = gui;
-		this.commandGoal = commandGoal;
-	}
+public class AccountWithdrawCombo extends GenericComboBox {
+
+	private WithdrawGUI plugin;
 
 	@Override
-	public void onButtonClick(ButtonClickEvent event) {
-		if(gui instanceof MainGUI) {
-			((MainGUI)gui).onClickCommand(commandGoal);
-		}
-		
-		if(gui instanceof CreateAccountGUI) {
-			((CreateAccountGUI)gui).onClickCommand(commandGoal);
-		}
-		
-		if(gui instanceof AckGUI) {
-			((AckGUI)gui).onClickCommand(commandGoal);
-		}
-		
-		if(gui instanceof DepositGUI) {
-			((DepositGUI)gui).onClickCommand(commandGoal);
-		}
-		
-		if(gui instanceof WithdrawGUI) {
-			((WithdrawGUI)gui).onClickCommand(commandGoal);
-		}
+	public void onSelectionChanged(int i, String text) {
+		super.onSelectionChanged(i, text);
+		plugin.onSelect(i, text);
+	}
+
+	public AccountWithdrawCombo(WithdrawGUI plugin) {
+		super();
+		this.plugin = plugin;
 	}
 }

@@ -94,8 +94,7 @@ public class CreateAccountGUI extends GenericPopup {
 		accountNameField.setAnchor(WidgetAnchor.CENTER_CENTER);
 		accountNameField.shiftXPos(-10).shiftYPos(-28);
 		accountNameField.setMaximumCharacters(30);
-		accountNameField.setMaximumLines(1);
-		
+		accountNameField.setMaximumLines(1);		
 		
 		GenericButton createAccount = new CommandButton(this, 1, "Create");
 		GenericButton close = new CommandButton(this, 2, "Close");
@@ -123,5 +122,5 @@ public class CreateAccountGUI extends GenericPopup {
 			new MainGUI(plugin, sPlayer);
 			break;
 		}
-	}
+	}	
 }
