@@ -23,44 +23,35 @@
  */
 package com.almuradev.reserve.gui;
 
-import java.text.NumberFormat;
-import java.util.Locale;
-
 import com.almuradev.reserve.ReservePlugin;
-import com.almuradev.reserve.storage.Bank;
-import com.almuradev.reserve.storage.Reserve;
-import com.almuradev.reserve.gui.MainGUI;
+import com.almuradev.reserve.econ.Bank;
 
-import org.bukkit.Bukkit;
 import org.getspout.spoutapi.gui.Color;
 import org.getspout.spoutapi.gui.GenericButton;
 import org.getspout.spoutapi.gui.GenericGradient;
 import org.getspout.spoutapi.gui.GenericLabel;
 import org.getspout.spoutapi.gui.GenericPopup;
-import org.getspout.spoutapi.gui.GenericTextField;
 import org.getspout.spoutapi.gui.GenericTexture;
 import org.getspout.spoutapi.gui.RenderPriority;
-import org.getspout.spoutapi.gui.Screen;
 import org.getspout.spoutapi.gui.WidgetAnchor;
 import org.getspout.spoutapi.player.SpoutPlayer;
 
 public class AckGUI extends GenericPopup {
-
 	private final ReservePlugin plugin;
 	private final SpoutPlayer sPlayer;
 	private final Bank playerBank;
 	private final String ackMessage;
 	Color bottom = new Color(1.0F, 1.0F, 1.0F, 0.50F);
-	
+
 	public AckGUI(ReservePlugin plugin, SpoutPlayer sPlayer, String ackMessage) {
 		this.plugin = plugin;
-		this.sPlayer = sPlayer;	
-		this.ackMessage = ackMessage;		
+		this.sPlayer = sPlayer;
+		this.ackMessage = ackMessage;
 		//Check if playerBank is null here and handle appropriately. May want to check this BEFORE you get to actually
 		//constructing the GUI (ie in the right click of a NPC).
-		
+
 		this.playerBank = plugin.getReserve().getAccount(sPlayer.getWorld(), sPlayer.getName());
-		
+
 		GenericTexture border = new GenericTexture("http://www.almuramc.com/images/playerplus.png");
 		border.setAnchor(WidgetAnchor.CENTER_CENTER);
 		border.setPriority(RenderPriority.High);
@@ -72,25 +63,25 @@ public class AckGUI extends GenericPopup {
 		gl.setAnchor(WidgetAnchor.CENTER_CENTER);
 		gl.setHeight(15).setWidth(GenericLabel.getStringWidth(gl.getText()));
 		gl.shiftXPos(-30).shiftYPos(-70);
-		
-		GenericGradient gg =  new GenericGradient(); 
+
+		GenericGradient gg = new GenericGradient();
 		gg.setBottomColor(bottom).setTopColor(bottom);
 		gg.setAnchor(WidgetAnchor.CENTER_CENTER);
 		gg.shiftXPos(-55).shiftYPos(-55).setMaxWidth(130);
 		gg.setWidth(130).setHeight(1);
-		
+
 		GenericLabel an = new GenericLabel(ackMessage);
 		an.setScale(1.0F);
 		an.setAnchor(WidgetAnchor.CENTER_CENTER);
 		an.setHeight(15).setWidth(GenericLabel.getStringWidth(an.getText()));
 		an.shiftXPos(-60).shiftYPos(-40);
-				
+
 		GenericButton close = new CommandButton(this, 1, "OK");
-				
+
 		close.setAnchor(WidgetAnchor.CENTER_CENTER);
-	
-		close.setHeight(16).setWidth(40).shiftXPos(-15).shiftYPos(-20);		
-		
+
+		close.setHeight(16).setWidth(40).shiftXPos(-15).shiftYPos(-20);
+
 		attachWidgets(plugin, border, gl, gg, an, close);
 
 		sPlayer.getMainScreen().closePopup();
@@ -99,10 +90,10 @@ public class AckGUI extends GenericPopup {
 
 	public void onClickCommand(int commandGoal) {
 		switch (commandGoal) {
-		case 1: //OK		
-			sPlayer.getMainScreen().closePopup();
-			new MainGUI(plugin, sPlayer);
-			break;			
+			case 1: //OK
+				sPlayer.getMainScreen().closePopup();
+				new MainGUI(plugin, sPlayer);
+				break;
 		}
 	}
 }

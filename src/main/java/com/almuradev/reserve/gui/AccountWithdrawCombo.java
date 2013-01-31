@@ -22,7 +22,6 @@ package com.almuradev.reserve.gui;
 import org.getspout.spoutapi.gui.GenericComboBox;
 
 public class AccountWithdrawCombo extends GenericComboBox {
-
 	private WithdrawGUI plugin;
 
 	@Override

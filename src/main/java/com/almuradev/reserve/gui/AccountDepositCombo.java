@@ -22,7 +22,6 @@ package com.almuradev.reserve.gui;
 import org.getspout.spoutapi.gui.GenericComboBox;
 
 public class AccountDepositCombo extends GenericComboBox {
-
 	private DepositGUI plugin;
 
 	@Override

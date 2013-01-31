@@ -23,49 +23,50 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.bukkit.World;
+import com.almuradev.reserve.econ.Bank;
 
-public class Reserve {
+import org.getspout.spoutapi.event.spout.ServerTickEvent;
+
+import org.bukkit.World;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
+
+public class Reserve implements Listener {
 	private static final ArrayList<Bank> BANKS = new ArrayList<>();
+	private static final ArrayList<Bank> REMOVED = new ArrayList<>();
 
 	/**
-	 * Adds a new account to the reserve. If the account exists, it adds the specified balance to
-	 * the account instead.
+	 * Adds a new bank to the reserve.
 	 * @param world The world where the bank is located at.
 	 * @param holder The name of the holder of the bank.
-	 * @param amount The amount to add.
-	 * @return The bank account that was added.
+	 * @return The bank econ that was added.
 	 */
-	public Bank addAccount(World world, String holder, List<String> users, double amount) {
+	public Bank addBank(World world, String holder) {
 		if (world == null || holder == null || holder.isEmpty()) {
 			throw new NullPointerException("Specified world or holder is null!");
 		}
 		Bank bank = null;
 		for (Bank temp : BANKS) {
 			if (temp.getWorld().equals(world) && temp.getHolder().equals(holder)) {
-				bank = temp;
-				break;
+				return temp;
 			}
 		}
 		if (bank == null) {
-			bank = new Bank(world, holder, users);
+			bank = new Bank(world, holder);
 			BANKS.add(bank);
 		}
-		bank.add(amount);
+		bank.setDirty(true);
 		return bank;
 	}
 
-	public Bank addAccount(World world, String holder, double amount) {
-		return addAccount(world, holder, Collections.<String>emptyList(), amount);
-	}
-
 	/**
-	 * Gets an account for the holder specified in the World specified.
+	 * Gets the bank assigned to this world and holder.
 	 * @param world The world where the bank is located at.
 	 * @param holder The name of the holder of the bank.
 	 * @return The Bank of the holder, for manipulation.
 	 */
-	public Bank getAccount(World world, String holder) {
+	public Bank getBank(World world, String holder) {
 		if (world == null || holder == null || holder.isEmpty()) {
 			throw new NullPointerException("Specified world or holder is null!");
 		}
@@ -78,65 +79,42 @@ public class Reserve {
 	}
 
 	/**
-	 * Removes an account for the holder specified in the World specified.
+	 * Removes an econ for the holder specified in the World specified.
 	 * @param world The world where the bank is located at.
 	 * @param holder The name of the holder of the bank.
-	 * @return The bank account removed.
+	 * @return The bank econ removed.
 	 */
-	public Bank removeAccount(World world, String holder) {
-		final Bank bank = getAccount(world, holder);
+	public Bank removeBank(World world, String holder) {
+		final Bank bank = getBank(world, holder);
 		BANKS.remove(bank);
+		REMOVED.add(bank);
 		return bank;
 	}
 
 	/**
-	 * Transfers account from one holder to another. If the new holder already has an account, this will merge the
-	 * balances together.
-	 *
-	 * If mergeUsers is set to true, this will also merge in the users from the current holder's account into the users
-	 * of the new account holder.
-	 * @param oldWorld The current world this account is in.
-	 * @param currentHolder The current holder's name of the account.
-	 * @param newWorld The new world that the new holder has the account in.
-	 * @param newholder The new holder of this account's name.
-	 * @param mergeBalances True to merge the two balances. If false, the new account's balance will only be applied.
-	 * @param mergeUsers If true, will merge in users from the old account in with the new one.
-	 * @param transferWorld If true, the old world associated with the account will be changed to the new one.
+	 * Retrieves all banks in the reserve.
+	 * @return All banks in the reserve.
 	 */
-	public void transferAccount(World oldWorld, String currentHolder, World newWorld, String newholder, boolean mergeBalances, boolean mergeUsers, boolean transferWorld) {
-		if (oldWorld == null || currentHolder == null || newholder == null || currentHolder.isEmpty() || newholder.isEmpty()) {
-			throw new NullPointerException("The previous world is null or the previous holder or the current holder's names are either null or empty!");
-		}
-
-		final Bank old = getAccount(oldWorld, currentHolder);
-		if (old == null) {
-			throw new NullPointerException("Previous account holder didn't exist!");
-		}
-		final Bank existing = getAccount(newWorld, newholder);
-		final World transferedWorld = transferWorld == true ? newWorld : oldWorld;
-		final List<String> transferedUsers = old.getUsers();
-		double balance = old.getBalance();
-		if (existing != null) {
-			if (mergeUsers) {
-				transferedUsers.addAll(old.getUsers());
-			}
-			if (mergeBalances) {
-				balance = balance + old.getBalance();
-			}
-		}
-		forceAdd(transferedWorld, newholder, transferedUsers, balance);
-	}
-
-	/**
-	 * Retrieves all accounts in the reserve.
-	 * @return All accounts in the reserve.
-	 */
-	public List<Bank> retrieveAccounts() {
+	public List<Bank> retrieveBanks() {
 		return Collections.unmodifiableList(BANKS);
 	}
 
-	private void forceAdd(World world, String holder, List<String> users, double balance) {
-		removeAccount(world, holder);
-		addAccount(world, holder, users, balance);
+	@EventHandler(priority = EventPriority.MONITOR)
+	public void onTick(ServerTickEvent event) {
+		//Check DT and delay...don't need a SQL ping each tick.
+		//Map has at least ONE dirty value.
+		final List<Bank> banks = retrieveBanks();
+		for (Bank bank : banks) {
+			if (!bank.isDirty()) {
+				continue;
+			}
+			//Bank is dirty and was removed last tick
+			if (REMOVED.contains(bank)) {
+				REMOVED.remove(bank);
+				//Remove from SQL
+			} else {
+				//Update SQL
+			}
+		}
 	}
 }

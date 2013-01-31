@@ -27,10 +27,8 @@ import java.text.NumberFormat;
 import java.util.Locale;
 
 import com.almuradev.reserve.ReservePlugin;
-import com.almuradev.reserve.storage.Bank;
-import com.almuradev.reserve.storage.Reserve;
+import com.almuradev.reserve.econ.Bank;
 
-import org.bukkit.Bukkit;
 import org.getspout.spoutapi.gui.Color;
 import org.getspout.spoutapi.gui.GenericButton;
 import org.getspout.spoutapi.gui.GenericGradient;
@@ -43,7 +41,6 @@ import org.getspout.spoutapi.gui.WidgetAnchor;
 import org.getspout.spoutapi.player.SpoutPlayer;
 
 public class MainGUI extends GenericPopup {
-
 	private final ReservePlugin plugin;
 	private final SpoutPlayer sPlayer;
 	private final Bank playerBank;
@@ -53,7 +50,7 @@ public class MainGUI extends GenericPopup {
 
 	public MainGUI(ReservePlugin plugin, SpoutPlayer sPlayer) {
 		this.plugin = plugin;
-		this.sPlayer = sPlayer;		
+		this.sPlayer = sPlayer;
 		//Check if playerBank is null here and handle appropriately. May want to check this BEFORE you get to actually
 		//constructing the GUI (ie in the right click of a NPC).
 		this.playerBank = plugin.getReserve().getAccount(sPlayer.getWorld(), sPlayer.getName());
@@ -69,27 +66,27 @@ public class MainGUI extends GenericPopup {
 		gl.setHeight(15).setWidth(GenericLabel.getStringWidth(gl.getText()));
 		gl.shiftXPos(-35).shiftYPos(-70);
 
-		GenericGradient gg =  new GenericGradient(); 
+		GenericGradient gg = new GenericGradient();
 		gg.setBottomColor(bottom).setTopColor(bottom);
 		gg.setAnchor(WidgetAnchor.CENTER_CENTER);
 		gg.shiftXPos(-65).shiftYPos(-55).setMaxWidth(130);
 		gg.setWidth(130).setHeight(1);
-		
-		GenericGradient gb =  new GenericGradient();
+
+		GenericGradient gb = new GenericGradient();
 		gb.setBottomColor(bottom).setTopColor(bottom);
 		gb.setAnchor(WidgetAnchor.CENTER_CENTER);
 		gb.shiftXPos(-65).shiftYPos(-25).setMaxWidth(130);
 		gb.setWidth(130).setHeight(1);
-		
+
 		//if (playerBank != null) {
-			//final String plat = numForm.format(playerBank.getTotalBalance());		
-			GenericLabel balanceLabel = new GenericLabel();
-			balanceLabel.setScale(1.0F);
-			balanceLabel.setAnchor(WidgetAnchor.CENTER_CENTER);
-			balanceLabel.setText("Bank Balance: $2,154,225.00");
-			//gl.setText("Bank Balance: " + plat);
-			balanceLabel.setHeight(15).setWidth(GenericLabel.getStringWidth(gl.getText()));
-			balanceLabel.shiftXPos(-70).shiftYPos(-44);
+		//final String plat = numForm.format(playerBank.getTotalBalance());
+		GenericLabel balanceLabel = new GenericLabel();
+		balanceLabel.setScale(1.0F);
+		balanceLabel.setAnchor(WidgetAnchor.CENTER_CENTER);
+		balanceLabel.setText("Bank Balance: $2,154,225.00");
+		//gl.setText("Bank Balance: " + plat);
+		balanceLabel.setHeight(15).setWidth(GenericLabel.getStringWidth(gl.getText()));
+		balanceLabel.shiftXPos(-70).shiftYPos(-44);
 		//}
 
 		GenericButton createAccount = new CommandButton(this, 1, "Open New Account");
@@ -126,31 +123,31 @@ public class MainGUI extends GenericPopup {
 
 	public void onClickCommand(int commandGoal) {
 		switch (commandGoal) {
-		case 1:
-			sPlayer.getMainScreen().closePopup();
-			new CreateAccountGUI(plugin, sPlayer);
-			break;
-		case 2:
-			sPlayer.getMainScreen().closePopup();
-			new DepositGUI(plugin, sPlayer);				
-			break;
-		case 3:
-			sPlayer.getMainScreen().closePopup();
-			new WithdrawGUI(plugin, sPlayer);				
-			break;
-		case 4:
-			sPlayer.getMainScreen().closePopup();
-			//new closeAccountGUI(mainGUI, sPlayer, true);				
-			break;
-		case 5: 
-			sPlayer.getMainScreen().closePopup();
-			new BankConfigGUI(plugin, sPlayer);				
-			break;
-		case 6:
-			Screen screen = sPlayer.getMainScreen();
-			screen.removeWidget(this);				
-			sPlayer.closeActiveWindow();
-			break;
+			case 1:
+				sPlayer.getMainScreen().closePopup();
+				new CreateAccountGUI(plugin, sPlayer);
+				break;
+			case 2:
+				sPlayer.getMainScreen().closePopup();
+				new DepositGUI(plugin, sPlayer);
+				break;
+			case 3:
+				sPlayer.getMainScreen().closePopup();
+				new WithdrawGUI(plugin, sPlayer);
+				break;
+			case 4:
+				sPlayer.getMainScreen().closePopup();
+				//new closeAccountGUI(mainGUI, sPlayer, true);
+				break;
+			case 5:
+				sPlayer.getMainScreen().closePopup();
+				new BankConfigGUI(plugin, sPlayer);
+				break;
+			case 6:
+				Screen screen = sPlayer.getMainScreen();
+				screen.removeWidget(this);
+				sPlayer.closeActiveWindow();
+				break;
 		}
 	}
 }

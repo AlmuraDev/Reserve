@@ -23,18 +23,11 @@
  */
 package com.almuradev.reserve.gui;
 
-import java.text.NumberFormat;
-import java.util.Locale;
-
 import com.almuradev.reserve.ReservePlugin;
-import com.almuradev.reserve.storage.Bank;
-import com.almuradev.reserve.storage.Reserve;
-import com.almuradev.reserve.gui.MainGUI;
+import com.almuradev.reserve.econ.Bank;
 
-import org.bukkit.Bukkit;
 import org.getspout.spoutapi.gui.CheckBox;
 import org.getspout.spoutapi.gui.Color;
-import org.getspout.spoutapi.gui.ComboBox;
 import org.getspout.spoutapi.gui.GenericButton;
 import org.getspout.spoutapi.gui.GenericGradient;
 import org.getspout.spoutapi.gui.GenericLabel;
@@ -42,25 +35,23 @@ import org.getspout.spoutapi.gui.GenericPopup;
 import org.getspout.spoutapi.gui.GenericTextField;
 import org.getspout.spoutapi.gui.GenericTexture;
 import org.getspout.spoutapi.gui.RenderPriority;
-import org.getspout.spoutapi.gui.Screen;
 import org.getspout.spoutapi.gui.WidgetAnchor;
 import org.getspout.spoutapi.player.SpoutPlayer;
 
 public class BankConfigGUI extends GenericPopup {
-
 	private final ReservePlugin plugin;
 	private final SpoutPlayer sPlayer;
 	private final Bank playerBank;
 	Color bottom = new Color(1.0F, 1.0F, 1.0F, 0.50F);
-	
+
 	public BankConfigGUI(ReservePlugin plugin, SpoutPlayer sPlayer) {
 		this.plugin = plugin;
-		this.sPlayer = sPlayer;		
+		this.sPlayer = sPlayer;
 		//Check if playerBank is null here and handle appropriately. May want to check this BEFORE you get to actually
 		//constructing the GUI (ie in the right click of a NPC).
-		
+
 		this.playerBank = plugin.getReserve().getAccount(sPlayer.getWorld(), sPlayer.getName());
-		
+
 		GenericTexture border = new GenericTexture("http://www.almuramc.com/images/playerplus.png");
 		border.setAnchor(WidgetAnchor.CENTER_CENTER);
 		border.setPriority(RenderPriority.High);
@@ -72,49 +63,48 @@ public class BankConfigGUI extends GenericPopup {
 		gl.setAnchor(WidgetAnchor.CENTER_CENTER);
 		gl.setHeight(15).setWidth(GenericLabel.getStringWidth(gl.getText()));
 		gl.shiftXPos(-60).shiftYPos(-70);
-		
-		GenericGradient gg =  new GenericGradient(); 
+
+		GenericGradient gg = new GenericGradient();
 		gg.setBottomColor(bottom).setTopColor(bottom);
 		gg.setAnchor(WidgetAnchor.CENTER_CENTER);
 		gg.shiftXPos(-45).shiftYPos(-55).setMaxWidth(130);
 		gg.setWidth(130).setHeight(1);
-		
-		
+
 		CheckBox multipleCheckbox = new ConfigMultipleCheckBox(sPlayer, this);
 		multipleCheckbox.setText("Allow Multiple Accounts");
 		multipleCheckbox.setAnchor(WidgetAnchor.CENTER_CENTER);
 		multipleCheckbox.setHeight(20).setWidth(19);
 		multipleCheckbox.shiftXPos(-45).shiftYPos(-42);
-		
+
 		CheckBox shareCheckbox = new ConfigShareCheckBox(sPlayer, this);
 		shareCheckbox.setText("Allow Multiple Accounts");
 		shareCheckbox.setAnchor(WidgetAnchor.CENTER_CENTER);
 		shareCheckbox.setHeight(20).setWidth(19);
 		shareCheckbox.shiftXPos(-45).shiftYPos(-17);
-		
+
 		GenericLabel an = new GenericLabel("Interest Calc: ");
 		an.setScale(1.0F);
 		an.setAnchor(WidgetAnchor.CENTER_CENTER);
 		an.setHeight(15).setWidth(GenericLabel.getStringWidth(an.getText()));
 		an.shiftXPos(-45).shiftYPos(16);
-		
+
 		GenericTextField interestAmountField = new GenericTextField();
 		interestAmountField.setWidth(50).setHeight(16);
 		interestAmountField.setAnchor(WidgetAnchor.CENTER_CENTER);
 		interestAmountField.shiftXPos(30).shiftYPos(13);
 		interestAmountField.setText("0.00");
 		interestAmountField.setMaximumCharacters(5);
-		interestAmountField.setMaximumLines(1);		
-		
+		interestAmountField.setMaximumLines(1);
+
 		GenericButton depositButton = new CommandButton(this, 1, "Save");
 		GenericButton close = new CommandButton(this, 2, "Close");
 
-		depositButton.setAnchor(WidgetAnchor.CENTER_CENTER);		
+		depositButton.setAnchor(WidgetAnchor.CENTER_CENTER);
 		close.setAnchor(WidgetAnchor.CENTER_CENTER);
 
-		depositButton.setHeight(16).setWidth(50).shiftXPos(30).shiftYPos(47);		
-		close.setHeight(16).setWidth(40).shiftXPos(85).shiftYPos(47);		
-		
+		depositButton.setHeight(16).setWidth(50).shiftXPos(30).shiftYPos(47);
+		close.setHeight(16).setWidth(40).shiftXPos(85).shiftYPos(47);
+
 		attachWidgets(plugin, border, gl, gg, shareCheckbox, multipleCheckbox, interestAmountField, an, depositButton, close);
 
 		sPlayer.getMainScreen().closePopup();
@@ -123,18 +113,18 @@ public class BankConfigGUI extends GenericPopup {
 
 	public void onClickCommand(int commandGoal) {
 		switch (commandGoal) {
-		case 1: //Create
-			sPlayer.getMainScreen().closePopup();
-			new AckGUI(plugin, sPlayer, "Bank Configuration Saved");
-			break;	
-		case 2:
-			sPlayer.getMainScreen().closePopup();
-			new MainGUI(plugin, sPlayer);
-			break;
+			case 1: //Create
+				sPlayer.getMainScreen().closePopup();
+				new AckGUI(plugin, sPlayer, "Bank Configuration Saved");
+				break;
+			case 2:
+				sPlayer.getMainScreen().closePopup();
+				new MainGUI(plugin, sPlayer);
+				break;
 		}
 	}
-	
-	void onSelect(int i, String text) {		
-		// set Current loaded account
+
+	void onSelect(int i, String text) {
+		// set Current loaded econ
 	}
 }

@@ -24,19 +24,18 @@ import org.getspout.spoutapi.gui.GenericCheckBox;
 import org.getspout.spoutapi.player.SpoutPlayer;
 
 public class ConfigMultipleCheckBox extends GenericCheckBox {
-
 	private BankConfigGUI plugin;
 	private SpoutPlayer sPlayer;
 
 	public ConfigMultipleCheckBox(SpoutPlayer player, BankConfigGUI plugin) {
 		super();
-		setTooltip("Click this to enabled / disable Multiple Accounts");		
+		setTooltip("Click this to enabled / disable Multiple Accounts");
 		this.plugin = plugin;
 	}
 
 	@Override
 	public void onButtonClick(ButtonClickEvent event) {
-		
+
 		setDirty(true);
 	}
 }

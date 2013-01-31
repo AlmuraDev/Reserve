@@ -22,7 +22,7 @@ package com.almuradev.reserve.task;
 import java.util.List;
 
 import com.almuradev.reserve.ReservePlugin;
-import com.almuradev.reserve.storage.Bank;
+import com.almuradev.reserve.econ.Bank;
 import com.almuradev.reserve.storage.Reserve;
 
 public class TaxTask implements Runnable {

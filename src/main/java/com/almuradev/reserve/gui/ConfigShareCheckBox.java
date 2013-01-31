@@ -24,19 +24,18 @@ import org.getspout.spoutapi.gui.GenericCheckBox;
 import org.getspout.spoutapi.player.SpoutPlayer;
 
 public class ConfigShareCheckBox extends GenericCheckBox {
-
 	private BankConfigGUI plugin;
 	private SpoutPlayer sPlayer;
 
 	public ConfigShareCheckBox(SpoutPlayer player, BankConfigGUI plugin) {
 		super();
-		setTooltip("Click this to enabled / disable Account Sharing");		
+		setTooltip("Click this to enabled / disable Account Sharing");
 		this.plugin = plugin;
 	}
 
 	@Override
 	public void onButtonClick(ButtonClickEvent event) {
-		
+
 		setDirty(true);
 	}
 }
