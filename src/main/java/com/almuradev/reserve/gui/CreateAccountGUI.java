@@ -29,6 +29,7 @@ import java.util.Locale;
 import com.almuradev.reserve.ReservePlugin;
 import com.almuradev.reserve.storage.Bank;
 import com.almuradev.reserve.storage.Reserve;
+import com.almuradev.reserve.gui.MainGUI;
 
 import org.bukkit.Bukkit;
 import org.getspout.spoutapi.gui.Color;
@@ -36,79 +37,76 @@ import org.getspout.spoutapi.gui.GenericButton;
 import org.getspout.spoutapi.gui.GenericGradient;
 import org.getspout.spoutapi.gui.GenericLabel;
 import org.getspout.spoutapi.gui.GenericPopup;
+import org.getspout.spoutapi.gui.GenericTextField;
 import org.getspout.spoutapi.gui.GenericTexture;
 import org.getspout.spoutapi.gui.RenderPriority;
 import org.getspout.spoutapi.gui.Screen;
 import org.getspout.spoutapi.gui.WidgetAnchor;
 import org.getspout.spoutapi.player.SpoutPlayer;
 
-public class MainGUI extends GenericPopup {
+public class CreateAccountGUI extends GenericPopup {
 
 	private final ReservePlugin plugin;
 	private final SpoutPlayer sPlayer;
 	private final Bank playerBank;
-	private static NumberFormat numForm;
-	private static Locale caLoc = new Locale("en", "US");
 	Color bottom = new Color(1.0F, 1.0F, 1.0F, 0.50F);
-
-	public MainGUI(ReservePlugin plugin, SpoutPlayer sPlayer) {
+	
+	public CreateAccountGUI(ReservePlugin plugin, SpoutPlayer sPlayer) {
 		this.plugin = plugin;
 		this.sPlayer = sPlayer;		
 		//Check if playerBank is null here and handle appropriately. May want to check this BEFORE you get to actually
 		//constructing the GUI (ie in the right click of a NPC).
+		
 		this.playerBank = plugin.getReserve().getAccount(sPlayer.getWorld(), sPlayer.getName());
+		
 		GenericTexture border = new GenericTexture("http://www.almuramc.com/images/playerplus.png");
 		border.setAnchor(WidgetAnchor.CENTER_CENTER);
 		border.setPriority(RenderPriority.High);
-		border.setWidth(170).setHeight(170);
-		border.shiftXPos(-85).shiftYPos(-80);
+		border.setWidth(225).setHeight(100);
+		border.shiftXPos(-105).shiftYPos(-80);
 
 		GenericLabel gl = new GenericLabel("Almura Bank");
 		gl.setScale(1.2F);
 		gl.setAnchor(WidgetAnchor.CENTER_CENTER);
 		gl.setHeight(15).setWidth(GenericLabel.getStringWidth(gl.getText()));
-		gl.shiftXPos(-35).shiftYPos(-70);
-
-		GenericGradient gg =  new GenericGradient(); //Horizontal White Line
+		gl.shiftXPos(-30).shiftYPos(-70);
+		
+		GenericGradient gg =  new GenericGradient(); 
 		gg.setBottomColor(bottom).setTopColor(bottom);
 		gg.setAnchor(WidgetAnchor.CENTER_CENTER);
 		gg.shiftXPos(-65).shiftYPos(-55).setMaxWidth(130);
 		gg.setWidth(130).setHeight(1);
 		
-		if (playerBank != null) {
-			final String plat = numForm.format(playerBank.getTotalBalance());		
-			GenericLabel balanceLabel = new GenericLabel();
-			gl.setScale(1.0F);
-			gl.setAnchor(WidgetAnchor.CENTER_CENTER);
-			gl.setText("Bank Balance: " + plat);
-			gl.setHeight(15).setWidth(GenericLabel.getStringWidth(gl.getText()));
-			gl.shiftXPos(-70).shiftYPos(-50);
-		}
+		GenericLabel cl = new GenericLabel("-- Create Account --");
+		cl.setScale(1.0F);
+		cl.setAnchor(WidgetAnchor.CENTER_CENTER);
+		cl.setHeight(15).setWidth(GenericLabel.getStringWidth(cl.getText()));
+		cl.shiftXPos(-45).shiftYPos(-47);
+		
+		GenericLabel an = new GenericLabel("Account Name: ");
+		an.setScale(1.0F);
+		an.setAnchor(WidgetAnchor.CENTER_CENTER);
+		an.setHeight(15).setWidth(GenericLabel.getStringWidth(an.getText()));
+		an.shiftXPos(-90).shiftYPos(-25);
+		
+		GenericTextField accountNameField = new GenericTextField();
+		accountNameField.setWidth(110).setHeight(16);
+		accountNameField.setAnchor(WidgetAnchor.CENTER_CENTER);
+		accountNameField.shiftXPos(-10).shiftYPos(-28);
+		accountNameField.setMaximumCharacters(30);
+		accountNameField.setMaximumLines(1);
+		
+		
+		GenericButton createAccount = new CommandButton(this, 1, "Create");
+		GenericButton close = new CommandButton(this, 2, "Close");
 
-		GenericButton createAccount = new CommandButton(this, 1, "Open New Account");
-		GenericButton makeDeposit = new CommandButton(this, 2, "Make Deposit");
-		GenericButton makeWithdraw = new CommandButton(this, 3, "Make Withdraw");
-		GenericButton closeAccount = new CommandButton(this, 4, "Close Account");
-		GenericButton close = new CommandButton(this, 5, "Close");
-
-		createAccount.setAnchor(WidgetAnchor.CENTER_CENTER);
-		makeDeposit.setAnchor(WidgetAnchor.CENTER_CENTER);
-		makeWithdraw.setAnchor(WidgetAnchor.CENTER_CENTER);
-		closeAccount.setAnchor(WidgetAnchor.CENTER_CENTER);
+		createAccount.setAnchor(WidgetAnchor.CENTER_CENTER);		
 		close.setAnchor(WidgetAnchor.CENTER_CENTER);
 
-		createAccount.setHeight(16).setWidth(120).shiftXPos(-60).shiftYPos(-20);
-		makeDeposit.setHeight(16).setWidth(120).shiftXPos(-60).shiftYPos(0);
-		makeWithdraw.setHeight(16).setWidth(120).shiftXPos(-60).shiftYPos(20);
-		closeAccount.setHeight(16).setWidth(120).shiftXPos(-60).shiftYPos(40);
-		close.setHeight(16).setWidth(40).shiftXPos(20).shiftYPos(68);
-
-		createAccount.setEnabled(sPlayer.hasPermission("reserve.createaccount") && playerBank == null);
-		makeDeposit.setEnabled(sPlayer.hasPermission("reserve.deposit") && playerBank != null);
-		makeWithdraw.setEnabled(sPlayer.hasPermission("reserve.withdraw") && playerBank != null);
-		closeAccount.setEnabled(sPlayer.hasPermission("reserve.closeaccount") && playerBank != null) ;
-
-		attachWidgets(plugin, border, gl, gg, createAccount, makeDeposit, makeWithdraw, closeAccount, close);
+		createAccount.setHeight(16).setWidth(50).shiftXPos(7).shiftYPos(0);		
+		close.setHeight(16).setWidth(40).shiftXPos(62).shiftYPos(0);		
+		
+		attachWidgets(plugin, border, gl, gg, cl, an, accountNameField, createAccount, close);
 
 		sPlayer.getMainScreen().closePopup();
 		sPlayer.getMainScreen().attachPopupScreen(this);
@@ -118,24 +116,11 @@ public class MainGUI extends GenericPopup {
 		switch (commandGoal) {
 		case 1: //Create
 			sPlayer.getMainScreen().closePopup();
-			new CreateAccountGUI(plugin, sPlayer);
-			break;
-		case 2: //Edit
+			new AckGUI(plugin, sPlayer, "Account Created Successfully");
+			break;	
+		case 2:
 			sPlayer.getMainScreen().closePopup();
-			//new depositGUI(mainGUI, sPlayer, true);				
-			break;
-		case 3: //View
-			sPlayer.getMainScreen().closePopup();
-			//new withdrawGUI(mainGUI, sPlayer, true);				
-			break;
-		case 4: //View
-			sPlayer.getMainScreen().closePopup();
-			//new closeAccountGUI(mainGUI, sPlayer, true);				
-			break;
-		case 5:
-			Screen screen = sPlayer.getMainScreen();
-			screen.removeWidget(this);				
-			sPlayer.closeActiveWindow();
+			new MainGUI(plugin, sPlayer);
 			break;
 		}
 	}

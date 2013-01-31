@@ -38,6 +38,12 @@ public class CommandButton extends GenericButton{
 			((MainGUI)gui).onClickCommand(commandGoal);
 		}
 		
+		if(gui instanceof CreateAccountGUI) {
+			((CreateAccountGUI)gui).onClickCommand(commandGoal);
+		}
 		
+		if(gui instanceof AckGUI) {
+			((AckGUI)gui).onClickCommand(commandGoal);
+		}
 	}
 }
