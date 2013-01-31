@@ -20,42 +20,23 @@
 package com.almuradev.reserve.gui;
 
 import org.getspout.spoutapi.event.screen.ButtonClickEvent;
-import org.getspout.spoutapi.gui.GenericButton;
+import org.getspout.spoutapi.gui.GenericCheckBox;
+import org.getspout.spoutapi.player.SpoutPlayer;
 
-public class CommandButton extends GenericButton{
-	private Object gui;
-	private int commandGoal;
-	
-	public CommandButton(Object gui, int commandGoal, String text) {
-		super(text);
-		this.gui = gui;
-		this.commandGoal = commandGoal;
+public class ConfigMultipleCheckBox extends GenericCheckBox {
+
+	private BankConfigGUI plugin;
+	private SpoutPlayer sPlayer;
+
+	public ConfigMultipleCheckBox(SpoutPlayer player, BankConfigGUI plugin) {
+		super();
+		setTooltip("Click this to enabled / disable Multiple Accounts");		
+		this.plugin = plugin;
 	}
 
 	@Override
 	public void onButtonClick(ButtonClickEvent event) {
-		if(gui instanceof MainGUI) {
-			((MainGUI)gui).onClickCommand(commandGoal);
-		}
 		
-		if(gui instanceof CreateAccountGUI) {
-			((CreateAccountGUI)gui).onClickCommand(commandGoal);
-		}
-		
-		if(gui instanceof AckGUI) {
-			((AckGUI)gui).onClickCommand(commandGoal);
-		}
-		
-		if(gui instanceof DepositGUI) {
-			((DepositGUI)gui).onClickCommand(commandGoal);
-		}
-		
-		if(gui instanceof WithdrawGUI) {
-			((WithdrawGUI)gui).onClickCommand(commandGoal);
-		}
-		
-		if(gui instanceof BankConfigGUI) {
-			((BankConfigGUI)gui).onClickCommand(commandGoal);
-		}
+		setDirty(true);
 	}
 }

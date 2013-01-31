@@ -76,14 +76,14 @@ public class AckGUI extends GenericPopup {
 		GenericGradient gg =  new GenericGradient(); 
 		gg.setBottomColor(bottom).setTopColor(bottom);
 		gg.setAnchor(WidgetAnchor.CENTER_CENTER);
-		gg.shiftXPos(-65).shiftYPos(-55).setMaxWidth(130);
+		gg.shiftXPos(-55).shiftYPos(-55).setMaxWidth(130);
 		gg.setWidth(130).setHeight(1);
 		
 		GenericLabel an = new GenericLabel(ackMessage);
 		an.setScale(1.0F);
 		an.setAnchor(WidgetAnchor.CENTER_CENTER);
 		an.setHeight(15).setWidth(GenericLabel.getStringWidth(an.getText()));
-		an.shiftXPos(-70).shiftYPos(-40);
+		an.shiftXPos(-60).shiftYPos(-40);
 				
 		GenericButton close = new CommandButton(this, 1, "OK");
 				
