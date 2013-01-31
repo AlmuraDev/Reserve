@@ -42,7 +42,7 @@ public class Bank implements Serializable {
 		}
 	}
 
-	public Bank(World world, String holder) {
+	public Bank(String holder, World world) {
 		this(holder, world, null);
 	}
 
@@ -77,9 +77,12 @@ public class Bank implements Serializable {
 	/**
 	 * @param account
 	 */
-	public void addAccount(Account account) {
-		accounts.add(account);
-		setDirty(true);
+	public Account addAccount(Account account) {
+		if (!accounts.contains(account)) {
+			accounts.add(account);
+			setDirty(true);
+		}
+		return account;
 	}
 
 	/**

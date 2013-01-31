@@ -50,6 +50,7 @@ public class ReservePlugin extends JavaPlugin {
 		final BukkitScheduler scheduler = getServer().getScheduler();
 		scheduler.scheduleSyncRepeatingTask(this, new TaxTask(this, reserve), 0, 0); //TODO Config values for tax delay.
 		scheduler.scheduleSyncRepeatingTask(this, new InterestTask(this, reserve), 0, 0); //TODO Config values for interest delay.
+		getServer().getPluginManager().registerEvents(reserve, this);
 	}
 
 	public static Reserve getReserve() {

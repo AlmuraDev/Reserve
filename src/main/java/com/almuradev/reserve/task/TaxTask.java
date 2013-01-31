@@ -36,7 +36,7 @@ public class TaxTask implements Runnable {
 
 	@Override
 	public void run() {
-		final List<Bank> BANKS = reserve.retrieveAccounts();
+		final List<Bank> BANKS = reserve.retrieveBanks();
 		//Tax the suckers here!
 	}
 }

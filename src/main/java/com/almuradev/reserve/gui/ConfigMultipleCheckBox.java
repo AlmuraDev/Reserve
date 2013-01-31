@@ -35,7 +35,6 @@ public class ConfigMultipleCheckBox extends GenericCheckBox {
 
 	@Override
 	public void onButtonClick(ButtonClickEvent event) {
-
 		setDirty(true);
 	}
 }

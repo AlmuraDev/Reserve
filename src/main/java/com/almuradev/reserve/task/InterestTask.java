@@ -36,7 +36,7 @@ public class InterestTask implements Runnable {
 
 	@Override
 	public void run() {
-		final List<Bank> BANKS = reserve.retrieveAccounts();
+		final List<Bank> BANKS = reserve.retrieveBanks();
 		//Apply interest here!
 	}
 }

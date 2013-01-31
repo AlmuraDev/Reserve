@@ -35,14 +35,14 @@ import org.bukkit.event.Listener;
 public class Reserve implements Listener {
 	private static final ArrayList<Bank> BANKS = new ArrayList<>();
 	private static final ArrayList<Bank> REMOVED = new ArrayList<>();
-
+	private long timeoutTicks = 2000L;
 	/**
 	 * Adds a new bank to the reserve.
-	 * @param world The world where the bank is located at.
 	 * @param holder The name of the holder of the bank.
+	 * @param world The world where the bank is located at.
 	 * @return The bank econ that was added.
 	 */
-	public Bank addBank(World world, String holder) {
+	public Bank addBank(String holder, World world) {
 		if (world == null || holder == null || holder.isEmpty()) {
 			throw new NullPointerException("Specified world or holder is null!");
 		}
@@ -53,7 +53,7 @@ public class Reserve implements Listener {
 			}
 		}
 		if (bank == null) {
-			bank = new Bank(world, holder);
+			bank = new Bank(holder, world);
 			BANKS.add(bank);
 		}
 		bank.setDirty(true);
@@ -62,11 +62,11 @@ public class Reserve implements Listener {
 
 	/**
 	 * Gets the bank assigned to this world and holder.
-	 * @param world The world where the bank is located at.
 	 * @param holder The name of the holder of the bank.
+	 * @param world The world where the bank is located at.
 	 * @return The Bank of the holder, for manipulation.
 	 */
-	public Bank getBank(World world, String holder) {
+	public Bank getBank(String holder, World world) {
 		if (world == null || holder == null || holder.isEmpty()) {
 			throw new NullPointerException("Specified world or holder is null!");
 		}
@@ -80,12 +80,12 @@ public class Reserve implements Listener {
 
 	/**
 	 * Removes an econ for the holder specified in the World specified.
-	 * @param world The world where the bank is located at.
 	 * @param holder The name of the holder of the bank.
+	 * @param world The world where the bank is located at.
 	 * @return The bank econ removed.
 	 */
-	public Bank removeBank(World world, String holder) {
-		final Bank bank = getBank(world, holder);
+	public Bank removeBank(String holder, World world) {
+		final Bank bank = getBank(holder, world);
 		BANKS.remove(bank);
 		REMOVED.add(bank);
 		return bank;
@@ -102,6 +102,11 @@ public class Reserve implements Listener {
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void onTick(ServerTickEvent event) {
 		//Check DT and delay...don't need a SQL ping each tick.
+		timeoutTicks -= event.getMillisLastTick();
+		if (timeoutTicks > 0) {
+			return;
+		}
+		timeoutTicks = 200L; //Tick every 2 mins
 		//Map has at least ONE dirty value.
 		final List<Bank> banks = retrieveBanks();
 		for (Bank bank : banks) {
