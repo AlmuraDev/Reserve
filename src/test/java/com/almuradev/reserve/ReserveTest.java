@@ -30,14 +30,26 @@ import org.bukkit.World;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertFalse;
+import static junit.framework.Assert.assertSame;
 import static junit.framework.Assert.assertTrue;
 import static org.junit.Assert.assertNotEquals;
 
-public class BankTest {
+public class ReserveTest {
 	private static final Reserve reserve;
 
 	static {
 		reserve = new Reserve();
+	}
+
+	@Test
+	public void testReserve() {
+		final World world = PowerMockito.mock(World.class);
+		final Bank a = reserve.addBank("Spouty", world);
+		assertEquals(a, reserve.getBank("Spouty", world));
+		a.addAccount(new Account("Checking", 10));
+		assertTrue(a.isDirty());
+		reserve.run();
+		assertTrue(!a.isDirty());
 	}
 
 	@Test
@@ -57,13 +69,15 @@ public class BankTest {
 	}
 
 	@Test
-	public void testReserve() {
-		final World world = PowerMockito.mock(World.class);
-		final Bank a = reserve.addBank("Spouty", world);
-		assertEquals(a, reserve.getBank("Spouty", world));
-		a.addAccount(new Account("Checking", 10));
+	public void testAccount() {
+		final Account a = new Account("Checking");
 		assertTrue(a.isDirty());
+		final Account b = new Account("Checking", 1);
+		assertNotEquals(a, b);
 		reserve.run();
-		assertTrue(!a.isDirty());
+		assertTrue(a.isDirty());
+		assertTrue(b.isDirty());
+		b.setBalance(0);
+		assertEquals(a, b);
 	}
 }

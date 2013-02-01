@@ -39,6 +39,8 @@ public class Bank implements Serializable {
 		accounts = new ArrayList<>();
 		if (account != null) {
 			addAccount(account);
+		}  else {
+			setDirty(true);
 		}
 	}
 
@@ -165,6 +167,6 @@ public class Bank implements Serializable {
 
 	@Override
 	public String toString() {
-		return "Bank{holder= " + holder + ", world= " + world + ", accounts= {" + accounts.toString() + "}} ";
+		return "Bank{holder= " + holder + ", world= " + world + ", accounts= {" + accounts.toString() + "}, dirty= " + dirty + "} ";
 	}
 }

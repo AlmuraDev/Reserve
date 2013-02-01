@@ -29,6 +29,7 @@ public class Account implements Serializable {
 	public Account(String name, double balance) {
 		this.name = name;
 		this.balance = balance;
+		setDirty(true);
 	}
 
 	public Account(String name) {
@@ -106,6 +107,6 @@ public class Account implements Serializable {
 
 	@Override
 	public String toString() {
-		return "Account{name= " + name + ", balance= " + balance + "} ";
+		return "Account{name= " + name + ", balance= " + balance + ", dirty= " + dirty + "} ";
 	}
 }
