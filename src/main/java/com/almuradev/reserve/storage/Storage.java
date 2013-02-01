@@ -60,17 +60,17 @@ public class Storage {
 		}
 		switch (type) {
 			case H2:
-				H2Configuration h2 = new H2Configuration();
+				final H2Configuration h2 = new H2Configuration();
 				File h2Db = new File(dbLoc, "reserve_db");
 				h2.setDatabase(h2Db.getAbsolutePath());
 				db = DatabaseFactory.createNewDatabase(h2);
 				break;
 			case SQLITE:
-				SQLiteConfiguration sqlite = new SQLiteConfiguration(new File(dbLoc, "reserve_db").getAbsolutePath());
+				final SQLiteConfiguration sqlite = new SQLiteConfiguration(new File(dbLoc, "reserve_db").getAbsolutePath());
 				db = DatabaseFactory.createNewDatabase(sqlite);
 				break;
 			case MYSQL:
-				MySQLConfiguration mysql = new MySQLConfiguration();
+				final MySQLConfiguration mysql = new MySQLConfiguration();
 				mysql
 						.setDatabase(dbName)
 						.setHost(hostName)

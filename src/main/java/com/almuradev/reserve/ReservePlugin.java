@@ -19,9 +19,12 @@
  */
 package com.almuradev.reserve;
 
+import com.almuradev.reserve.config.ReserveConfiguration;
 import com.almuradev.reserve.gui.MainGUI;
 import com.almuradev.reserve.npc.ReserveNPCTrait;
 import com.almuradev.reserve.storage.Reserve;
+import com.almuradev.reserve.storage.Storage;
+import com.almuradev.reserve.storage.StorageType;
 import com.almuradev.reserve.task.InterestTask;
 import com.almuradev.reserve.task.TaxTask;
 
@@ -37,6 +40,8 @@ import org.bukkit.scheduler.BukkitScheduler;
 
 public class ReservePlugin extends JavaPlugin {
 	private static final Reserve reserve;
+	private static Storage storage;
+	private static ReserveConfiguration config;
 	private BukkitScheduler scheduler;
 
 	static {
@@ -50,6 +55,20 @@ public class ReservePlugin extends JavaPlugin {
 
 	@Override
 	public void onEnable() {
+		config = new ReserveConfiguration(this);
+		config.onLoad();
+		switch (config.getSqlType()) {
+			case H2:
+				storage = new Storage(StorageType.H2, getDataFolder());
+				break;
+			case SQLITE:
+				storage = new Storage(StorageType.SQLITE, getDataFolder());
+				break;
+			case MYSQL:
+				storage = new Storage(StorageType.MYSQL, getDataFolder(), config.getDatabaseName(), config.getHost(), config.getUsername(), config.getPassword(), config.getPort());
+				break;
+		}
+		storage.onLoad();
 		scheduler = getServer().getScheduler();
 		scheduler.scheduleSyncRepeatingTask(this, new TaxTask(this, reserve), 0, 0); //TODO Config values for tax delay.
 		scheduler.scheduleSyncRepeatingTask(this, new InterestTask(this, reserve), 0, 0); //TODO Config values for interest delay.
@@ -59,6 +78,14 @@ public class ReservePlugin extends JavaPlugin {
 
 	public static Reserve getReserve() {
 		return reserve;
+	}
+
+	public static Storage getStorage() {
+		return storage;
+	}
+
+	public static ReserveConfiguration getWrapper() {
+		return config;
 	}
 
 	//TESTING
