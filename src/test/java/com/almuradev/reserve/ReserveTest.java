@@ -66,6 +66,8 @@ public class ReserveTest {
 		assertEquals(a, b);
 		b.addAccount(new Account("Checking", 10));
 		assertFalse(b.getAccounts().size() == 2);
+		b.addAccount(new Account("Savings", 100));
+		assertTrue(b.getAccounts().size() == 2);
 	}
 
 	@Test
