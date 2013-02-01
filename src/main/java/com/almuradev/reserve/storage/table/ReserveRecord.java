@@ -19,8 +19,35 @@
  */
 package com.almuradev.reserve.storage.table;
 
+import com.almuradev.reserve.econ.Bank;
+import com.alta189.simplesave.Field;
+import com.alta189.simplesave.Id;
 import com.alta189.simplesave.Table;
 
 @Table("reserve_banks")
-public class BankTable {
+public class ReserveRecord {
+	@Id
+	private int id;
+	@Field
+	private Bank bank;
+
+	public ReserveRecord() {
+
+	}
+
+	public ReserveRecord(Bank bank) {
+		this.bank = bank;
+	}
+
+	public int getID() {
+		return id;
+	}
+
+	public Bank getBank() {
+		return bank;
+	}
+
+	public void setBank(Bank bank) {
+		this.bank = bank;
+	}
 }

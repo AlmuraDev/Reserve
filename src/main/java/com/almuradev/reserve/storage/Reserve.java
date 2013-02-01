@@ -19,23 +19,18 @@
  */
 package com.almuradev.reserve.storage;
 
-import java.util.ArrayList;
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 
 import com.almuradev.reserve.econ.Bank;
 
-import org.getspout.spoutapi.event.spout.ServerTickEvent;
-
 import org.bukkit.World;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
-import org.bukkit.event.Listener;
 
-public class Reserve implements Listener {
-	private static final ArrayList<Bank> BANKS = new ArrayList<>();
-	private static final ArrayList<Bank> REMOVED = new ArrayList<>();
-	private long timeoutTicks = 2000L;
+public class Reserve implements Runnable {
+	private static final LinkedList<Bank> BANKS = new LinkedList<>();
+	private static final LinkedList<Bank> REMOVED = new LinkedList<>();
+
 	/**
 	 * Adds a new bank to the reserve.
 	 * @param holder The name of the holder of the bank.
@@ -99,15 +94,8 @@ public class Reserve implements Listener {
 		return Collections.unmodifiableList(BANKS);
 	}
 
-	@EventHandler(priority = EventPriority.MONITOR)
-	public void onTick(ServerTickEvent event) {
-		//Check DT and delay...don't need a SQL ping each tick.
-		timeoutTicks -= event.getMillisLastTick();
-		if (timeoutTicks > 0) {
-			return;
-		}
-		timeoutTicks = 200L; //Tick every 2 mins
-		//Map has at least ONE dirty value.
+	@Override
+	public void run() {
 		final List<Bank> banks = retrieveBanks();
 		for (Bank bank : banks) {
 			if (!bank.isDirty()) {
