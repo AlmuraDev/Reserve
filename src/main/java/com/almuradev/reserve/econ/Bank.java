@@ -53,8 +53,8 @@ public class Bank implements Serializable {
 		setDirty(true);
 	}
 
-	public void setWorld(World world) {
-		this.world = world.getName();
+	public void setWorld(String world) {
+		this.world = world;
 		setDirty(true);
 	}
 
@@ -101,10 +101,37 @@ public class Bank implements Serializable {
 	}
 
 	/**
+	 *
+	 * @param name
+	 * @return
+	 */
+	public Account removeAccount(String name) {
+		final Account account = getAccount(name);
+		if (account == null) {
+			return null;
+		}
+		accounts.remove(account);
+		return account;
+	}
+
+	/**
 	 * @return
 	 */
 	public List<Account> retrieveAccounts() {
 		return Collections.unmodifiableList(accounts);
+	}
+
+	/**
+	 *
+	 * @param erase
+	 */
+	public void wipe(boolean erase) {
+		for (Account account : retrieveAccounts()) {
+			account.wipe();
+			if (erase) {
+				removeAccount(account.getName());
+			}
+		}
 	}
 
 	/**
