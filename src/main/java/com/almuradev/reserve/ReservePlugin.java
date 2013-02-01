@@ -37,26 +37,32 @@ import org.bukkit.scheduler.BukkitScheduler;
 
 public class ReservePlugin extends JavaPlugin {
 	private static final Reserve reserve;
+	private BukkitScheduler scheduler;
 
 	static {
 		reserve = new Reserve();
 	}
 
 	@Override
+	public void onDisable() {
+		scheduler.cancelTasks(this);
+	}
+
+	@Override
 	public void onEnable() {
-		//Register the 'Banker' Trait.
-		//To set the NPC to that trait, select it and do /trait banker
-		CitizensAPI.getTraitFactory().registerTrait(TraitInfo.create(ReserveNPCTrait.class));
-		final BukkitScheduler scheduler = getServer().getScheduler();
+		scheduler = getServer().getScheduler();
 		scheduler.scheduleSyncRepeatingTask(this, new TaxTask(this, reserve), 0, 0); //TODO Config values for tax delay.
 		scheduler.scheduleSyncRepeatingTask(this, new InterestTask(this, reserve), 0, 0); //TODO Config values for interest delay.
 		scheduler.scheduleSyncRepeatingTask(this, reserve, 0, 2400); //Save every 2 mins.
+		CitizensAPI.getTraitFactory().registerTrait(TraitInfo.create(ReserveNPCTrait.class));
 	}
 
 	public static Reserve getReserve() {
 		return reserve;
 	}
 
+	//TESTING
+	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		Player player = null;
 		if (sender instanceof Player) {
