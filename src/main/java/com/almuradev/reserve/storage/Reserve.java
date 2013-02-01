@@ -108,6 +108,8 @@ public class Reserve implements Runnable {
 			} else {
 				//Update SQL
 			}
+
+			bank.setDirty(false);
 		}
 	}
 }

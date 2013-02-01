@@ -138,6 +138,11 @@ public class Bank implements Serializable {
 	 */
 	public void setDirty(boolean dirty) {
 		this.dirty = dirty;
+		if (dirty == false) {
+			for (Account account : accounts) {
+				account.setDirty(false);
+			}
+		}
 	}
 
 	@Override

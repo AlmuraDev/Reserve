@@ -30,6 +30,7 @@ import org.bukkit.World;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertFalse;
+import static junit.framework.Assert.assertTrue;
 import static org.junit.Assert.assertNotEquals;
 
 public class BankTest {
@@ -60,5 +61,9 @@ public class BankTest {
 		final World world = PowerMockito.mock(World.class);
 		final Bank a = reserve.addBank("Spouty", world);
 		assertEquals(a, reserve.getBank("Spouty", world));
+		a.addAccount(new Account("Checking", 10));
+		assertTrue(a.isDirty());
+		reserve.run();
+		assertTrue(!a.isDirty());
 	}
 }
