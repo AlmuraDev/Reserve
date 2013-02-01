@@ -103,7 +103,7 @@ public class Bank implements Serializable {
 	/**
 	 * @return
 	 */
-	public List<Account> getAccounts() {
+	public List<Account> retrieveAccounts() {
 		return Collections.unmodifiableList(accounts);
 	}
 
@@ -158,7 +158,7 @@ public class Bank implements Serializable {
 		}
 
 		final Bank bank = (Bank) other;
-		if (!bank.getHolder().equals(holder) || !bank.getWorld().equals(world) || !bank.getAccounts().equals(accounts)) {
+		if (!bank.getHolder().equals(holder) || !bank.getWorld().equals(world) || !bank.retrieveAccounts().equals(accounts)) {
 			return false;
 		}
 

@@ -74,10 +74,10 @@ public class Reserve implements Runnable {
 	}
 
 	/**
-	 * Removes an econ for the holder specified in the World specified.
+	 * Removes a bank from the reserve specified by both World and holder.
 	 * @param holder The name of the holder of the bank.
 	 * @param world The world where the bank is located at.
-	 * @return The bank econ removed.
+	 * @return The bank removed.
 	 */
 	public Bank removeBank(String holder, World world) {
 		final Bank bank = getBank(holder, world);
@@ -103,7 +103,6 @@ public class Reserve implements Runnable {
 			}
 			//Bank is dirty and was removed last tick
 			if (REMOVED.contains(bank)) {
-				REMOVED.remove(bank);
 				//Remove from SQL
 			} else {
 				//Update SQL
@@ -111,5 +110,6 @@ public class Reserve implements Runnable {
 
 			bank.setDirty(false);
 		}
+		REMOVED.clear();
 	}
 }
