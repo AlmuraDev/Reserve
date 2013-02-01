@@ -39,6 +39,7 @@ import com.alta189.simplesave.h2.H2Database;
 import com.alta189.simplesave.sqlite.SQLiteConfiguration;
 import com.alta189.simplesave.sqlite.SQLiteDatabase;
 
+import junit.framework.Assert;
 import org.junit.Test;
 import org.powermock.api.mockito.PowerMockito;
 
@@ -191,6 +192,9 @@ public class ReserveTest {
 		storage.saveBank(a);
 		storage.saveBank(a, b);
 		assertEquals(storage.getAll().size(), 1);
+		final Bank bank = storage.loadBank("Spouty", world);
+		assertNotNull(bank);
+		assertEquals(bank.getAccount("Checking"), new Account("Checking", 100));
 		storage.deleteBank(b);
 		assertEquals(storage.getAll().size(), 0);
 		storage.onUnLoad();

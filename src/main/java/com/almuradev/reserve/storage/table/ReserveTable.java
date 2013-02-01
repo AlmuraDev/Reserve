@@ -19,7 +19,6 @@
  */
 package com.almuradev.reserve.storage.table;
 
-import com.almuradev.reserve.econ.Bank;
 import com.alta189.simplesave.Field;
 import com.alta189.simplesave.Id;
 import com.alta189.simplesave.Table;
@@ -29,25 +28,58 @@ public class ReserveTable {
 	@Id
 	private int id;
 	@Field
-	private Bank bank;
+	private String holder;
+	@Field
+	private String world;
+	@Field
+	private String accountName;
+	@Field
+	private double balance;
 
 	public ReserveTable() {
 
 	}
 
-	public ReserveTable(Bank bank) {
-		this.bank = bank;
+	public ReserveTable(String holder, String world, String accountName, double balance) {
+		this.holder = holder;
+		this.world = world;
+		this.accountName = accountName;
+		this.balance = balance;
 	}
 
 	public int getID() {
 		return id;
 	}
 
-	public Bank getBank() {
-		return bank;
+	public String getHolder() {
+		return holder;
 	}
 
-	public void setBank(Bank bank) {
-		this.bank = bank;
+	public void setHolder(String holder) {
+		this.holder = holder;
+	}
+
+	public String getWorld() {
+		return world;
+	}
+
+	public void setWorld(String world) {
+		this.world = world;
+	}
+
+	public String getAccountName() {
+		return accountName;
+	}
+
+	public void setAccountName(String accountName) {
+		this.accountName = accountName;
+	}
+
+	public double getBalance() {
+		return balance;
+	}
+
+	public void setBalance(double balance) {
+		this.balance = balance;
 	}
 }

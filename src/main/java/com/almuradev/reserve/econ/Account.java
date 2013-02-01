@@ -19,9 +19,7 @@
  */
 package com.almuradev.reserve.econ;
 
-import java.io.Serializable;
-
-public class Account implements Serializable {
+public class Account {
 	private String name;
 	private double balance;
 	private boolean dirty = false;

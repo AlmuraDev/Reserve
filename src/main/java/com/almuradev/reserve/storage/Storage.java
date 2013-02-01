@@ -22,7 +22,9 @@ package com.almuradev.reserve.storage;
 import java.io.File;
 import java.util.Collection;
 import java.util.LinkedList;
+import java.util.List;
 
+import com.almuradev.reserve.econ.Account;
 import com.almuradev.reserve.econ.Bank;
 import com.almuradev.reserve.storage.table.ReserveTable;
 import com.alta189.simplesave.Database;
@@ -102,6 +104,18 @@ public class Storage {
 		}
 	}
 
+	public Bank loadBank(String holder, String world) {
+		if (holder == null || holder.isEmpty() || world == null || world.isEmpty()) {
+			throw new NullPointerException("Trying to load a holder/world that is null from the storage backend!");
+		}
+		for (Bank bank : getAll()) {
+			if (bank.getHolder().equalsIgnoreCase(holder) && bank.getWorld().equalsIgnoreCase(world)) {
+				return bank;
+			}
+		}
+		return null;
+	}
+
 	public Storage saveBank(Bank bank) {
 		return saveBank(null, bank);
 	}
@@ -110,36 +124,44 @@ public class Storage {
 		if (newBank == null) {
 			throw new NullPointerException("Trying to save a null bank to the storage backend!");
 		}
+		List<String> toIgnore = new LinkedList<>();
 		if (oldBank != null) {
-			final ReserveTable entry = db.select(ReserveTable.class).where().equal("bank", oldBank).execute().findOne();
-			if (entry != null) {
-				entry.setBank(newBank);
-				db.save(entry);
-			} else {
-				db.save(new ReserveTable(newBank));
+			//Update prior accounts
+			final List<ReserveTable> entries = db.select(ReserveTable.class).where().equal("holder", oldBank.getHolder()).and().equal("world", oldBank.getWorld()).execute().find();
+			if (entries != null && !entries.isEmpty()) {
+				//Loop through all entries in the table that has the holder and the world's name
+				for (ReserveTable entry : entries) {
+					//The account existed in the old bank.
+					if (oldBank.getAccount(entry.getAccountName()) != null) {
+						//The account exists in the new bank, save it to the entry.
+						if (newBank.getAccount(entry.getAccountName()) != null) {
+							entry.setBalance(newBank.getAccount(entry.getAccountName()).getBalance());
+							toIgnore.add(entry.getAccountName());
+						//The account exists in the old bank, exists as an entry, but doesn't exist in the new bank. Need to delete this entry.
+						} else {
+							toIgnore.add(entry.getAccountName());
+							db.remove(entry);
+						}
+						continue;
+					}
+				}
 			}
 		} else {
-			db.save(new ReserveTable(newBank));
+			for (Account account : newBank.retrieveAccounts()) {
+				if (toIgnore.contains(account.getName())) {
+					continue;
+				}
+				db.save(new ReserveTable(newBank.getHolder(), newBank.getWorld(), account.getName(), account.getBalance()));
+			}
 		}
 		return this;
 	}
 
 	public Storage deleteBank(Bank bank) {
-		if (bank == null) {
-			throw new NullPointerException("Trying to remove a null bank from the storage backend!");
-		}
-		final ReserveTable record = db.select(ReserveTable.class).where().equal("bank", bank).execute().findOne();
-		if (record != null) {
-			db.remove(record);
-		}
 		return this;
 	}
 
 	public Collection<Bank> getAll() {
-		final LinkedList<Bank> banks = new LinkedList<>();
-		for (ReserveTable entry : db.select(ReserveTable.class).execute().find()) {
-			banks.add(entry.getBank());
-		}
-		return banks;
+		return null;
 	}
 }

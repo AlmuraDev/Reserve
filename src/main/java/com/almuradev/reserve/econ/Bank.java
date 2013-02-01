@@ -26,8 +26,10 @@ import java.util.List;
 
 import org.bukkit.World;
 
-//TODO Testing SQL code...hopefully World is defaulty Serializable...
-public class Bank implements Serializable {
+/**
+ * A wrapper class that keeps track of accounts
+ */
+public class Bank {
 	private String holder;
 	private String world;
 	private List<Account> accounts;
