@@ -51,7 +51,7 @@ public class MainGUI extends GenericPopup {
 	public MainGUI(ReservePlugin plugin, SpoutPlayer sPlayer) {
 		this.plugin = plugin;
 		this.sPlayer = sPlayer;
-		this.playerBank = plugin.getReserve().getBank(sPlayer.getName(), sPlayer.getWorld());
+		this.playerBank = plugin.getReserve().getBank(sPlayer.getName(), sPlayer.getWorld().getName());
 		GenericTexture border = new GenericTexture("http://www.almuramc.com/images/playerplus.png");
 		border.setAnchor(WidgetAnchor.CENTER_CENTER);
 		border.setPriority(RenderPriority.High);

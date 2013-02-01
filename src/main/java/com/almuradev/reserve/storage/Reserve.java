@@ -25,8 +25,6 @@ import java.util.List;
 
 import com.almuradev.reserve.econ.Bank;
 
-import org.bukkit.World;
-
 public class Reserve implements Runnable {
 	private static final LinkedList<Bank> BANKS = new LinkedList<>();
 	private static final LinkedList<Bank> REMOVED = new LinkedList<>();
@@ -34,10 +32,10 @@ public class Reserve implements Runnable {
 	/**
 	 * Adds a new bank to the reserve.
 	 * @param holder The name of the holder of the bank.
-	 * @param world The world where the bank is located at.
+	 * @param world The name of the world where the bank is located at.
 	 * @return The bank econ that was added.
 	 */
-	public Bank addBank(String holder, World world) {
+	public Bank addBank(String holder, String world) {
 		if (world == null || holder == null || holder.isEmpty()) {
 			throw new NullPointerException("Specified world or holder is null!");
 		}
@@ -58,11 +56,11 @@ public class Reserve implements Runnable {
 	/**
 	 * Gets the bank assigned to this world and holder.
 	 * @param holder The name of the holder of the bank.
-	 * @param world The world where the bank is located at.
+	 * @param world The name of the world where the bank is located at.
 	 * @return The Bank of the holder, for manipulation.
 	 */
-	public Bank getBank(String holder, World world) {
-		if (world == null || holder == null || holder.isEmpty()) {
+	public Bank getBank(String holder, String world) {
+		if (world == null || world.isEmpty() || holder == null || holder.isEmpty()) {
 			throw new NullPointerException("Specified world or holder is null!");
 		}
 		for (Bank bank : BANKS) {
@@ -76,10 +74,10 @@ public class Reserve implements Runnable {
 	/**
 	 * Removes a bank from the reserve specified by both World and holder.
 	 * @param holder The name of the holder of the bank.
-	 * @param world The world where the bank is located at.
+	 * @param world The name of the world where the bank is located at.
 	 * @return The bank removed.
 	 */
-	public Bank removeBank(String holder, World world) {
+	public Bank removeBank(String holder, String world) {
 		final Bank bank = getBank(holder, world);
 		BANKS.remove(bank);
 		REMOVED.add(bank);

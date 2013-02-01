@@ -24,27 +24,28 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.bukkit.Bukkit;
 import org.bukkit.World;
 
 //TODO Testing SQL code...hopefully World is defaulty Serializable...
 public class Bank implements Serializable {
 	private String holder;
-	private World world;
+	private String world;
 	private List<Account> accounts;
 	private boolean dirty = false;
 
-	public Bank(String holder, World world, Account account) {
+	public Bank(String holder, String world, Account account) {
 		this.holder = holder;
 		this.world = world;
 		accounts = new ArrayList<>();
 		if (account != null) {
 			addAccount(account);
-		}  else {
+		} else {
 			setDirty(true);
 		}
 	}
 
-	public Bank(String holder, World world) {
+	public Bank(String holder, String world) {
 		this(holder, world, null);
 	}
 
@@ -54,7 +55,7 @@ public class Bank implements Serializable {
 	}
 
 	public void setWorld(World world) {
-		this.world = world;
+		this.world = world.getName();
 		setDirty(true);
 	}
 
@@ -62,7 +63,7 @@ public class Bank implements Serializable {
 	 * Returns the world in-which this bank is in.
 	 * @return The current world.
 	 */
-	public World getWorld() {
+	public String getWorld() {
 		return world;
 	}
 

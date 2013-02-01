@@ -20,9 +20,11 @@
 package com.almuradev.reserve.storage;
 
 import java.io.File;
+import java.util.Collection;
+import java.util.LinkedList;
 
-import com.almuradev.reserve.storage.table.ReserveRecord;
-import com.alta189.simplesave.Configuration;
+import com.almuradev.reserve.econ.Bank;
+import com.almuradev.reserve.storage.table.ReserveTable;
 import com.alta189.simplesave.Database;
 import com.alta189.simplesave.DatabaseFactory;
 import com.alta189.simplesave.exceptions.ConnectionException;
@@ -32,18 +34,18 @@ import com.alta189.simplesave.mysql.MySQLConfiguration;
 import com.alta189.simplesave.sqlite.SQLiteConfiguration;
 
 public class Storage {
+	private final StorageType type;
 	private final File dbLoc;
 	private Database db;
-	private Configuration config;
 	private String dbName, hostName, username, password;
 	private int port;
 
-	public Storage(Configuration config, File dbLoc) {
-		this(config, dbLoc, "test", "localhost", "spouty", "unleashtheflow", 1337);
+	public Storage(StorageType type, File dbLoc) {
+		this(type, dbLoc, "test", "localhost", "spouty", "unleashtheflow", 1337);
 	}
 
-	public Storage(Configuration config, File dbLoc, String dbName, String hostName, String username, String password, int port) {
-		this.config = config;
+	public Storage(StorageType type, File dbLoc, String dbName, String hostName, String username, String password, int port) {
+		this.type = type;
 		this.dbLoc = dbLoc;
 		this.dbName = dbName;
 		this.hostName = hostName;
@@ -56,29 +58,31 @@ public class Storage {
 		if (!dbLoc.exists()) {
 			dbLoc.mkdirs();
 		}
-		if (config instanceof SQLiteConfiguration) {
-			SQLiteConfiguration sqlite = (SQLiteConfiguration) config;
-			File sqliteDb = new File(dbLoc, "reserve_db");
-			sqlite.setPath(sqliteDb.getAbsolutePath());
-			db = DatabaseFactory.createNewDatabase(sqlite);
-		} else if (config instanceof H2Configuration) {
-			H2Configuration h2 = (H2Configuration) config;
-			File h2Db = new File(dbLoc, "reserve_db");
-			h2.setDatabase(h2Db.getAbsolutePath());
-			db = DatabaseFactory.createNewDatabase(h2);
-		} else {
-			MySQLConfiguration mysql = (MySQLConfiguration) config;
-			mysql
-					.setDatabase(dbName)
-					.setHost(hostName)
-					.setUser(username)
-					.setPassword(password)
-					.setPort(port);
-			db = DatabaseFactory.createNewDatabase(config);
+		switch (type) {
+			case H2:
+				H2Configuration h2 = new H2Configuration();
+				File h2Db = new File(dbLoc, "reserve_db");
+				h2.setDatabase(h2Db.getAbsolutePath());
+				db = DatabaseFactory.createNewDatabase(h2);
+				break;
+			case SQLITE:
+				SQLiteConfiguration sqlite = new SQLiteConfiguration(new File(dbLoc, "reserve_db").getAbsolutePath());
+				db = DatabaseFactory.createNewDatabase(sqlite);
+				break;
+			case MYSQL:
+				MySQLConfiguration mysql = new MySQLConfiguration();
+				mysql
+						.setDatabase(dbName)
+						.setHost(hostName)
+						.setUser(username)
+						.setPassword(password)
+						.setPort(port);
+				db = DatabaseFactory.createNewDatabase(mysql);
+				break;
 		}
 
 		try {
-			db.registerTable(ReserveRecord.class);
+			db.registerTable(ReserveTable.class);
 		} catch (TableRegistrationException e) {
 			e.printStackTrace();
 		}
@@ -96,5 +100,46 @@ public class Storage {
 		} catch (ConnectionException e) {
 			e.printStackTrace();
 		}
+	}
+
+	public Storage saveBank(Bank bank) {
+		return saveBank(null, bank);
+	}
+
+	public Storage saveBank(Bank oldBank, Bank newBank) {
+		if (newBank == null) {
+			throw new NullPointerException("Trying to save a null bank to the storage backend!");
+		}
+		if (oldBank != null) {
+			final ReserveTable entry = db.select(ReserveTable.class).where().equal("bank", oldBank).execute().findOne();
+			if (entry != null) {
+				entry.setBank(newBank);
+				db.save(entry);
+			} else {
+				db.save(new ReserveTable(newBank));
+			}
+		} else {
+			db.save(new ReserveTable(newBank));
+		}
+		return this;
+	}
+
+	public Storage deleteBank(Bank bank) {
+		if (bank == null) {
+			throw new NullPointerException("Trying to remove a null bank from the storage backend!");
+		}
+		final ReserveTable record = db.select(ReserveTable.class).where().equal("bank", bank).execute().findOne();
+		if (record != null) {
+			db.remove(record);
+		}
+		return this;
+	}
+
+	public Collection<Bank> getAll() {
+		final LinkedList<Bank> banks = new LinkedList<>();
+		for (ReserveTable entry : db.select(ReserveTable.class).execute().find()) {
+			banks.add(entry.getBank());
+		}
+		return banks;
 	}
 }

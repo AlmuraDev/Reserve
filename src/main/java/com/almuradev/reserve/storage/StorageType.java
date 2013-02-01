@@ -17,37 +17,10 @@
  * You should have received a copy of the GNU General Public License. If not,
  * see <http://www.gnu.org/licenses/> for the GNU General Public License.
  */
-package com.almuradev.reserve.storage.table;
+package com.almuradev.reserve.storage;
 
-import com.almuradev.reserve.econ.Bank;
-import com.alta189.simplesave.Field;
-import com.alta189.simplesave.Id;
-import com.alta189.simplesave.Table;
-
-@Table("reserve_banks")
-public class ReserveRecord {
-	@Id
-	private int id;
-	@Field
-	private Bank bank;
-
-	public ReserveRecord() {
-
-	}
-
-	public ReserveRecord(Bank bank) {
-		this.bank = bank;
-	}
-
-	public int getID() {
-		return id;
-	}
-
-	public Bank getBank() {
-		return bank;
-	}
-
-	public void setBank(Bank bank) {
-		this.bank = bank;
-	}
+public enum StorageType {
+	H2,
+	SQLITE,
+	MYSQL;
 }

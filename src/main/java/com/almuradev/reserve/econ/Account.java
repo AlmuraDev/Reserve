@@ -74,6 +74,13 @@ public class Account implements Serializable {
 	}
 
 	/**
+	 * Wipes the balance on this account.
+	 */
+	public void wipe() {
+		balance = 0;
+	}
+
+	/**
 	 * @return
 	 */
 	public boolean isDirty() {

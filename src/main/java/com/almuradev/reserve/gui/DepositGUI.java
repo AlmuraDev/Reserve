@@ -50,7 +50,7 @@ public class DepositGUI extends GenericPopup {
 		//Check if playerBank is null here and handle appropriately. May want to check this BEFORE you get to actually
 		//constructing the GUI (ie in the right click of a NPC).
 
-		this.playerBank = plugin.getReserve().getBank(sPlayer.getName(), sPlayer.getWorld());
+		this.playerBank = plugin.getReserve().getBank(sPlayer.getName(), sPlayer.getWorld().getName());
 
 		GenericTexture border = new GenericTexture("http://www.almuramc.com/images/playerplus.png");
 		border.setAnchor(WidgetAnchor.CENTER_CENTER);
