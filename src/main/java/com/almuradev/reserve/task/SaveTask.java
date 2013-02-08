@@ -25,14 +25,17 @@ import java.util.Map;
 import com.almuradev.reserve.ReservePlugin;
 import com.almuradev.reserve.econ.Bank;
 import com.almuradev.reserve.storage.Reserve;
+import com.almuradev.reserve.storage.Storage;
 
 public class SaveTask implements Runnable {
 	private final ReservePlugin plugin;
 	private final Reserve reserve;
+	private final Storage storage;
 
-	public SaveTask(ReservePlugin plugin, Reserve reserve) {
+	public SaveTask(ReservePlugin plugin, Reserve reserve, Storage storage) {
 		this.plugin = plugin;
 		this.reserve = reserve;
+		this.storage = storage;
 	}
 
 	@Override

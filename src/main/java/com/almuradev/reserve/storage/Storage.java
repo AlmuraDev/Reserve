@@ -47,7 +47,7 @@ public class Storage implements Listener {
 		final File banksDir = new File(plugin.getDataFolder(), "banks");
 		if (!banksDir.exists()) {
 			try {
-				banksDir.createNewFile();
+				Files.createDirectory(banksDir.toPath());
 			} catch (IOException e) {
 				plugin.getLogger().severe("Could not create banks directory! Disabling...");
 				plugin.getServer().getPluginManager().disablePlugin(plugin);
@@ -59,14 +59,16 @@ public class Storage implements Listener {
 		if (world == null || world.isEmpty() || bank == null) {
 			throw new NullPointerException("Trying to save a null world or bank to the storage backend!");
 		}
-
-		return this;
-	}
-
-	public Storage remove(String world, Bank bank) {
-		if (world == null || world.isEmpty() || bank == null) {
-			throw new NullPointerException("Trying to remove a null bank from the storage backend!");
+		final File worldDir = new File(plugin.getDataFolder(), world);
+		if (!worldDir.exists()) {
+			try {
+				Files.createDirectory(worldDir.toPath());
+			} catch (IOException ioe) {
+				plugin.getLogger().severe("Could not save " + bank.toString() + ". Skipping...");
+				return this;
+			}
 		}
+
 		return this;
 	}
 
@@ -106,8 +108,9 @@ class BankFileVisitor extends SimpleFileVisitor<Path> {
 		//We are now visiting a file inside a directory with root as the parent. Grab that directory's name.
 		//ex. pluginname/banks/world >>> world is the 2nd index starting from 0.
 		final String world = path.getName(2).toString();
+		final String name = path.getName(3).toString();
 		final File ymlEntry = path.toFile();
-		final Bank toInject = createBank(ymlEntry);
+		final Bank toInject = createBank(name, ymlEntry);
 		if (toInject == null) {
 			plugin.getLogger().severe("Could not load: " + path.getFileName() + ". Skipping...");
 			return FileVisitResult.CONTINUE;
@@ -116,18 +119,12 @@ class BankFileVisitor extends SimpleFileVisitor<Path> {
 		return FileVisitResult.CONTINUE;
 	}
 
-	private Bank createBank(File bankYml) {
+	private Bank createBank(String name, File bankYml) {
 		final YamlConfiguration reader = YamlConfiguration.loadConfiguration(bankYml);
 		final ConfigurationSection general = reader.getConfigurationSection("general");
 		if (general == null) {
 			return null;
 		}
-		//Grab the bank's name
-		String rawName = general.getString("name");
-		if (rawName == null || rawName.isEmpty()) {
-			return null;
-		}
-		final String name = rawName.replaceAll("^\"|\"$", "");
 		//Grab the holder's name
 		final String holder = general.getString("holder");
 		if (holder == null || holder.isEmpty()) {

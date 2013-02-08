@@ -65,7 +65,7 @@ public class ReservePlugin extends JavaPlugin {
 		//Schedule tasks
 		scheduler = Bukkit.getServer().getScheduler();
 		scheduler.scheduleSyncRepeatingTask(this, new InterestTask(this, reserve), 0, 0); //TODO Config values for interest delay.
-		scheduler.scheduleSyncRepeatingTask(this, new SaveTask(this, reserve), 0, 2400); //Save every 2 mins.
+		scheduler.scheduleSyncRepeatingTask(this, new SaveTask(this, reserve, storage), 0, 2400); //Save every 2 mins.
 		scheduler.scheduleSyncRepeatingTask(this, new TaxTask(this, reserve), 0, 0); //TODO Config values for tax delay.
 		//Hook into Citizens
 		CitizensAPI.getTraitFactory().registerTrait(TraitInfo.create(ReserveNPCTrait.class));

@@ -62,9 +62,4 @@ public class ReserveTest {
 	public void testAccount() {
 
 	}
-
-	@Test
-	public void testBackend() {
-
-	}
 }
