@@ -59,16 +59,32 @@ public class Storage implements Listener {
 		if (world == null || world.isEmpty() || bank == null) {
 			throw new NullPointerException("Trying to save a null world or bank to the storage backend!");
 		}
-		final File worldDir = new File(plugin.getDataFolder(), world);
-		if (!worldDir.exists()) {
-			try {
-				Files.createDirectory(worldDir.toPath());
-			} catch (IOException ioe) {
-				plugin.getLogger().severe("Could not save " + bank.toString() + ". Skipping...");
-				return this;
-			}
+		//Find (and create if needed) world directory.
+		final Path worldDir;
+		try {
+			worldDir = Files.createDirectory(new File(plugin.getDataFolder(), world).toPath());
+		} catch (IOException ioe) {
+			plugin.getLogger().severe("Could not save " + bank.toString() + ". Skipping...");
+			return this;
 		}
-
+		//Find (and create if needed) the bank file.
+		final Path bankPath;
+		try {
+			bankPath = Files.createFile(new File(worldDir.toFile(), bank.getName() + ".yml").toPath());
+		} catch (IOException ignore) {
+			plugin.getLogger().severe("Could not save " + bank.toString() + ". Skipping...");
+			return this;
+		}
+		//Create a reader.
+		final YamlConfiguration reader;
+		try {
+			reader = YamlConfiguration.loadConfiguration(Files.newInputStream(bankPath));
+		} catch (IOException ignore) {
+			plugin.getLogger().severe("Could not open a stream to save bank " + bank.toString() + ". Skipping...");
+			return this;
+		}
+		//Start writing!
+		//TODO
 		return this;
 	}
 
