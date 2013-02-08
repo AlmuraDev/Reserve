@@ -27,7 +27,6 @@ import java.nio.file.Path;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.Set;
-import java.util.logging.Logger;
 
 import com.almuradev.reserve.ReservePlugin;
 import com.almuradev.reserve.econ.Account;
@@ -38,18 +37,14 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.event.Listener;
 
 public class Storage implements Listener {
-	private final File parentFolder;
-	private final Reserve reserve;
 	private final ReservePlugin plugin;
 
-	public Storage(ReservePlugin plugin, File parentFolder) {
-		this.parentFolder = parentFolder;
+	public Storage(ReservePlugin plugin) {
 		this.plugin = plugin;
-		reserve = plugin.getReserve();
 	}
 
 	public void onEnable() {
-		final File banksDir = new File(parentFolder, "banks");
+		final File banksDir = new File(plugin.getDataFolder(), "banks");
 		if (!banksDir.exists()) {
 			try {
 				banksDir.createNewFile();
@@ -57,9 +52,7 @@ public class Storage implements Listener {
 				plugin.getLogger().severe("Could not create banks directory! Disabling...");
 				plugin.getServer().getPluginManager().disablePlugin(plugin);
 			}
-			return;
 		}
-		build();
 	}
 
 	public Storage save(String world, Bank bank) {
@@ -77,12 +70,9 @@ public class Storage implements Listener {
 		return this;
 	}
 
-	/**
-	 * Called when the storage is initialized.
-	 */
-	private void build() {
+	protected void load() {
 		try {
-			Files.walkFileTree(new File(parentFolder, "banks").toPath(), new BankFileVisitor(plugin.getDataFolder(), plugin.getLogger(), reserve));
+			Files.walkFileTree(new File(plugin.getDataFolder(), "banks").toPath(), new BankFileVisitor(plugin));
 		} catch (IOException ignore) {
 			plugin.getLogger().severe("Encountered a major issue when attempting to traverse the bank's files. Disabling...");
 			plugin.getServer().getPluginManager().disablePlugin(plugin);
@@ -91,26 +81,22 @@ public class Storage implements Listener {
 }
 
 class BankFileVisitor extends SimpleFileVisitor<Path> {
-	private final File dataFolder;
-	private final Reserve RESERVE;
-	private final Logger LOGGER;
+	private final ReservePlugin plugin;
 
-	public BankFileVisitor(File dataFolder, Logger logger, Reserve reserve) {
-		this.dataFolder = dataFolder;
-		this.LOGGER = logger;
-		this.RESERVE = reserve;
+	public BankFileVisitor(ReservePlugin plugin) {
+		this.plugin = plugin;
 	}
 
 	@Override
 	public FileVisitResult visitFileFailed(Path path, IOException ioe) {
-		LOGGER.severe("Could not load: " + path.getFileName() + ". Skipping...");
+		plugin.getLogger().severe("Could not load: " + path.getFileName() + ". Skipping...");
 		return FileVisitResult.CONTINUE;
 	}
 
 	@Override
 	public FileVisitResult visitFile(Path path, BasicFileAttributes attr) {
 		//This means that the file about to be visited is in the banks' directory. Skip those.
-		if (path.getParent().equals(new File(dataFolder, "banks").toPath())) {
+		if (path.getParent().equals(new File(plugin.getDataFolder(), "banks").toPath())) {
 			return FileVisitResult.CONTINUE;
 		}
 		//Skip all subdirs or files that are not yaml.
@@ -123,10 +109,10 @@ class BankFileVisitor extends SimpleFileVisitor<Path> {
 		final File ymlEntry = path.toFile();
 		final Bank toInject = createBank(ymlEntry);
 		if (toInject == null) {
-			LOGGER.severe("Could not load: " + path.getFileName() + ". Skipping...");
+			plugin.getLogger().severe("Could not load: " + path.getFileName() + ". Skipping...");
 			return FileVisitResult.CONTINUE;
 		}
-		RESERVE.add(world, toInject);
+		plugin.getReserve().add(world, toInject);
 		return FileVisitResult.CONTINUE;
 	}
 

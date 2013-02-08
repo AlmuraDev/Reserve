@@ -57,7 +57,7 @@ public class ReservePlugin extends JavaPlugin {
 		config = new ReserveConfiguration(this);
 		config.onEnable();
 		//Load storage
-		storage = new Storage(this, getDataFolder());
+		storage = new Storage(this);
 		storage.onEnable();
 		//Load reserve
 		reserve = new Reserve(storage);

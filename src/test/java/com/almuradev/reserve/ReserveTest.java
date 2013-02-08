@@ -45,8 +45,8 @@ public class ReserveTest {
 
 	@Test
 	public void testReserve() {
-		final Bank a = reserve.add("Spouty", world);
-		assertEquals(a, reserve.get("Spouty", world));
+		final Bank a = reserve.add("Spouty", "My Bank", world);
+		assertEquals(a, reserve.get("Spouty",  world));
 		a.addAccount(new Account("NinjaZidane", "Checking", 10));
 		assertTrue(a.isDirty());
 		new SaveTask(plugin, reserve).run();

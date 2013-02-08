@@ -36,7 +36,7 @@ public final class Reserve {
 	}
 
 	public void onEnable() {
-		//load from the storage
+		storage.load();
 	}
 
 	public void onDisable() {
@@ -50,7 +50,7 @@ public final class Reserve {
 	 * @param world
 	 * @return
 	 */
-	public Bank add(String holder, String world) {
+	public Bank add(String holder, String name, String world) {
 		if (holder == null || holder.isEmpty() || world == null || world.isEmpty()) {
 			throw new NullPointerException("Specified world or holder is null!");
 		}
@@ -65,7 +65,7 @@ public final class Reserve {
 			ENTRY = new ArrayList<>();
 			BANKS.put(world, ENTRY);
 		}
-		final Bank toReturn = new Bank(holder);
+		final Bank toReturn = new Bank(holder, name);
 		ENTRY.add(toReturn);
 		return toReturn;
 	}
@@ -119,6 +119,10 @@ public final class Reserve {
 		return Collections.unmodifiableMap(BANKS);
 	}
 
+	/**
+	 * @param world
+	 * @param injectBank
+	 */
 	protected void add(String world, Bank injectBank) {
 		if (world == null || world.isEmpty()) {
 			throw new NullPointerException("Specified world or holder is null!");
