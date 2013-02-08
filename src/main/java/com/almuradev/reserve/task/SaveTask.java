@@ -17,10 +17,35 @@
  * You should have received a copy of the GNU General Public License. If not,
  * see <http://www.gnu.org/licenses/> for the GNU General Public License.
  */
-package com.almuradev.reserve.storage;
+package com.almuradev.reserve.task;
 
-public enum StorageType {
-	H2,
-	SQLITE,
-	MYSQL;
+import java.util.List;
+import java.util.Map;
+
+import com.almuradev.reserve.ReservePlugin;
+import com.almuradev.reserve.econ.Bank;
+import com.almuradev.reserve.storage.Reserve;
+
+public class SaveTask implements Runnable {
+	private final ReservePlugin plugin;
+	private final Reserve reserve;
+
+	public SaveTask(ReservePlugin plugin, Reserve reserve) {
+		this.plugin = plugin;
+		this.reserve = reserve;
+	}
+
+	@Override
+	public void run() {
+		final Map<String, List<Bank>> BANKS = reserve.retrieveBanks();
+		for (String worldEntry : BANKS.keySet()) {
+			for (Bank bankEntry : BANKS.get(worldEntry)) {
+				if (!bankEntry.isDirty()) {
+					continue;
+				}
+				//Save to flat file.
+				bankEntry.setDirty(false);
+			}
+		}
+	}
 }

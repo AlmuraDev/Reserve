@@ -20,148 +20,158 @@
 package com.almuradev.reserve.storage;
 
 import java.io.File;
-import java.util.Collection;
-import java.util.LinkedList;
-import java.util.List;
+import java.io.IOException;
+import java.nio.file.FileVisitResult;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.SimpleFileVisitor;
+import java.nio.file.attribute.BasicFileAttributes;
+import java.util.Set;
+import java.util.logging.Logger;
 
+import com.almuradev.reserve.ReservePlugin;
 import com.almuradev.reserve.econ.Account;
 import com.almuradev.reserve.econ.Bank;
-import com.almuradev.reserve.storage.table.ReserveTable;
-import com.alta189.simplesave.Database;
-import com.alta189.simplesave.DatabaseFactory;
-import com.alta189.simplesave.exceptions.ConnectionException;
-import com.alta189.simplesave.exceptions.TableRegistrationException;
-import com.alta189.simplesave.h2.H2Configuration;
-import com.alta189.simplesave.mysql.MySQLConfiguration;
-import com.alta189.simplesave.sqlite.SQLiteConfiguration;
 
-public class Storage {
-	private final StorageType type;
-	private final File dbLoc;
-	private Database db;
-	private String dbName, hostName, username, password;
-	private int port;
+import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.event.Listener;
 
-	public Storage(StorageType type, File dbLoc) {
-		this(type, dbLoc, "test", "localhost", "spouty", "unleashtheflow", 1337);
+public class Storage implements Listener {
+	private final File parentFolder;
+	private final Reserve reserve;
+	private final ReservePlugin plugin;
+
+	public Storage(ReservePlugin plugin, File parentFolder) {
+		this.parentFolder = parentFolder;
+		this.plugin = plugin;
+		reserve = plugin.getReserve();
 	}
 
-	public Storage(StorageType type, File dbLoc, String dbName, String hostName, String username, String password, int port) {
-		this.type = type;
-		this.dbLoc = dbLoc;
-		this.dbName = dbName;
-		this.hostName = hostName;
-		this.username = username;
-		this.password = password;
-		this.port = port;
-	}
-
-	public void onLoad() {
-		if (!dbLoc.exists()) {
-			dbLoc.mkdirs();
-		}
-		switch (type) {
-			case H2:
-				final H2Configuration h2 = new H2Configuration();
-				File h2Db = new File(dbLoc, "reserve_db");
-				h2.setDatabase(h2Db.getAbsolutePath());
-				db = DatabaseFactory.createNewDatabase(h2);
-				break;
-			case SQLITE:
-				final SQLiteConfiguration sqlite = new SQLiteConfiguration(new File(dbLoc, "reserve_db").getAbsolutePath());
-				db = DatabaseFactory.createNewDatabase(sqlite);
-				break;
-			case MYSQL:
-				final MySQLConfiguration mysql = new MySQLConfiguration();
-				mysql
-						.setDatabase(dbName)
-						.setHost(hostName)
-						.setUser(username)
-						.setPassword(password)
-						.setPort(port);
-				db = DatabaseFactory.createNewDatabase(mysql);
-				break;
-		}
-
-		try {
-			db.registerTable(ReserveTable.class);
-		} catch (TableRegistrationException e) {
-			e.printStackTrace();
-		}
-
-		try {
-			db.connect();
-		} catch (ConnectionException e) {
-			e.printStackTrace();
-		}
-	}
-
-	public void onUnLoad() {
-		try {
-			db.close();
-		} catch (ConnectionException e) {
-			e.printStackTrace();
-		}
-	}
-
-	public Bank loadBank(String holder, String world) {
-		if (holder == null || holder.isEmpty() || world == null || world.isEmpty()) {
-			throw new NullPointerException("Trying to load a holder/world that is null from the storage backend!");
-		}
-		for (Bank bank : getAll()) {
-			if (bank.getHolder().equalsIgnoreCase(holder) && bank.getWorld().equalsIgnoreCase(world)) {
-				return bank;
+	public void onEnable() {
+		final File banksDir = new File(parentFolder, "banks");
+		if (!banksDir.exists()) {
+			try {
+				banksDir.createNewFile();
+			} catch (IOException e) {
+				plugin.getLogger().severe("Could not create banks directory! Disabling...");
+				plugin.getServer().getPluginManager().disablePlugin(plugin);
 			}
+			return;
 		}
-		return null;
+		build();
 	}
 
-	public Storage saveBank(Bank bank) {
-		return saveBank(null, bank);
+	public Storage save(String world, Bank bank) {
+		if (world == null || world.isEmpty() || bank == null) {
+			throw new NullPointerException("Trying to save a null world or bank to the storage backend!");
+		}
+
+		return this;
 	}
 
-	public Storage saveBank(Bank oldBank, Bank newBank) {
-		if (newBank == null) {
-			throw new NullPointerException("Trying to save a null bank to the storage backend!");
-		}
-		List<String> toIgnore = new LinkedList<>();
-		if (oldBank != null) {
-			//Update prior accounts
-			final List<ReserveTable> entries = db.select(ReserveTable.class).where().equal("holder", oldBank.getHolder()).and().equal("world", oldBank.getWorld()).execute().find();
-			if (entries != null && !entries.isEmpty()) {
-				//Loop through all entries in the table that has the holder and the world's name
-				for (ReserveTable entry : entries) {
-					//The account existed in the old bank.
-					if (oldBank.getAccount(entry.getAccountName()) != null) {
-						//The account exists in the new bank, save it to the entry.
-						if (newBank.getAccount(entry.getAccountName()) != null) {
-							entry.setBalance(newBank.getAccount(entry.getAccountName()).getBalance());
-							toIgnore.add(entry.getAccountName());
-						//The account exists in the old bank, exists as an entry, but doesn't exist in the new bank. Need to delete this entry.
-						} else {
-							toIgnore.add(entry.getAccountName());
-							db.remove(entry);
-						}
-						continue;
-					}
-				}
-			}
-		} else {
-			for (Account account : newBank.retrieveAccounts()) {
-				if (toIgnore.contains(account.getName())) {
-					continue;
-				}
-				db.save(new ReserveTable(newBank.getHolder(), newBank.getWorld(), account.getName(), account.getBalance()));
-			}
+	public Storage remove(String world, Bank bank) {
+		if (world == null || world.isEmpty() || bank == null) {
+			throw new NullPointerException("Trying to remove a null bank from the storage backend!");
 		}
 		return this;
 	}
 
-	public Storage deleteBank(Bank bank) {
-		return this;
+	/**
+	 * Called when the storage is initialized.
+	 */
+	private void build() {
+		try {
+			Files.walkFileTree(new File(parentFolder, "banks").toPath(), new BankFileVisitor(plugin.getDataFolder(), plugin.getLogger(), reserve));
+		} catch (IOException ignore) {
+			plugin.getLogger().severe("Encountered a major issue when attempting to traverse the bank's files. Disabling...");
+			plugin.getServer().getPluginManager().disablePlugin(plugin);
+		}
+	}
+}
+
+class BankFileVisitor extends SimpleFileVisitor<Path> {
+	private final File dataFolder;
+	private final Reserve RESERVE;
+	private final Logger LOGGER;
+
+	public BankFileVisitor(File dataFolder, Logger logger, Reserve reserve) {
+		this.dataFolder = dataFolder;
+		this.LOGGER = logger;
+		this.RESERVE = reserve;
 	}
 
-	public Collection<Bank> getAll() {
-		return null;
+	@Override
+	public FileVisitResult visitFileFailed(Path path, IOException ioe) {
+		LOGGER.severe("Could not load: " + path.getFileName() + ". Skipping...");
+		return FileVisitResult.CONTINUE;
+	}
+
+	@Override
+	public FileVisitResult visitFile(Path path, BasicFileAttributes attr) {
+		//This means that the file about to be visited is in the banks' directory. Skip those.
+		if (path.getParent().equals(new File(dataFolder, "banks").toPath())) {
+			return FileVisitResult.CONTINUE;
+		}
+		//Skip all subdirs or files that are not yaml.
+		if (attr.isDirectory() || !path.endsWith(".yml")) {
+			return FileVisitResult.CONTINUE;
+		}
+		//We are now visiting a file inside a directory with root as the parent. Grab that directory's name.
+		//ex. pluginname/banks/world >>> world is the 2nd index starting from 0.
+		final String world = path.getName(2).toString();
+		final File ymlEntry = path.toFile();
+		final Bank toInject = createBank(ymlEntry);
+		if (toInject == null) {
+			LOGGER.severe("Could not load: " + path.getFileName() + ". Skipping...");
+			return FileVisitResult.CONTINUE;
+		}
+		RESERVE.add(world, toInject);
+		return FileVisitResult.CONTINUE;
+	}
+
+	private Bank createBank(File bankYml) {
+		final YamlConfiguration reader = YamlConfiguration.loadConfiguration(bankYml);
+		final ConfigurationSection general = reader.getConfigurationSection("general");
+		if (general == null) {
+			return null;
+		}
+		//Grab the bank's name
+		String rawName = general.getString("name");
+		if (rawName == null || rawName.isEmpty()) {
+			return null;
+		}
+		final String name = rawName.replaceAll("^\"|\"$", "");
+		//Grab the holder's name
+		final String holder = general.getString("holder");
+		if (holder == null || holder.isEmpty()) {
+			return null;
+		}
+		//Create the empty bank.
+		final Bank bankToInject = new Bank(holder, name);
+
+		final ConfigurationSection accounts = reader.getConfigurationSection("accounts");
+		if (accounts == null) {
+			return null;
+		}
+
+		//Grab the account names.
+		final Set<String> accountOwnerNames = accounts.getKeys(false);
+		//Determine if there are players with accounts.
+		for (String accountOwnerName : accountOwnerNames) {
+			final ConfigurationSection accountTypeSection = accounts.getConfigurationSection(accountOwnerName);
+			//Determine the names of accounts the player has registered.
+			final Set<String> accountTypeNames = accountTypeSection.getKeys(false);
+			for (String accountTypeName : accountTypeNames) {
+				final ConfigurationSection accountDetailSection = accountTypeSection.getConfigurationSection(accountTypeName);
+				//Grab the account name's balance.
+				final double balance = accountDetailSection.getDouble("balance", 0.0);
+				//Create the account.
+				final Account accountToInject = new Account(accountOwnerName, accountTypeName, balance);
+				//Finally add it.
+				bankToInject.addAccount(accountToInject);
+			}
+		}
+		return bankToInject;
 	}
 }

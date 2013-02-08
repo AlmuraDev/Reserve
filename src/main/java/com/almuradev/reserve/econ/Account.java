@@ -20,33 +20,34 @@
 package com.almuradev.reserve.econ;
 
 public class Account {
+	private String holder;
 	private String name;
 	private double balance;
 	private boolean dirty = false;
 
-	public Account(String name, double balance) {
+	public Account(String holder, String name, double balance) {
+		this.holder = holder;
 		this.name = name;
 		this.balance = balance;
 		setDirty(true);
 	}
 
-	public Account(String name) {
-		this(name, 0);
+	public Account(String holder, String name) {
+		this(holder, name, 0);
 	}
 
 	/**
-	 * @param name
+	 * @return
 	 */
-	public void setName(String name) {
-		this.name = name;
-		setDirty(true);
+	public String getHolder() {
+		return holder;
 	}
 
 	/**
-	 * @param balance
+	 * @param holder
 	 */
-	public void setBalance(double balance) {
-		this.balance = balance;
+	public void setHolder(String holder) {
+		this.holder = holder;
 		setDirty(true);
 	}
 
@@ -58,10 +59,26 @@ public class Account {
 	}
 
 	/**
+	 * @param name
+	 */
+	public void setName(String name) {
+		this.name = name;
+		setDirty(true);
+	}
+
+	/**
 	 * @return
 	 */
 	public double getBalance() {
 		return balance;
+	}
+
+	/**
+	 * @param balance
+	 */
+	public void setBalance(double balance) {
+		this.balance = balance;
+		setDirty(true);
 	}
 
 	/**
@@ -75,7 +92,7 @@ public class Account {
 	 * Wipes the balance on this account.
 	 */
 	public void wipe() {
-		balance = 0;
+		setBalance(0);
 	}
 
 	/**
@@ -103,7 +120,7 @@ public class Account {
 		}
 
 		final Account account = (Account) other;
-		if (!account.getName().equals(name) || account.getBalance() != balance) {
+		if (!account.getHolder().equalsIgnoreCase(holder) || !account.getName().equals(name) || account.getBalance() != balance) {
 			return false;
 		}
 
@@ -112,6 +129,6 @@ public class Account {
 
 	@Override
 	public String toString() {
-		return "Account{name= " + name + ", balance= " + balance + ", dirty= " + dirty + "} ";
+		return "Account{holder= " + holder + ", name= " + name + ", balance= " + balance + ", dirty= " + dirty + "} ";
 	}
 }

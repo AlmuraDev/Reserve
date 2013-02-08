@@ -24,7 +24,6 @@
 package com.almuradev.reserve.gui;
 
 import com.almuradev.reserve.ReservePlugin;
-import com.almuradev.reserve.econ.Bank;
 
 import org.getspout.spoutapi.gui.CheckBox;
 import org.getspout.spoutapi.gui.Color;
@@ -41,16 +40,11 @@ import org.getspout.spoutapi.player.SpoutPlayer;
 public class BankConfigGUI extends GenericPopup {
 	private final ReservePlugin plugin;
 	private final SpoutPlayer sPlayer;
-	private final Bank playerBank;
 	Color bottom = new Color(1.0F, 1.0F, 1.0F, 0.50F);
 
 	public BankConfigGUI(ReservePlugin plugin, SpoutPlayer sPlayer) {
 		this.plugin = plugin;
 		this.sPlayer = sPlayer;
-		//Check if playerBank is null here and handle appropriately. May want to check this BEFORE you get to actually
-		//constructing the GUI (ie in the right click of a NPC).
-
-		this.playerBank = plugin.getReserve().getBank(sPlayer.getName(), sPlayer.getWorld().getName());
 
 		GenericTexture border = new GenericTexture("http://www.almuramc.com/images/playerplus.png");
 		border.setAnchor(WidgetAnchor.CENTER_CENTER);

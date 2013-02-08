@@ -19,95 +19,121 @@
  */
 package com.almuradev.reserve.storage;
 
+import java.util.ArrayList;
 import java.util.Collections;
-import java.util.LinkedList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.almuradev.reserve.econ.Bank;
 
-public class Reserve implements Runnable {
-	private static final LinkedList<Bank> BANKS = new LinkedList<>();
-	private static final LinkedList<Bank> REMOVED = new LinkedList<>();
+public final class Reserve {
+	private static final HashMap<String, List<Bank>> BANKS = new HashMap<>();
+	private final Storage storage;
 
-	/**
-	 * Adds a new bank to the reserve.
-	 * @param holder The name of the holder of the bank.
-	 * @param world The name of the world where the bank is located at.
-	 * @return The bank econ that was added.
-	 */
-	public Bank addBank(String holder, String world) {
-		if (world == null || holder == null || holder.isEmpty()) {
-			throw new NullPointerException("Specified world or holder is null!");
-		}
-		Bank bank = null;
-		for (Bank temp : BANKS) {
-			if (temp.getWorld().equals(world) && temp.getHolder().equals(holder)) {
-				return temp;
-			}
-		}
-		if (bank == null) {
-			bank = new Bank(holder, world);
-			BANKS.add(bank);
-		}
-		bank.setDirty(true);
-		return bank;
+	public Reserve(Storage storage) {
+		this.storage = storage;
+	}
+
+	public void onEnable() {
+		//load from the storage
+	}
+
+	public void onDisable() {
+		//save to storage
 	}
 
 	/**
-	 * Gets the bank assigned to this world and holder.
-	 * @param holder The name of the holder of the bank.
-	 * @param world The name of the world where the bank is located at.
-	 * @return The Bank of the holder, for manipulation.
+	 * Adds a new bank to the reserve under the holder and world's name. If it exists,
+	 * this function will return the existing one.
+	 * @param holder
+	 * @param world
+	 * @return
 	 */
-	public Bank getBank(String holder, String world) {
-		if (world == null || world.isEmpty() || holder == null || holder.isEmpty()) {
+	public Bank add(String holder, String world) {
+		if (holder == null || holder.isEmpty() || world == null || world.isEmpty()) {
 			throw new NullPointerException("Specified world or holder is null!");
 		}
-		for (Bank bank : BANKS) {
-			if (bank.getWorld().equals(world) && bank.getHolder().equals(holder)) {
-				return bank;
+		List<Bank> ENTRY = BANKS.get(world);
+		if (ENTRY != null) {
+			for (Bank bank : ENTRY) {
+				if (bank.getHolder().equalsIgnoreCase(holder)) {
+					return bank;
+				}
+			}
+		} else {
+			ENTRY = new ArrayList<>();
+			BANKS.put(world, ENTRY);
+		}
+		final Bank toReturn = new Bank(holder);
+		ENTRY.add(toReturn);
+		return toReturn;
+	}
+
+	/**
+	 * Fetches a bank from the reserve with the
+	 * @param holder
+	 * @param world
+	 * @return
+	 */
+	public Bank get(String holder, String world) {
+		if (holder == null || holder.isEmpty() || world == null || world.isEmpty()) {
+			throw new NullPointerException("Specified holder or world is null!");
+		}
+		for (String worldEntry : BANKS.keySet()) {
+			for (Bank bankEntry : BANKS.get(worldEntry)) {
+				if (bankEntry.getHolder().equalsIgnoreCase(holder)) {
+					return bankEntry;
+				}
 			}
 		}
 		return null;
 	}
 
 	/**
-	 * Removes a bank from the reserve specified by both World and holder.
-	 * @param holder The name of the holder of the bank.
-	 * @param world The name of the world where the bank is located at.
-	 * @return The bank removed.
+	 * @param holder
+	 * @param world
+	 * @return
 	 */
-	public Bank removeBank(String holder, String world) {
-		final Bank bank = getBank(holder, world);
-		BANKS.remove(bank);
-		REMOVED.add(bank);
-		return bank;
+	public Bank remove(String holder, String world) {
+		if (holder == null || holder.isEmpty() || world == null || world.isEmpty()) {
+			throw new NullPointerException("Specified holder or world is null!");
+		}
+		final List<Bank> ENTRY = BANKS.get(world);
+		if (ENTRY != null) {
+			for (Bank bank : ENTRY) {
+				if (bank.getHolder().equalsIgnoreCase(holder)) {
+					ENTRY.remove(bank);
+					return bank;
+				}
+			}
+		}
+		return null;
 	}
 
 	/**
 	 * Retrieves all banks in the reserve.
 	 * @return All banks in the reserve.
 	 */
-	public List<Bank> retrieveBanks() {
-		return Collections.unmodifiableList(BANKS);
+	public Map<String, List<Bank>> retrieveBanks() {
+		return Collections.unmodifiableMap(BANKS);
 	}
 
-	@Override
-	public void run() {
-		final List<Bank> banks = retrieveBanks();
-		for (Bank bank : banks) {
-			if (!bank.isDirty()) {
-				continue;
-			}
-			//Bank is dirty and was removed last tick
-			if (REMOVED.contains(bank)) {
-				//Remove from SQL
-			} else {
-				//Update SQL
-			}
-
-			bank.setDirty(false);
+	protected void add(String world, Bank injectBank) {
+		if (world == null || world.isEmpty()) {
+			throw new NullPointerException("Specified world or holder is null!");
 		}
-		REMOVED.clear();
+		List<Bank> ENTRY = BANKS.get(world);
+		if (ENTRY != null) {
+			for (Bank bank : ENTRY) {
+				if (bank.equals(injectBank)) {
+					return;
+				}
+			}
+		} else {
+			ENTRY = new ArrayList<>();
+			BANKS.put(world, ENTRY);
+		}
+		ENTRY.add(injectBank);
 	}
 }

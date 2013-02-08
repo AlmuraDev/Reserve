@@ -19,53 +19,32 @@
  */
 package com.almuradev.reserve.econ;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
-import org.bukkit.World;
 
 /**
  * A wrapper class that keeps track of accounts
  */
 public class Bank {
 	private String holder;
-	private String world;
+	private String name;
 	private List<Account> accounts;
 	private boolean dirty = false;
 
-	public Bank(String holder, String world, Account account) {
+	public Bank(String holder, String name) {
 		this.holder = holder;
-		this.world = world;
-		accounts = new ArrayList<>();
-		if (account != null) {
-			addAccount(account);
-		} else {
-			setDirty(true);
-		}
-	}
-
-	public Bank(String holder, String world) {
-		this(holder, world, null);
-	}
-
-	public void setHolder(String holder) {
-		this.holder = holder;
-		setDirty(true);
-	}
-
-	public void setWorld(String world) {
-		this.world = world;
-		setDirty(true);
+		this.name = name;
+		this.accounts = new ArrayList<>();
+		dirty = true;
 	}
 
 	/**
-	 * Returns the world in-which this bank is in.
-	 * @return The current world.
+	 * @param holder
 	 */
-	public String getWorld() {
-		return world;
+	public void setHolder(String holder) {
+		this.holder = holder;
+		setDirty(true);
 	}
 
 	/**
@@ -76,6 +55,21 @@ public class Bank {
 	 */
 	public String getHolder() {
 		return holder;
+	}
+
+	/**
+	 * @return
+	 */
+	public String getName() {
+		return name;
+	}
+
+	/**
+	 * @param name
+	 */
+	public void setName(String name) {
+		this.name = name;
+		setDirty(true);
 	}
 
 	/**
@@ -103,7 +97,6 @@ public class Bank {
 	}
 
 	/**
-	 *
 	 * @param name
 	 * @return
 	 */
@@ -113,6 +106,7 @@ public class Bank {
 			return null;
 		}
 		accounts.remove(account);
+		setDirty(true);
 		return account;
 	}
 
@@ -124,7 +118,13 @@ public class Bank {
 	}
 
 	/**
-	 *
+	 * @return
+	 */
+	public boolean hasAccounts() {
+		return accounts.size() > 0;
+	}
+
+	/**
 	 * @param erase
 	 */
 	public void wipe(boolean erase) {
@@ -187,7 +187,7 @@ public class Bank {
 		}
 
 		final Bank bank = (Bank) other;
-		if (!bank.getHolder().equals(holder) || !bank.getWorld().equals(world) || !bank.retrieveAccounts().equals(accounts)) {
+		if (!bank.getHolder().equals(holder) || !bank.getName().equalsIgnoreCase(name) || !bank.retrieveAccounts().equals(accounts)) {
 			return false;
 		}
 
@@ -196,6 +196,6 @@ public class Bank {
 
 	@Override
 	public String toString() {
-		return "Bank{holder= " + holder + ", world= " + world + ", accounts= {" + accounts.toString() + "}, dirty= " + dirty + "} ";
+		return "Bank{holder= " + holder + ", name= " + name + ", accounts= {" + accounts.toString() + "}, dirty= " + dirty + "} ";
 	}
 }

@@ -22,9 +22,6 @@ package com.almuradev.reserve.config;
 import java.io.File;
 
 import com.almuradev.reserve.ReservePlugin;
-import com.almuradev.reserve.storage.StorageType;
-
-import org.yaml.snakeyaml.error.YAMLException;
 
 import org.bukkit.configuration.file.FileConfiguration;
 
@@ -36,45 +33,11 @@ public class ReserveConfiguration {
 		this.plugin = plugin;
 	}
 
-	public void onLoad() {
+	public void onEnable() {
 		//Read in default config.yml
 		if (!new File(plugin.getDataFolder(), "config.yml").exists()) {
 			plugin.saveDefaultConfig();
 		}
 		config = plugin.getConfig();
-	}
-
-	public StorageType getSqlType() {
-		final String mode = config.getString("sql.mode").toLowerCase();
-		switch (mode) {
-			case "sql":
-				return StorageType.MYSQL;
-			case "sqlite":
-				return StorageType.SQLITE;
-			case "h2":
-				return StorageType.H2;
-			default:
-				throw new YAMLException("Specified mode for SQL configuration: " + mode + " is invalid.");
-		}
-	}
-
-	public final String getDatabaseName() {
-		return config.getString("sql.name", "minecraft");
-	}
-
-	public final String getUsername() {
-		return config.getString("sql.username", "minecraft");
-	}
-
-	public final String getPassword() {
-		return config.getString("sql.password", "minecraft");
-	}
-
-	public final String getHost() {
-		return config.getString("sql.host", "localhost");
-	}
-
-	public final int getPort() {
-		return config.getInt("sql.port", 25564);
 	}
 }

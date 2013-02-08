@@ -20,6 +20,7 @@
 package com.almuradev.reserve.task;
 
 import java.util.List;
+import java.util.Map;
 
 import com.almuradev.reserve.ReservePlugin;
 import com.almuradev.reserve.econ.Bank;
@@ -36,7 +37,7 @@ public class InterestTask implements Runnable {
 
 	@Override
 	public void run() {
-		final List<Bank> BANKS = reserve.retrieveBanks();
+		final Map<String, List<Bank>> BANKS = reserve.retrieveBanks();
 		//Apply interest here!
 	}
 }

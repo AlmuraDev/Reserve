@@ -24,14 +24,15 @@ import com.almuradev.reserve.gui.MainGUI;
 import com.almuradev.reserve.npc.ReserveNPCTrait;
 import com.almuradev.reserve.storage.Reserve;
 import com.almuradev.reserve.storage.Storage;
-import com.almuradev.reserve.storage.StorageType;
 import com.almuradev.reserve.task.InterestTask;
+import com.almuradev.reserve.task.SaveTask;
 import com.almuradev.reserve.task.TaxTask;
 
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.trait.TraitInfo;
 import org.getspout.spoutapi.player.SpoutPlayer;
 
+import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -39,40 +40,34 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitScheduler;
 
 public class ReservePlugin extends JavaPlugin {
-	private static final Reserve reserve;
+	private static Reserve reserve;
 	private static Storage storage;
 	private static ReserveConfiguration config;
 	private BukkitScheduler scheduler;
 
-	static {
-		reserve = new Reserve();
-	}
-
 	@Override
 	public void onDisable() {
+		reserve.onDisable();
 		scheduler.cancelTasks(this);
 	}
 
 	@Override
 	public void onEnable() {
+		//Load configuration
 		config = new ReserveConfiguration(this);
-		config.onLoad();
-		switch (config.getSqlType()) {
-			case H2:
-				storage = new Storage(StorageType.H2, getDataFolder());
-				break;
-			case SQLITE:
-				storage = new Storage(StorageType.SQLITE, getDataFolder());
-				break;
-			case MYSQL:
-				storage = new Storage(StorageType.MYSQL, getDataFolder(), config.getDatabaseName(), config.getHost(), config.getUsername(), config.getPassword(), config.getPort());
-				break;
-		}
-		storage.onLoad();
-		scheduler = getServer().getScheduler();
-		scheduler.scheduleSyncRepeatingTask(this, new TaxTask(this, reserve), 0, 0); //TODO Config values for tax delay.
+		config.onEnable();
+		//Load storage
+		storage = new Storage(this, getDataFolder());
+		storage.onEnable();
+		//Load reserve
+		reserve = new Reserve(storage);
+		reserve.onEnable();
+		//Schedule tasks
+		scheduler = Bukkit.getServer().getScheduler();
 		scheduler.scheduleSyncRepeatingTask(this, new InterestTask(this, reserve), 0, 0); //TODO Config values for interest delay.
-		scheduler.scheduleSyncRepeatingTask(this, reserve, 0, 2400); //Save every 2 mins.
+		scheduler.scheduleSyncRepeatingTask(this, new SaveTask(this, reserve), 0, 2400); //Save every 2 mins.
+		scheduler.scheduleSyncRepeatingTask(this, new TaxTask(this, reserve), 0, 0); //TODO Config values for tax delay.
+		//Hook into Citizens
 		CitizensAPI.getTraitFactory().registerTrait(TraitInfo.create(ReserveNPCTrait.class));
 	}
 
@@ -84,7 +79,7 @@ public class ReservePlugin extends JavaPlugin {
 		return storage;
 	}
 
-	public static ReserveConfiguration getWrapper() {
+	public static ReserveConfiguration getConfiguration() {
 		return config;
 	}
 

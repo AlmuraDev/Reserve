@@ -27,7 +27,6 @@ import java.text.NumberFormat;
 import java.util.Locale;
 
 import com.almuradev.reserve.ReservePlugin;
-import com.almuradev.reserve.econ.Bank;
 
 import org.getspout.spoutapi.gui.Color;
 import org.getspout.spoutapi.gui.GenericButton;
@@ -43,7 +42,6 @@ import org.getspout.spoutapi.player.SpoutPlayer;
 public class MainGUI extends GenericPopup {
 	private final ReservePlugin plugin;
 	private final SpoutPlayer sPlayer;
-	private final Bank playerBank;
 	private static NumberFormat numForm;
 	private static Locale caLoc = new Locale("en", "US");
 	Color bottom = new Color(1.0F, 1.0F, 1.0F, 0.50F);
@@ -51,7 +49,7 @@ public class MainGUI extends GenericPopup {
 	public MainGUI(ReservePlugin plugin, SpoutPlayer sPlayer) {
 		this.plugin = plugin;
 		this.sPlayer = sPlayer;
-		this.playerBank = plugin.getReserve().getBank(sPlayer.getName(), sPlayer.getWorld().getName());
+
 		GenericTexture border = new GenericTexture("http://www.almuramc.com/images/playerplus.png");
 		border.setAnchor(WidgetAnchor.CENTER_CENTER);
 		border.setPriority(RenderPriority.High);
@@ -108,7 +106,7 @@ public class MainGUI extends GenericPopup {
 		config.setHeight(16).setWidth(40).shiftXPos(-60).shiftYPos(68);
 		close.setHeight(16).setWidth(40).shiftXPos(20).shiftYPos(68);
 
-		createAccount.setEnabled(sPlayer.hasPermission("reserve.createaccount") && playerBank == null);
+		//createAccount.setEnabled(sPlayer.hasPermission("reserve.createaccount") && playerBank == null);
 		//makeDeposit.setEnabled(sPlayer.hasPermission("reserve.deposit") && playerBank != null);
 		//makeWithdraw.setEnabled(sPlayer.hasPermission("reserve.withdraw") && playerBank != null);
 		//closeAccount.setEnabled(sPlayer.hasPermission("reserve.closeaccount") && playerBank != null) ;
