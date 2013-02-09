@@ -41,13 +41,14 @@ public class SaveTask implements Runnable {
 	@Override
 	public void run() {
 		final Map<String, List<Bank>> BANKS = reserve.retrieveBanks();
-		for (String worldEntry : BANKS.keySet()) {
-			for (Bank bankEntry : BANKS.get(worldEntry)) {
-				if (!bankEntry.isDirty()) {
+		for (String world : BANKS.keySet()) {
+			for (Bank bank : BANKS.get(world)) {
+				if (!bank.isDirty()) {
 					continue;
 				}
+				storage.save(world, bank);
 				//Save to flat file.
-				bankEntry.setDirty(false);
+				bank.setDirty(false);
 			}
 		}
 	}
