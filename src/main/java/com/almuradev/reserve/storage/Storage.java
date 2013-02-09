@@ -21,6 +21,7 @@ package com.almuradev.reserve.storage;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -44,14 +45,11 @@ public class Storage implements Listener {
 	}
 
 	public void onEnable() {
-		final File banksDir = new File(plugin.getDataFolder(), "banks");
-		if (!banksDir.exists()) {
-			try {
-				Files.createDirectory(banksDir.toPath());
-			} catch (IOException e) {
-				plugin.getLogger().severe("Could not create banks directory! Disabling...");
-				plugin.getServer().getPluginManager().disablePlugin(plugin);
-			}
+		try {
+			Files.createDirectory(new File(plugin.getDataFolder(), "banks").toPath());
+		} catch (IOException e) {
+			plugin.getLogger().severe("Could not create banks directory! Disabling...");
+			plugin.getServer().getPluginManager().disablePlugin(plugin);
 		}
 	}
 
@@ -62,29 +60,48 @@ public class Storage implements Listener {
 		//Find (and create if needed) world directory.
 		final Path worldDir;
 		try {
-			worldDir = Files.createDirectory(new File(plugin.getDataFolder(), world).toPath());
+			worldDir = Files.createDirectory(new File(plugin.getDataFolder(), "banks" + File.pathSeparator + world).toPath());
 		} catch (IOException ioe) {
 			plugin.getLogger().severe("Could not save " + bank.toString() + ". Skipping...");
 			return this;
 		}
 		//Find (and create if needed) the bank file.
-		final Path bankPath;
+		Path bankPath;
 		try {
 			bankPath = Files.createFile(new File(worldDir.toFile(), bank.getName() + ".yml").toPath());
-		} catch (IOException ignore) {
+		} catch (FileAlreadyExistsException fafe) {
+			final File tmp = new File(worldDir.toFile(), bank.getName() + ".yml");
+			tmp.delete();
+			try {
+				tmp.createNewFile();
+			} catch (IOException ioe) {
+				plugin.getLogger().severe("Could not save " + bank.toString() + ". Skipping...");
+				ioe.printStackTrace();
+				return this;
+			}
+			bankPath = tmp.toPath();
+		} catch (IOException ioe) {
 			plugin.getLogger().severe("Could not save " + bank.toString() + ". Skipping...");
+			ioe.printStackTrace();
 			return this;
 		}
 		//Create a reader.
-		final YamlConfiguration reader;
-		try {
-			reader = YamlConfiguration.loadConfiguration(Files.newInputStream(bankPath));
-		} catch (IOException ignore) {
-			plugin.getLogger().severe("Could not open a stream to save bank " + bank.toString() + ". Skipping...");
-			return this;
-		}
+		final YamlConfiguration reader = new YamlConfiguration();
 		//Start writing!
-		//TODO
+		final ConfigurationSection general = reader.createSection("general");
+		general.set("holder", bank.getHolder());
+		final ConfigurationSection accounts = reader.createSection("accounts");
+		for (Account account : bank.retrieveAccounts()) {
+			final ConfigurationSection accountHolderSection = accounts.createSection(account.getHolder());
+			final ConfigurationSection accountDetailSection = accountHolderSection.createSection(account.getName());
+			accountDetailSection.set("balance", account.getBalance());
+		}
+		try {
+			reader.save(bankPath.toFile());
+		} catch (IOException ioe) {
+			plugin.getLogger().severe("Could not save bank " + bank.toString());
+			ioe.printStackTrace();
+		}
 		return this;
 	}
 

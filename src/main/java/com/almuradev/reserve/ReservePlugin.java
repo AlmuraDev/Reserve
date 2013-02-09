@@ -47,8 +47,8 @@ public class ReservePlugin extends JavaPlugin {
 
 	@Override
 	public void onDisable() {
-		reserve.onDisable();
 		scheduler.cancelTasks(this);
+		reserve.onDisable();
 	}
 
 	@Override

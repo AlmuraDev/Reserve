@@ -40,7 +40,11 @@ public final class Reserve {
 	}
 
 	public void onDisable() {
-		//save to storage
+		for (String world : BANKS.keySet()) {
+			for (Bank bank : BANKS.get(world)) {
+				storage.save(world, bank);
+			}
+		}
 	}
 
 	/**
