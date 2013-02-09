@@ -1,8 +1,10 @@
-sql:
-    mode: h2
-    # mysql only
-    name: minecraft
-    username: minecraft
-    password: minecraft
-    host: localhost
-    port: 25564
+# This dictates the time Reserve should wait to apply a modifier.
+# By default...
+#   - Reserve will apply a tax/interest once every 72 Minecraft days (which is once a human day).
+#   - There is 20 ticks per second. 86,400 seconds in a day, ~1,728,000 ticks performed in one human day.
+schedule:
+    interest: true
+    tax: true
+interval:
+    interest: 1728000
+    tax: 1728000

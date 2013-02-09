@@ -40,4 +40,20 @@ public class ReserveConfiguration {
 		}
 		config = plugin.getConfig();
 	}
+
+	public boolean shouldInterest() {
+		return config.getBoolean("schedule.interest", true);
+	}
+
+	public long getInterestInterval() {
+		return config.getLong("interval.interest", 1728000);
+	}
+
+	public boolean shouldTax() {
+		return config.getBoolean("schedule.tax", true);
+	}
+
+	public long getTaxInterval() {
+		return config.getLong("interval.tax", 1728000);
+	}
 }

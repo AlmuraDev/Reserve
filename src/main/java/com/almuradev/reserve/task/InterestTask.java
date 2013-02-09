@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.almuradev.reserve.ReservePlugin;
+import com.almuradev.reserve.econ.Account;
 import com.almuradev.reserve.econ.Bank;
 import com.almuradev.reserve.storage.Reserve;
 
@@ -38,6 +39,14 @@ public class InterestTask implements Runnable {
 	@Override
 	public void run() {
 		final Map<String, List<Bank>> BANKS = reserve.retrieveBanks();
-		//Apply interest here!
+		for (String world : BANKS.keySet()) {
+			for (Bank bank : BANKS.get(world)) {
+				for (Account account : bank.retrieveAccounts()) {
+					//I = P r t
+					final double interest = account.getBalance() * account.getInterestRate() * (1/365);
+					account.add(interest);
+				}
+			}
+		}
 	}
 }
