@@ -23,6 +23,8 @@ public class Account {
 	private String holder;
 	private String name;
 	private double balance;
+	private double interestRate = 0;
+	private double taxRate = 0;
 	private boolean dirty = false;
 
 	public Account(String holder, String name, double balance) {
@@ -96,6 +98,37 @@ public class Account {
 	}
 
 	/**
+	 *
+	 * @return
+	 */
+	public double getInterestRate() {
+		return interestRate;
+	}
+
+	/**
+	 *
+	 * @param interestRate
+	 */
+	public void setInterestRate(double interestRate) {
+		this.interestRate = interestRate;
+	}
+
+	/**
+	 *
+	 * @return
+	 */
+	public double getTaxRate() {
+		return taxRate;
+	}
+
+	/**
+	 *
+	 * @param taxRate
+	 */
+	public void setTaxRate(double taxRate) {
+		this.taxRate = taxRate;
+	}
+	/**
 	 * @return
 	 */
 	public boolean isDirty() {
@@ -111,24 +144,16 @@ public class Account {
 
 	@Override
 	public boolean equals(Object other) {
-		if (other == null) {
-			return false;
-		}
-
-		if (!(other instanceof Account)) {
+		if (other == null || !(other instanceof Account)) {
 			return false;
 		}
 
 		final Account account = (Account) other;
-		if (!account.getHolder().equalsIgnoreCase(holder) || !account.getName().equals(name) || account.getBalance() != balance) {
-			return false;
-		}
-
-		return true;
+		return account.getHolder().equalsIgnoreCase(holder) && account.getName().equals(name) && account.getInterestRate() == interestRate && account.getTaxRate() == taxRate && account.getBalance() == balance;
 	}
 
 	@Override
 	public String toString() {
-		return "Account{holder= " + holder + ", name= " + name + ", balance= " + balance + ", dirty= " + dirty + "} ";
+		return "Account{holder= " + holder + ", name= " + name + ", interest= " + interestRate + ", tax= " + taxRate + ", balance= " + balance + ", dirty= " + dirty + "} ";
 	}
 }

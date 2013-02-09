@@ -148,6 +148,30 @@ public class Bank {
 	}
 
 	/**
+	 *
+	 * @param taxRate
+	 * @return
+	 */
+	public Bank setGlobalTaxRate(double taxRate) {
+		for (Account account : accounts) {
+			account.setTaxRate(taxRate);
+		}
+		return this;
+	}
+
+	/**
+	 *
+	 * @param interestRate
+	 * @return
+	 */
+	public Bank setGlobalInterestRate(double interestRate) {
+		for (Account account : accounts) {
+			account.setInterestRate(interestRate);
+		}
+		return this;
+	}
+
+	/**
 	 * @return
 	 */
 	public boolean isDirty() {
@@ -178,20 +202,12 @@ public class Bank {
 
 	@Override
 	public boolean equals(Object other) {
-		if (other == null) {
-			return false;
-		}
-
-		if (!(other instanceof Bank)) {
+		if (other == null || !(other instanceof Bank)) {
 			return false;
 		}
 
 		final Bank bank = (Bank) other;
-		if (!bank.getHolder().equals(holder) || !bank.getName().equalsIgnoreCase(name) || !bank.retrieveAccounts().equals(accounts)) {
-			return false;
-		}
-
-		return true;
+		return bank.getHolder().equals(holder) && bank.getName().equalsIgnoreCase(name) && !bank.retrieveAccounts().equals(accounts);
 	}
 
 	@Override
