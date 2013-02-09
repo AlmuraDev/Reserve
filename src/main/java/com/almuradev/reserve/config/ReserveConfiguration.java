@@ -49,6 +49,10 @@ public class ReserveConfiguration {
 		return config.getLong("interval.interest", 1728000);
 	}
 
+	public long getSaveInterval() {
+		return config.getLong("interval.save", 2400);
+	}
+
 	public boolean shouldTax() {
 		return config.getBoolean("schedule.tax", true);
 	}

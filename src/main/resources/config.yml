@@ -2,9 +2,13 @@
 # By default...
 #   - Reserve will apply a tax/interest once every 72 Minecraft days (which is once a human day).
 #   - There is 20 ticks per second. 86,400 seconds in a day, ~1,728,000 ticks performed in one human day.
+#   - Be EXTREMELY CAUTIOUS about adjusting the save interval. Too low and you could potentially lock your server up. Too high
+#     and your server suffers a crash, the persistence could be very out of date. For this reason, I feel 2 mins as a default is
+#     a good medium.
 schedule:
     interest: true
     tax: true
 interval:
     interest: 1728000
+    save: 2400 
     tax: 1728000

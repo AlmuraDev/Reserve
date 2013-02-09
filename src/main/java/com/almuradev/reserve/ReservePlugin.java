@@ -67,7 +67,7 @@ public class ReservePlugin extends JavaPlugin {
 		if (config.shouldInterest()) {
 			scheduler.scheduleSyncRepeatingTask(this, new InterestTask(this, reserve), 0, config.getInterestInterval());
 		}
-		scheduler.scheduleSyncRepeatingTask(this, new SaveTask(this, reserve, storage), 0, 2400);
+		scheduler.scheduleSyncRepeatingTask(this, new SaveTask(this, reserve, storage), 0, config.getSaveInterval());
 		if (config.shouldTax()) {
 			scheduler.scheduleSyncRepeatingTask(this, new TaxTask(this, reserve), 0, config.getTaxInterval());
 		}
