@@ -21,6 +21,7 @@ package com.almuradev.reserve.storage;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -46,6 +47,8 @@ public class Storage implements Listener {
 	public void onEnable() {
 		try {
 			Files.createDirectory(new File(plugin.getDataFolder(), "banks").toPath());
+		} catch (FileAlreadyExistsException fafe) {
+			;
 		} catch (IOException e) {
 			plugin.getLogger().severe("Could not create banks directory! Disabling...");
 			plugin.getServer().getPluginManager().disablePlugin(plugin);
@@ -57,9 +60,11 @@ public class Storage implements Listener {
 			throw new NullPointerException("Trying to save a null world or bank to the storage backend!");
 		}
 		//Find (and create if needed) world directory.
-		final Path worldDir;
+		Path worldDir;
 		try {
 			worldDir = Files.createDirectory(new File(plugin.getDataFolder(), "banks" + File.pathSeparator + world).toPath());
+		} catch (FileAlreadyExistsException fafe) {
+			worldDir = new File(plugin.getDataFolder(), "banks" + File.pathSeparator + world).toPath();
 		} catch (IOException ioe) {
 			plugin.getLogger().severe("Could not save " + bank.toString() + ". Skipping...");
 			ioe.printStackTrace();

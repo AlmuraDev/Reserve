@@ -56,7 +56,7 @@ public class MainGUI extends GenericPopup {
 		border.setWidth(170).setHeight(170);
 		border.shiftXPos(-85).shiftYPos(-80);
 
-		GenericLabel gl = new GenericLabel("Almura Bank");
+		GenericLabel gl = new GenericLabel("Reserve");
 		gl.setScale(1.2F);
 		gl.setAnchor(WidgetAnchor.CENTER_CENTER);
 		gl.setHeight(15).setWidth(GenericLabel.getStringWidth(gl.getText()));

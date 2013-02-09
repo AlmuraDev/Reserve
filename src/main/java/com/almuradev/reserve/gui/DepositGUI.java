@@ -52,7 +52,7 @@ public class DepositGUI extends GenericPopup {
 		border.setWidth(255).setHeight(150);
 		border.shiftXPos(-105).shiftYPos(-80);
 
-		GenericLabel gl = new GenericLabel("Almura Bank");
+		GenericLabel gl = new GenericLabel("Reserve");
 		gl.setScale(1.2F);
 		gl.setAnchor(WidgetAnchor.CENTER_CENTER);
 		gl.setHeight(15).setWidth(GenericLabel.getStringWidth(gl.getText()));
