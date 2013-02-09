@@ -22,20 +22,15 @@ package com.almuradev.reserve.econ;
 public class Account {
 	private String name;
 	private String holder;
-	private double balance;
+	private double balance = 0;
 	private double interestRate = 0;
 	private double taxRate = 0;
 	private boolean dirty = false;
 
-	public Account(String name, String holder, double balance) {
+	public Account(String name, String holder) {
 		this.name = name;
 		this.holder = holder;
-		this.balance = balance;
 		setDirty(true);
-	}
-
-	public Account(String holder, String name) {
-		this(holder, name, 0);
 	}
 
 	/**
