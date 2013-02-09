@@ -66,20 +66,11 @@ public class Storage implements Listener {
 			return this;
 		}
 		//Find (and create if needed) the bank file.
-		Path bankPath;
+		final Path bankPath;
 		try {
-			bankPath = Files.createFile(new File(worldDir.toFile(), bank.getName() + ".yml").toPath());
-		} catch (FileAlreadyExistsException fafe) {
-			final File tmp = new File(worldDir.toFile(), bank.getName() + ".yml");
-			tmp.delete();
-			try {
-				tmp.createNewFile();
-			} catch (IOException ioe) {
-				plugin.getLogger().severe("Could not save " + bank.toString() + ". Skipping...");
-				ioe.printStackTrace();
-				return this;
-			}
-			bankPath = tmp.toPath();
+			bankPath = new File(worldDir.toFile(), bank.getName() + ".yml").toPath();
+			Files.deleteIfExists(bankPath);
+			Files.createFile(bankPath);
 		} catch (IOException ioe) {
 			plugin.getLogger().severe("Could not save " + bank.toString() + ". Skipping...");
 			ioe.printStackTrace();
