@@ -63,6 +63,7 @@ public class Storage implements Listener {
 			worldDir = Files.createDirectory(new File(plugin.getDataFolder(), "banks" + File.pathSeparator + world).toPath());
 		} catch (IOException ioe) {
 			plugin.getLogger().severe("Could not save " + bank.toString() + ". Skipping...");
+			ioe.printStackTrace();
 			return this;
 		}
 		//Find (and create if needed) the bank file.
