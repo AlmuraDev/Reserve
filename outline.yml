@@ -18,7 +18,7 @@ accounts:
         checking:
             balance: -20
         savings:
-            balance: 100			
+            balance: 100		
         mutual:
             balance: 100000
 
