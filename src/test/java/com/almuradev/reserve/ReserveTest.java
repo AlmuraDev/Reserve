@@ -19,17 +19,11 @@
  */
 package com.almuradev.reserve;
 
-import com.almuradev.reserve.econ.Account;
-import com.almuradev.reserve.econ.Bank;
 import com.almuradev.reserve.storage.Reserve;
 import com.almuradev.reserve.storage.Storage;
-import com.almuradev.reserve.task.SaveTask;
 
 import org.junit.Test;
 import org.powermock.api.mockito.PowerMockito;
-
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertTrue;
 
 public class ReserveTest {
 	private static Reserve reserve;
