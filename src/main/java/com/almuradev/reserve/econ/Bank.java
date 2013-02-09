@@ -27,16 +27,32 @@ import java.util.List;
  * A wrapper class that keeps track of accounts
  */
 public class Bank {
-	private String holder;
 	private String name;
+	private String holder;
 	private List<Account> accounts;
 	private boolean dirty = false;
 
-	public Bank(String holder, String name) {
-		this.holder = holder;
+	public Bank(String name, String holder) {
 		this.name = name;
+		this.holder = holder;
 		this.accounts = new ArrayList<>();
 		dirty = true;
+	}
+
+	/**
+	 * @return
+	 */
+	public String getName() {
+		return name;
+	}
+
+	/**
+	 * @param name
+	 */
+	public Bank setName(String name) {
+		this.name = name;
+		setDirty(true);
+		return this;
 	}
 
 	/**
@@ -54,22 +70,6 @@ public class Bank {
 	 */
 	public Bank setHolder(String holder) {
 		this.holder = holder;
-		setDirty(true);
-		return this;
-	}
-
-	/**
-	 * @return
-	 */
-	public String getName() {
-		return name;
-	}
-
-	/**
-	 * @param name
-	 */
-	public Bank setName(String name) {
-		this.name = name;
 		setDirty(true);
 		return this;
 	}
@@ -151,7 +151,6 @@ public class Bank {
 	}
 
 	/**
-	 *
 	 * @param taxRate
 	 * @return
 	 */
@@ -163,7 +162,6 @@ public class Bank {
 	}
 
 	/**
-	 *
 	 * @param interestRate
 	 * @return
 	 */
@@ -210,7 +208,7 @@ public class Bank {
 		}
 
 		final Bank bank = (Bank) other;
-		return bank.getHolder().equals(holder) && bank.getName().equalsIgnoreCase(name) && !bank.retrieveAccounts().equals(accounts);
+		return bank.getName().equalsIgnoreCase(name) && bank.getHolder().equalsIgnoreCase(holder) && !bank.retrieveAccounts().equals(accounts);
 	}
 
 	@Override

@@ -1,37 +1,37 @@
-Reserve Specifications.
+# Reserve Specifications.
 
-- Requires Java 7 due to Java NIO architecture to handle files (a lot better than Java 6 and below).
-- Banks are stored in a folder called banks. Ex. /plugins/Reserve/banks
-- Banks are stored relative to the world they were made in. Ex. /plugins/Reserve/banks/world or /plugins/Reserve/banks/world_nether
-- The actual yaml file for a Bank is stored based on the bank's name. This makes a Bank's name a valuable commodity per world. Ex. /plugins/Reserve/banks/world/mybank.yml
-- The construct of the yaml file is as follows:
+# - Requires Java 7 due to Java NIO architecture to handle files (a lot better than Java 6 and below).
+# - Banks are stored in a folder called banks. Ex. /plugins/Reserve/banks
+# - Banks are stored relative to the world they were made in. Ex. /plugins/Reserve/banks/world or /plugins/Reserve/banks/world_nether
+# - The actual yaml file for a Bank is stored based on the bank's name. This makes a Bank's name a valuable commodity per world. Ex. /plugins/Reserve/banks/world/mybank.yml
+# - The construct of the yaml file is as follows:
 
-general:
-    holder: ninjazidane
+holder: ninjazidane
 accounts:
-    ninjazidane:
-        checking:
+    checking:
+        ninjazidane:
             balance: 20
             interest-rate: 0
+            tax-rate: 0
+        gregabyte:
+            balance: -20
+            interest-rate: 0
             tax-rate: 0            
-        savings:
+    savings:
+        ninjazidane:
             balance: 28739
             interest-rate: 0
             tax-rate: 0            
-    gregabyte:
-        checking:
-            balance: -20
-            interest-rate: 0
-            tax-rate: 0
-        savings:
+        gregabyte:
             balance: 100
             interest-rate: 0
-            tax-rate: 0            
-        mutual:
+            tax-rate: 0                    
+    mutual:
+        gregabyte:
             balance: 100000
             interest-rate: 0
             tax-rate: 0            
 
-- Each time a file is saved, it is wiped and re-made. This is done purely to make future upgrades to Banks 100% compatible with older systems.
-- Files are not saved on transaction but on a schedule (every 2 mins). This may change to on transaction in the future.
-- Reserve incorporates a "dirty" system. Essentially when an update is made, the bank is marked as dirty and in-need for an update. This keeps file changes to a minimum.
+# - Each time a file is saved, it is wiped and re-made. This is done purely to make future upgrades to Banks 100% compatible with older systems.
+# - Files are not saved on transaction but on a schedule (every 2 mins). This may change to on transaction in the future.
+# - Reserve incorporates a "dirty" system. Essentially when an update is made, the bank is marked as dirty and in-need for an update. This keeps file changes to a minimum.

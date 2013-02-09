@@ -79,15 +79,17 @@ public class Storage implements Listener {
 		//Create a reader.
 		final YamlConfiguration reader = new YamlConfiguration();
 		//Start writing!
-		final ConfigurationSection general = reader.createSection("general");
-		general.set("holder", bank.getHolder());
+		reader.set("holder", bank.getHolder());
 		final ConfigurationSection accounts = reader.createSection("accounts");
 		for (Account account : bank.retrieveAccounts()) {
-			final ConfigurationSection accountHolderSection = accounts.createSection(account.getHolder());
-			final ConfigurationSection accountDetailSection = accountHolderSection.createSection(account.getName());
-			accountDetailSection.set("balance", account.getBalance());
-			accountDetailSection.set("interest-rate", account.getInterestRate());
-			accountDetailSection.set("tax-rate", account.getTaxRate());
+			ConfigurationSection accountTypeSection = accounts.getConfigurationSection(account.getName());
+			if (accountTypeSection == null) {
+				accountTypeSection = accounts.createSection(account.getName());
+			}
+			final ConfigurationSection accountHolderSection = accountTypeSection.createSection(account.getHolder());
+			accountHolderSection.set("balance", account.getBalance());
+			accountHolderSection.set("interest-rate", account.getInterestRate());
+			accountHolderSection.set("tax-rate", account.getTaxRate());
 		}
 		try {
 			reader.save(bankPath.toFile());
@@ -147,12 +149,8 @@ class BankFileVisitor extends SimpleFileVisitor<Path> {
 
 	private Bank createBank(String name, File bankYml) {
 		final YamlConfiguration reader = YamlConfiguration.loadConfiguration(bankYml);
-		final ConfigurationSection general = reader.getConfigurationSection("general");
-		if (general == null) {
-			return null;
-		}
 		//Grab the holder's name
-		final String holder = general.getString("holder");
+		final String holder = reader.getString("holder");
 		if (holder == null || holder.isEmpty()) {
 			return null;
 		}
@@ -165,22 +163,22 @@ class BankFileVisitor extends SimpleFileVisitor<Path> {
 		}
 
 		//Grab the account names.
-		final Set<String> accountOwnerNames = accounts.getKeys(false);
-		//Determine if there are players with accounts.
-		for (String accountOwnerName : accountOwnerNames) {
-			final ConfigurationSection accountTypeSection = accounts.getConfigurationSection(accountOwnerName);
-			//Determine the names of accounts the player has registered.
-			final Set<String> accountTypeNames = accountTypeSection.getKeys(false);
-			for (String accountTypeName : accountTypeNames) {
-				final ConfigurationSection accountDetailSection = accountTypeSection.getConfigurationSection(accountTypeName);
-				//Grab the account name's balance.
-				final double balance = accountDetailSection.getDouble("balance", 0.0);
-				//Grab the account name's interest rate.
-				final double interestRate = accountDetailSection.getDouble("interest-rate", 0.0);
-				//Grab the account names' tax rate.
-				final double taxRate = accountDetailSection.getDouble("tax-rate", 0.0);
+		final Set<String> accountTypeNames = accounts.getKeys(false);
+		//Determine if there are types of accounts.
+		for (String accountTypeName : accountTypeNames) {
+			final ConfigurationSection accountTypeSection = accounts.getConfigurationSection(accountTypeName);
+			//Determine the names of who holds the accounts.
+			final Set<String> accountHolderNames = accountTypeSection.getKeys(false);
+			for (String accountHolderName : accountHolderNames) {
+				final ConfigurationSection accountHolderSection = accountTypeSection.getConfigurationSection(accountTypeName);
+				//Grab the account holder's balance.
+				final double balance = accountHolderSection.getDouble("balance", 0.0);
+				//Grab the account holder's interest rate.
+				final double interestRate = accountHolderSection.getDouble("interest-rate", 0.0);
+				//Grab the account holder's tax rate.
+				final double taxRate = accountHolderSection.getDouble("tax-rate", 0.0);
 				//Create the account.
-				final Account accountToInject = new Account(accountOwnerName, accountTypeName);
+				final Account accountToInject = new Account(accountTypeName, accountHolderName);
 				accountToInject
 						.setBalance(balance)
 						.setInterestRate(interestRate)

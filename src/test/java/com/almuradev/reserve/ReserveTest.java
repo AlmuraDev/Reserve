@@ -34,23 +34,15 @@ import static junit.framework.Assert.assertTrue;
 public class ReserveTest {
 	private static Reserve reserve;
 	private static Storage storage;
-	private final ReservePlugin plugin;
-	private final String world = "world";
 
 	public ReserveTest() {
-		plugin = PowerMockito.mock(ReservePlugin.class);
 		storage = PowerMockito.mock(Storage.class);
 		reserve = new Reserve(storage);
 	}
 
 	@Test
 	public void testReserve() {
-		final Bank a = reserve.add("Spouty", "My Bank", world);
-		assertEquals(a, reserve.get("Spouty",  world));
-		a.addAccount(new Account("NinjaZidane", "Checking", 10));
-		assertTrue(a.isDirty());
-		new SaveTask(plugin, reserve).run();
-		assertTrue(!a.isDirty());
+
 	}
 
 	@Test

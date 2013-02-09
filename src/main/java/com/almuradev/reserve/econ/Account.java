@@ -20,38 +20,22 @@
 package com.almuradev.reserve.econ;
 
 public class Account {
-	private String holder;
 	private String name;
+	private String holder;
 	private double balance;
 	private double interestRate = 0;
 	private double taxRate = 0;
 	private boolean dirty = false;
 
-	public Account(String holder, String name, double balance) {
-		this.holder = holder;
+	public Account(String name, String holder, double balance) {
 		this.name = name;
+		this.holder = holder;
 		this.balance = balance;
 		setDirty(true);
 	}
 
 	public Account(String holder, String name) {
 		this(holder, name, 0);
-	}
-
-	/**
-	 * @return
-	 */
-	public String getHolder() {
-		return holder;
-	}
-
-	/**
-	 * @param holder
-	 */
-	public Account setHolder(String holder) {
-		this.holder = holder;
-		setDirty(true);
-		return this;
 	}
 
 	/**
@@ -66,6 +50,22 @@ public class Account {
 	 */
 	public Account setName(String name) {
 		this.name = name;
+		setDirty(true);
+		return this;
+	}
+
+	/**
+	 * @return
+	 */
+	public String getHolder() {
+		return holder;
+	}
+
+	/**
+	 * @param holder
+	 */
+	public Account setHolder(String holder) {
+		this.holder = holder;
 		setDirty(true);
 		return this;
 	}
@@ -101,7 +101,6 @@ public class Account {
 	}
 
 	/**
-	 *
 	 * @return
 	 */
 	public double getInterestRate() {
@@ -109,7 +108,6 @@ public class Account {
 	}
 
 	/**
-	 *
 	 * @param interestRate
 	 */
 	public Account setInterestRate(double interestRate) {
@@ -119,7 +117,6 @@ public class Account {
 	}
 
 	/**
-	 *
 	 * @return
 	 */
 	public double getTaxRate() {
@@ -127,7 +124,6 @@ public class Account {
 	}
 
 	/**
-	 *
 	 * @param taxRate
 	 */
 	public Account setTaxRate(double taxRate) {
@@ -135,6 +131,7 @@ public class Account {
 		setDirty(true);
 		return this;
 	}
+
 	/**
 	 * @return
 	 */
@@ -156,11 +153,11 @@ public class Account {
 		}
 
 		final Account account = (Account) other;
-		return account.getHolder().equalsIgnoreCase(holder) && account.getName().equals(name) && account.getInterestRate() == interestRate && account.getTaxRate() == taxRate && account.getBalance() == balance;
+		return account.getName().equalsIgnoreCase(name) && account.getHolder().equalsIgnoreCase(holder) && account.getInterestRate() == interestRate && account.getTaxRate() == taxRate && account.getBalance() == balance;
 	}
 
 	@Override
 	public String toString() {
-		return "Account{holder= " + holder + ", name= " + name + ", interest= " + interestRate + ", tax= " + taxRate + ", balance= " + balance + ", dirty= " + dirty + "} ";
+		return "Account{name= " + name + ", holder= " + holder + ", interest= " + interestRate + ", tax= " + taxRate + ", balance= " + balance + ", dirty= " + dirty + "} ";
 	}
 }
