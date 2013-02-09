@@ -86,6 +86,8 @@ public class Storage implements Listener {
 			final ConfigurationSection accountHolderSection = accounts.createSection(account.getHolder());
 			final ConfigurationSection accountDetailSection = accountHolderSection.createSection(account.getName());
 			accountDetailSection.set("balance", account.getBalance());
+			accountDetailSection.set("interest-rate", account.getInterestRate());
+			accountDetailSection.set("tax-rate", account.getTaxRate());
 		}
 		try {
 			reader.save(bankPath.toFile());
@@ -173,8 +175,16 @@ class BankFileVisitor extends SimpleFileVisitor<Path> {
 				final ConfigurationSection accountDetailSection = accountTypeSection.getConfigurationSection(accountTypeName);
 				//Grab the account name's balance.
 				final double balance = accountDetailSection.getDouble("balance", 0.0);
+				//Grab the account name's interest rate.
+				final double interestRate = accountDetailSection.getDouble("interest-rate", 0.0);
+				//Grab the account names' tax rate.
+				final double taxRate = accountDetailSection.getDouble("tax-rate", 0.0);
 				//Create the account.
-				final Account accountToInject = new Account(accountOwnerName, accountTypeName, balance);
+				final Account accountToInject = new Account(accountOwnerName, accountTypeName);
+				accountToInject
+						.setBalance(balance)
+						.setInterestRate(interestRate)
+						.setTaxRate(taxRate);
 				//Finally add it.
 				bankToInject.addAccount(accountToInject);
 			}

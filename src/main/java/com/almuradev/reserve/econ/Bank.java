@@ -40,14 +40,6 @@ public class Bank {
 	}
 
 	/**
-	 * @param holder
-	 */
-	public void setHolder(String holder) {
-		this.holder = holder;
-		setDirty(true);
-	}
-
-	/**
 	 * Returns the holder of this bank. This String is unique, no two holders can have the exact same name.
 	 * <p/>
 	 * This should solve the offline/online player dilemma that has plagued many other plugins.
@@ -55,6 +47,15 @@ public class Bank {
 	 */
 	public String getHolder() {
 		return holder;
+	}
+
+	/**
+	 * @param holder
+	 */
+	public Bank setHolder(String holder) {
+		this.holder = holder;
+		setDirty(true);
+		return this;
 	}
 
 	/**
@@ -67,9 +68,10 @@ public class Bank {
 	/**
 	 * @param name
 	 */
-	public void setName(String name) {
+	public Bank setName(String name) {
 		this.name = name;
 		setDirty(true);
+		return this;
 	}
 
 	/**
@@ -127,13 +129,14 @@ public class Bank {
 	/**
 	 * @param erase
 	 */
-	public void wipe(boolean erase) {
+	public Bank wipe(boolean erase) {
 		for (Account account : retrieveAccounts()) {
 			account.wipe();
 			if (erase) {
 				removeAccount(account.getName());
 			}
 		}
+		return this;
 	}
 
 	/**

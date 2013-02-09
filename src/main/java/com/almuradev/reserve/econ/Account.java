@@ -48,9 +48,10 @@ public class Account {
 	/**
 	 * @param holder
 	 */
-	public void setHolder(String holder) {
+	public Account setHolder(String holder) {
 		this.holder = holder;
 		setDirty(true);
+		return this;
 	}
 
 	/**
@@ -63,9 +64,10 @@ public class Account {
 	/**
 	 * @param name
 	 */
-	public void setName(String name) {
+	public Account setName(String name) {
 		this.name = name;
 		setDirty(true);
+		return this;
 	}
 
 	/**
@@ -78,23 +80,24 @@ public class Account {
 	/**
 	 * @param balance
 	 */
-	public void setBalance(double balance) {
+	public Account setBalance(double balance) {
 		this.balance = balance;
 		setDirty(true);
+		return this;
 	}
 
 	/**
 	 * @param amount
 	 */
-	public void add(double amount) {
-		setBalance(balance + amount);
+	public Account add(double amount) {
+		return setBalance(balance + amount);
 	}
 
 	/**
 	 * Wipes the balance on this account.
 	 */
-	public void wipe() {
-		setBalance(0);
+	public Account wipe() {
+		return setBalance(0);
 	}
 
 	/**
@@ -109,8 +112,10 @@ public class Account {
 	 *
 	 * @param interestRate
 	 */
-	public void setInterestRate(double interestRate) {
+	public Account setInterestRate(double interestRate) {
 		this.interestRate = interestRate;
+		setDirty(true);
+		return this;
 	}
 
 	/**
@@ -125,8 +130,10 @@ public class Account {
 	 *
 	 * @param taxRate
 	 */
-	public void setTaxRate(double taxRate) {
+	public Account setTaxRate(double taxRate) {
 		this.taxRate = taxRate;
+		setDirty(true);
+		return this;
 	}
 	/**
 	 * @return
