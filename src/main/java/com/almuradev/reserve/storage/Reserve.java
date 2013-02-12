@@ -162,5 +162,6 @@ public final class Reserve {
 			BANKS.put(world, ENTRY);
 		}
 		ENTRY.add(injectBank);
+		injectBank.setDirty(false);
 	}
 }

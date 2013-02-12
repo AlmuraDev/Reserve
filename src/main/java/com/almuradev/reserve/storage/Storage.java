@@ -135,8 +135,6 @@ class BankFileVisitor extends SimpleFileVisitor<Path> {
 			//ex. pluginname/banks/world >>> world is the 2nd index starting from 0.
 			final String world = path.getName(3).toString();
 			final String name = path.getName(4).toString().split(".yml")[0];
-			System.out.println(world);
-			System.out.println(name);
 			final File ymlEntry = path.toFile();
 			final Bank toInject = createBank(name, ymlEntry);
 			if (toInject == null) {
@@ -188,7 +186,6 @@ class BankFileVisitor extends SimpleFileVisitor<Path> {
 				bankToInject.addAccount(accountToInject);
 			}
 		}
-		System.out.println(bankToInject);
 		return bankToInject;
 	}
 }

@@ -36,7 +36,7 @@ public class Bank {
 		this.name = name;
 		this.holder = holder;
 		this.accounts = new ArrayList<>();
-		dirty = true;
+		setDirty(true);
 	}
 
 	/**
@@ -176,7 +176,7 @@ public class Bank {
 	 * @return
 	 */
 	public boolean isDirty() {
-		if (this.dirty) {
+		if (dirty) {
 			return true;
 		}
 		boolean dirty = false;
@@ -194,10 +194,8 @@ public class Bank {
 	 */
 	public void setDirty(boolean dirty) {
 		this.dirty = dirty;
-		if (dirty == false) {
-			for (Account account : accounts) {
-				account.setDirty(false);
-			}
+		for (Account account : accounts) {
+			account.setDirty(dirty);
 		}
 	}
 
