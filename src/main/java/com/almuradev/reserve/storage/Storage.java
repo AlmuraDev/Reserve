@@ -130,7 +130,7 @@ class BankFileVisitor extends SimpleFileVisitor<Path> {
 
 	@Override
 	public FileVisitResult visitFile(Path path, BasicFileAttributes attr) {
-		if (path.getFileName().toString().endsWith(".yml")) {
+		if (path.getFileName().toString().endsWith(".yml") && path.getNameCount() == 5) {
 			//We are now visiting a file inside a directory with root as the parent. Grab that directory's name.
 			//ex. pluginname/banks/world >>> world is the 2nd index starting from 0.
 			final String world = path.getName(3).toString();
