@@ -42,9 +42,6 @@ public final class Reserve {
 	public void onDisable() {
 		for (String world : BANKS.keySet()) {
 			for (Bank bank : BANKS.get(world)) {
-				if (!bank.isDirty()) {
-					continue;
-				}
 				storage.save(world, bank);
 			}
 		}
