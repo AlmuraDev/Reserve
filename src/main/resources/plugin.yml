@@ -5,7 +5,7 @@ author: ${project.organization.name}
 website: ${project.organization.url}
 
 main: ${mainClass}
-depend: [Citizens, Spout, Vault]
+depend: [Spout, Vault]
 load: POSTWORLD
 
 commands:   

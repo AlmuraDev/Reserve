@@ -42,10 +42,6 @@
 	<!-- Repository locations -->
 	<repositories>
 		<repository>
-			<id>citizens-repo</id>
-			<url>http://repo.citizensnpcs.com</url>
-		</repository>
-		<repository>
 			<id>spout-repo</id>
 			<url>http://repo.spout.org</url>
 		</repository>
@@ -57,11 +53,6 @@
 
 	<!-- Dependencies -->
 	<dependencies>
-		<dependency>
-			<groupId>net.citizensnpcs</groupId>
-			<artifactId>citizensapi</artifactId>
-			<version>2.0.7-SNAPSHOT</version>
-		</dependency>
 		<dependency>
 			<groupId>org.bukkit</groupId>
 			<artifactId>bukkit</artifactId>

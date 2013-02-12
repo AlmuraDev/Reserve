@@ -21,15 +21,11 @@ package com.almuradev.reserve;
 
 import com.almuradev.reserve.config.ReserveConfiguration;
 import com.almuradev.reserve.gui.MainGUI;
-import com.almuradev.reserve.npc.ReserveNPCTrait;
 import com.almuradev.reserve.storage.Reserve;
 import com.almuradev.reserve.storage.Storage;
 import com.almuradev.reserve.task.InterestTask;
 import com.almuradev.reserve.task.SaveTask;
 import com.almuradev.reserve.task.TaxTask;
-
-import net.citizensnpcs.api.CitizensAPI;
-import net.citizensnpcs.api.trait.TraitInfo;
 import org.getspout.spoutapi.player.SpoutPlayer;
 
 import org.bukkit.Bukkit;
@@ -71,8 +67,6 @@ public class ReservePlugin extends JavaPlugin {
 		if (config.shouldTax()) {
 			scheduler.scheduleSyncRepeatingTask(this, new TaxTask(this, reserve), 0, config.getTaxInterval());
 		}
-		//Hook into Citizens
-		CitizensAPI.getTraitFactory().registerTrait(TraitInfo.create(ReserveNPCTrait.class));
 	}
 
 	public static Reserve getReserve() {

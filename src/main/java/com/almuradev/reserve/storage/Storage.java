@@ -62,9 +62,9 @@ public class Storage implements Listener {
 		//Find (and create if needed) world directory.
 		Path worldDir;
 		try {
-			worldDir = Files.createDirectory(new File(plugin.getDataFolder(), "banks" + File.pathSeparator + world).toPath());
+			worldDir = Files.createDirectory(new File(plugin.getDataFolder(), "banks" + File.separator + world).toPath());
 		} catch (FileAlreadyExistsException fafe) {
-			worldDir = new File(plugin.getDataFolder(), "banks" + File.pathSeparator + world).toPath();
+			worldDir = new File(plugin.getDataFolder(), "banks" + File.separator + world).toPath();
 		} catch (IOException ioe) {
 			plugin.getLogger().severe("Could not save " + bank.toString() + ". Skipping...");
 			ioe.printStackTrace();
@@ -130,25 +130,21 @@ class BankFileVisitor extends SimpleFileVisitor<Path> {
 
 	@Override
 	public FileVisitResult visitFile(Path path, BasicFileAttributes attr) {
-		//This means that the file about to be visited is in the banks' directory. Skip those.
-		if (path.getParent().equals(new File(plugin.getDataFolder(), "banks").toPath())) {
-			return FileVisitResult.CONTINUE;
+		if (path.getFileName().toString().endsWith(".yml")) {
+			//We are now visiting a file inside a directory with root as the parent. Grab that directory's name.
+			//ex. pluginname/banks/world >>> world is the 2nd index starting from 0.
+			final String world = path.getName(3).toString();
+			final String name = path.getName(4).toString().split(".yml")[0];
+			System.out.println(world);
+			System.out.println(name);
+			final File ymlEntry = path.toFile();
+			final Bank toInject = createBank(name, ymlEntry);
+			if (toInject == null) {
+				plugin.getLogger().severe("Could not load: " + path.getFileName() + ". Skipping...");
+				return FileVisitResult.CONTINUE;
+			}
+			plugin.getReserve().add(world, toInject);
 		}
-		//Skip all subdirs or files that are not yaml.
-		if (attr.isDirectory() || !path.endsWith(".yml")) {
-			return FileVisitResult.CONTINUE;
-		}
-		//We are now visiting a file inside a directory with root as the parent. Grab that directory's name.
-		//ex. pluginname/banks/world >>> world is the 2nd index starting from 0.
-		final String world = path.getName(2).toString();
-		final String name = path.getName(3).toString();
-		final File ymlEntry = path.toFile();
-		final Bank toInject = createBank(name, ymlEntry);
-		if (toInject == null) {
-			plugin.getLogger().severe("Could not load: " + path.getFileName() + ". Skipping...");
-			return FileVisitResult.CONTINUE;
-		}
-		plugin.getReserve().add(world, toInject);
 		return FileVisitResult.CONTINUE;
 	}
 
@@ -160,7 +156,7 @@ class BankFileVisitor extends SimpleFileVisitor<Path> {
 			return null;
 		}
 		//Create the empty bank.
-		final Bank bankToInject = new Bank(holder, name);
+		final Bank bankToInject = new Bank(name, holder);
 
 		final ConfigurationSection accounts = reader.getConfigurationSection("accounts");
 		if (accounts == null) {
@@ -175,7 +171,7 @@ class BankFileVisitor extends SimpleFileVisitor<Path> {
 			//Determine the names of who holds the accounts.
 			final Set<String> accountHolderNames = accountTypeSection.getKeys(false);
 			for (String accountHolderName : accountHolderNames) {
-				final ConfigurationSection accountHolderSection = accountTypeSection.getConfigurationSection(accountTypeName);
+				final ConfigurationSection accountHolderSection = accountTypeSection.getConfigurationSection(accountHolderName);
 				//Grab the account holder's balance.
 				final double balance = accountHolderSection.getDouble("balance", 0.0);
 				//Grab the account holder's interest rate.
@@ -192,6 +188,7 @@ class BankFileVisitor extends SimpleFileVisitor<Path> {
 				bankToInject.addAccount(accountToInject);
 			}
 		}
+		System.out.println(bankToInject);
 		return bankToInject;
 	}
 }
