@@ -24,7 +24,7 @@ import com.almuradev.reserve.gui.MainGUI;
 import com.almuradev.reserve.storage.Reserve;
 import com.almuradev.reserve.storage.Storage;
 import com.almuradev.reserve.task.InterestTask;
-import com.almuradev.reserve.task.SaveTask;
+import com.almuradev.reserve.storage.SaveTask;
 import com.almuradev.reserve.task.TaxTask;
 import org.getspout.spoutapi.player.SpoutPlayer;
 

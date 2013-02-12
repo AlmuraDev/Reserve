@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU General Public License. If not,
  * see <http://www.gnu.org/licenses/> for the GNU General Public License.
  */
-package com.almuradev.reserve.task;
+package com.almuradev.reserve.storage;
 
 import java.util.List;
 import java.util.Map;
@@ -42,6 +42,7 @@ public class SaveTask implements Runnable {
 	public void run() {
 		final Map<String, List<Bank>> BANKS = reserve.retrieveBanks();
 		plugin.getLogger().info("Saving all banks to file. Please wait...");
+		//Step 1, save all to files
 		for (String world : BANKS.keySet()) {
 			for (Bank bank : BANKS.get(world)) {
 				System.out.println(bank.toString());
@@ -53,6 +54,8 @@ public class SaveTask implements Runnable {
 				bank.setDirty(false);
 			}
 		}
+		//Step 2, cleanup
+		storage.cleanup();
 		plugin.getLogger().info("Saving complete.");
 	}
 }

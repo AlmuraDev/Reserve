@@ -107,7 +107,16 @@ public class Storage implements Listener {
 
 	protected void load() {
 		try {
-			Files.walkFileTree(new File(plugin.getDataFolder(), "banks").toPath(), new BankFileVisitor(plugin));
+			Files.walkFileTree(new File(plugin.getDataFolder(), "banks").toPath(), new BankFileSaveVisitor(plugin));
+		} catch (IOException ignore) {
+			plugin.getLogger().severe("Encountered a major issue when attempting to traverse the bank's files. Disabling...");
+			plugin.getServer().getPluginManager().disablePlugin(plugin);
+		}
+	}
+
+	protected void cleanup() {
+		try {
+			Files.walkFileTree(new File(plugin.getDataFolder(), "banks").toPath(), new CleanupVisitor(plugin));
 		} catch (IOException ignore) {
 			plugin.getLogger().severe("Encountered a major issue when attempting to traverse the bank's files. Disabling...");
 			plugin.getServer().getPluginManager().disablePlugin(plugin);
@@ -115,10 +124,10 @@ public class Storage implements Listener {
 	}
 }
 
-class BankFileVisitor extends SimpleFileVisitor<Path> {
+class CleanupVisitor extends SimpleFileVisitor<Path> {
 	private final ReservePlugin plugin;
 
-	public BankFileVisitor(ReservePlugin plugin) {
+	public CleanupVisitor(ReservePlugin plugin) {
 		this.plugin = plugin;
 	}
 
@@ -131,8 +140,34 @@ class BankFileVisitor extends SimpleFileVisitor<Path> {
 	@Override
 	public FileVisitResult visitFile(Path path, BasicFileAttributes attr) {
 		if (path.getFileName().toString().endsWith(".yml") && path.getNameCount() == 5) {
-			//We are now visiting a file inside a directory with root as the parent. Grab that directory's name.
-			//ex. pluginname/banks/world >>> world is the 2nd index starting from 0.
+			if (plugin.getReserve().get(path.getName(4).toString().split(".yml")[0], path.getName(3).toString(), false) == null) {
+				try {
+					Files.deleteIfExists(path);
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		return FileVisitResult.CONTINUE;
+	}
+}
+
+class BankFileSaveVisitor extends SimpleFileVisitor<Path> {
+	private final ReservePlugin plugin;
+
+	public BankFileSaveVisitor(ReservePlugin plugin) {
+		this.plugin = plugin;
+	}
+
+	@Override
+	public FileVisitResult visitFileFailed(Path path, IOException ioe) {
+		plugin.getLogger().severe("Could not load: " + path.getFileName() + ". Skipping...");
+		return FileVisitResult.CONTINUE;
+	}
+
+	@Override
+	public FileVisitResult visitFile(Path path, BasicFileAttributes attr) {
+		if (path.getFileName().toString().endsWith(".yml") && path.getNameCount() == 5) {
 			final String world = path.getName(3).toString();
 			final String name = path.getName(4).toString().split(".yml")[0];
 			final File ymlEntry = path.toFile();
