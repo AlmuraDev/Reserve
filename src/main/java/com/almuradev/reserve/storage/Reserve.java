@@ -77,6 +77,21 @@ public final class Reserve {
 		return toReturn;
 	}
 
+	public Bank get(String name, String world, boolean ignore) {
+		if (name == null || name.isEmpty() || world == null || world.isEmpty()) {
+			throw new NullPointerException("Specified name or world is null!");
+		}
+		List<Bank> WORLD_BANKS = BANKS.get(world);
+		if (WORLD_BANKS != null && !WORLD_BANKS.isEmpty()) {
+			for (Bank bank : WORLD_BANKS) {
+				if (bank.getName().equalsIgnoreCase(name)) {
+					return bank;
+				}
+			}
+		}
+		return null;
+	}
+
 	/**
 	 * Fetches a bank from the reserve with the
 	 * @param holder
@@ -87,10 +102,11 @@ public final class Reserve {
 		if (holder == null || holder.isEmpty() || world == null || world.isEmpty()) {
 			throw new NullPointerException("Specified holder or world is null!");
 		}
-		for (String worldEntry : BANKS.keySet()) {
-			for (Bank bankEntry : BANKS.get(worldEntry)) {
-				if (bankEntry.getHolder().equalsIgnoreCase(holder)) {
-					return bankEntry;
+		List<Bank> WORLD_BANKS = BANKS.get(world);
+		if (WORLD_BANKS != null && !WORLD_BANKS.isEmpty()) {
+			for (Bank bank : WORLD_BANKS) {
+				if (bank.getHolder().equalsIgnoreCase(holder)) {
+					return bank;
 				}
 			}
 		}
