@@ -26,7 +26,8 @@ public class AccountDeleteCombo extends GenericComboBox {
 
 	@Override
 	public void onSelectionChanged(int i, String text) {
-		super.onSelectionChanged(i, text);		
+		super.onSelectionChanged(i, text);
+		plugin.onSelect(i, text);
 	}
 
 	public AccountDeleteCombo(DeleteAccountGUI plugin) {

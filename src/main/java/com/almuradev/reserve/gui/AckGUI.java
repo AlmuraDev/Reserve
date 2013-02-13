@@ -113,6 +113,15 @@ public class AckGUI extends GenericPopup {
 				} else if (ackMessage.equalsIgnoreCase("Please specify name.") && previousWindow.equalsIgnoreCase("createaccountgui")) {
 					sPlayer.getMainScreen().closePopup();
 					new CreateAccountGUI(plugin, sPlayer, selectedBank);
+				} else if (ackMessage.equalsIgnoreCase("Account already exists.") && previousWindow.equalsIgnoreCase("createaccountgui")) {
+					sPlayer.getMainScreen().closePopup();
+					new CreateAccountGUI(plugin, sPlayer, selectedBank);
+				} else if (ackMessage.equalsIgnoreCase("Account balance is not zero.") && previousWindow.equalsIgnoreCase("deleteaccountgui")) {
+					sPlayer.getMainScreen().closePopup();
+					new DeleteAccountGUI(plugin, sPlayer, selectedBank);
+				} else if (ackMessage.equalsIgnoreCase("Please specify account.") && previousWindow.equalsIgnoreCase("deleteaccountgui")) {
+					sPlayer.getMainScreen().closePopup();
+					new DepositGUI(plugin, sPlayer, selectedBank);
 				} else {
 					sPlayer.getMainScreen().closePopup();
 					new BankMainGUI(plugin, sPlayer, selectedBank);

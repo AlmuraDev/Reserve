@@ -23,6 +23,10 @@
  */
 package com.almuradev.reserve.gui;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 import com.almuradev.reserve.ReservePlugin;
 import com.almuradev.reserve.econ.Account;
 import com.almuradev.reserve.econ.Bank;
@@ -59,7 +63,8 @@ public class WithdrawGUI extends GenericPopup {
 		border.setWidth(255).setHeight(150);
 		border.shiftXPos(-105).shiftYPos(-80);
 
-		GenericLabel gl = new GenericLabel("Reserve");
+		GenericLabel gl = new GenericLabel();
+		gl.setText(selectedBank.getName());
 		gl.setScale(1.2F);
 		gl.setAnchor(WidgetAnchor.CENTER_CENTER);
 		gl.setHeight(15).setWidth(GenericLabel.getStringWidth(gl.getText()));
@@ -85,6 +90,7 @@ public class WithdrawGUI extends GenericPopup {
 		box.shiftXPos(-15).shiftYPos(-47);
 		box.setAuto(true);
 		box.setPriority(RenderPriority.Low);
+		populateList();
 
 		GenericLabel an = new GenericLabel("Withdraw Amount: ");
 		an.setScale(1.0F);
@@ -151,6 +157,19 @@ public class WithdrawGUI extends GenericPopup {
 		}
 	}
 
+	private void populateList() {		
+		List<String> items = new ArrayList<String>();
+		List<Account> accountNames = ReservePlugin.getReserve().getAccountsInBankFor(sPlayer.getName(), selectedBank);    	
+		for (Account account: accountNames) {
+			items.add(account.getName());
+		}
+		if (items != null) {	
+			Collections.sort(items, String.CASE_INSENSITIVE_ORDER);
+			box.setItems(items);
+			box.setDirty(true);
+		}		
+	}
+	
 	void onSelect(int i, String text) {
 		// set Current loaded econ
 	}

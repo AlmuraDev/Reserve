@@ -56,7 +56,8 @@ public class CreateAccountGUI extends GenericPopup {
 		border.setWidth(225).setHeight(100);
 		border.shiftXPos(-105).shiftYPos(-80);
 
-		GenericLabel gl = new GenericLabel("Reserve");
+		GenericLabel gl = new GenericLabel();
+		gl.setText(selectedBank.getName());
 		gl.setScale(1.2F);
 		gl.setAnchor(WidgetAnchor.CENTER_CENTER);
 		gl.setHeight(15).setWidth(GenericLabel.getStringWidth(gl.getText()));
@@ -104,19 +105,23 @@ public class CreateAccountGUI extends GenericPopup {
 
 	public void onClickCommand(int commandGoal) {
 		switch (commandGoal) {
-			case 1: //Create
-				if (accountNameField.getText().isEmpty()) {
-					new AckGUI(plugin, sPlayer, selectedBank, "Please specify name.", "createaccountgui");
+		case 1: //Create
+			if (accountNameField.getText().isEmpty()) {
+				new AckGUI(plugin, sPlayer, selectedBank, "Please specify name.", "createaccountgui");
+			} else {
+				if (selectedBank.getAccount(accountNameField.getText(), sPlayer.getName()) != null) {
+					new AckGUI(plugin, sPlayer, selectedBank, "Account already exists.", "createaccountgui");
 				} else {
-				selectedBank.addAccount(new Account(accountNameField.getText(), sPlayer.getName()));
-				sPlayer.getMainScreen().closePopup();
-				new AckGUI(plugin, sPlayer, selectedBank, "Account Created Successfully", "createaccountgui");
+					selectedBank.addAccount(new Account(accountNameField.getText(), sPlayer.getName()));
+					sPlayer.getMainScreen().closePopup();
+					new AckGUI(plugin, sPlayer, selectedBank, "Account Created Successfully", "createaccountgui");
 				}
-				break;
-			case 2:
-				sPlayer.getMainScreen().closePopup();
-				new BankMainGUI(plugin, sPlayer, selectedBank);
-				break;
+			}
+			break;
+		case 2:
+			sPlayer.getMainScreen().closePopup();
+			new BankMainGUI(plugin, sPlayer, selectedBank);
+			break;
 		}
 	}
 }

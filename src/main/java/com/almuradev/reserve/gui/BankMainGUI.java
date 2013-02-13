@@ -56,10 +56,11 @@ public class BankMainGUI extends GenericPopup {
 		GenericTexture border = new GenericTexture("http://www.almuramc.com/images/playerplus.png");
 		border.setAnchor(WidgetAnchor.CENTER_CENTER);
 		border.setPriority(RenderPriority.High);
-		border.setWidth(170).setHeight(170);
-		border.shiftXPos(-85).shiftYPos(-80);
+		border.setWidth(250).setHeight(170);
+		border.shiftXPos(0-(border.getWidth()/2)).shiftYPos(-80);
 
-		GenericLabel gl = new GenericLabel("Bank");
+		GenericLabel gl = new GenericLabel();
+		gl.setText(selectedBank.getName());
 		gl.setScale(1.2F);
 		gl.setAnchor(WidgetAnchor.CENTER_CENTER);
 		gl.setHeight(15).setWidth(GenericLabel.getStringWidth(gl.getText()));
@@ -67,20 +68,20 @@ public class BankMainGUI extends GenericPopup {
 
 		GenericGradient gg = new GenericGradient();
 		gg.setBottomColor(bottom).setTopColor(bottom);
-		gg.setAnchor(WidgetAnchor.CENTER_CENTER);
-		gg.shiftXPos(-65).shiftYPos(-55).setMaxWidth(130);
-		gg.setWidth(130).setHeight(1);
+		gg.setAnchor(WidgetAnchor.CENTER_CENTER);		
+		gg.setWidth(200).setHeight(1);
+		gg.shiftXPos(0-(gg.getWidth()/2)).shiftYPos(-55);
 
 		GenericGradient gb = new GenericGradient();
 		gb.setBottomColor(bottom).setTopColor(bottom);
-		gb.setAnchor(WidgetAnchor.CENTER_CENTER);
-		gb.shiftXPos(-65).shiftYPos(-25).setMaxWidth(130);
-		gb.setWidth(130).setHeight(1);
+		gb.setAnchor(WidgetAnchor.CENTER_CENTER);		
+		gb.setWidth(200).setHeight(1);
+		gb.shiftXPos(0-(gb.getWidth()/2)).shiftYPos(-25);
 
 		GenericLabel bankNameLabel = new GenericLabel();
 		bankNameLabel.setScale(1.0F);
 		bankNameLabel.setAnchor(WidgetAnchor.CENTER_CENTER);
-		bankNameLabel.setText("Bank Name: " + selectedBank.getName());
+		bankNameLabel.setText("Total Balance: " + selectedBank.getTotalBalance());
 		bankNameLabel.setHeight(15).setWidth(GenericLabel.getStringWidth(bankNameLabel.getText()));
 		bankNameLabel.shiftXPos((GenericLabel.getStringWidth(bankNameLabel.getText()) / 2) * -1).shiftYPos(-44);
 
@@ -103,7 +104,7 @@ public class BankMainGUI extends GenericPopup {
 		makeWithdraw.setHeight(16).setWidth(120).shiftXPos(-60).shiftYPos(20);
 		closeAccount.setHeight(16).setWidth(120).shiftXPos(-60).shiftYPos(40);
 		options.setHeight(16).setWidth(40).shiftXPos(-60).shiftYPos(68);
-		close.setHeight(16).setWidth(40).shiftXPos(20).shiftYPos(68);
+		close.setHeight(16).setWidth(50).shiftXPos(20).shiftYPos(68);
 
 		//createAccount.setEnabled(sPlayer.hasPermission("reserve.createaccount") && playerBank == null);
 		//makeDeposit.setEnabled(sPlayer.hasPermission("reserve.deposit") && playerBank != null);
@@ -132,7 +133,7 @@ public class BankMainGUI extends GenericPopup {
 				break;
 			case 4:
 				sPlayer.getMainScreen().closePopup();
-				//new closeAccountGUI(mainGUI, sPlayer, true);
+				new DeleteAccountGUI(plugin, sPlayer, selectedBank);
 				break;
 			case 5:
 				sPlayer.getMainScreen().closePopup();

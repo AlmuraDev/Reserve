@@ -65,5 +65,9 @@ public class CommandButton extends GenericButton {
 		if (gui instanceof OptionsGUI) {
 			((OptionsGUI) gui).onClickCommand(commandGoal);
 		}
+		
+		if (gui instanceof DeleteAccountGUI) {
+			((DeleteAccountGUI) gui).onClickCommand(commandGoal);
+		}
 	}
 }

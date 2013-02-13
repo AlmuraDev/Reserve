@@ -62,60 +62,67 @@ public class DeleteAccountGUI extends GenericPopup {
 		border.setAnchor(WidgetAnchor.CENTER_CENTER);
 		border.setPriority(RenderPriority.High);
 		border.setWidth(255).setHeight(150);
-		border.shiftXPos(-105).shiftYPos(-80);
+		border.shiftXPos(0-(border.getWidth()/2)).shiftYPos(-80);
 
-		GenericLabel gl = new GenericLabel("Bank");
+		GenericLabel gl = new GenericLabel();
+		gl.setText(selectedBank.getName());
 		gl.setScale(1.2F);
 		gl.setAnchor(WidgetAnchor.CENTER_CENTER);
 		gl.setHeight(15).setWidth(GenericLabel.getStringWidth(gl.getText()));
-		gl.shiftXPos(-10).shiftYPos(-70);
+		gl.shiftXPos(((GenericLabel.getStringWidth(gl.getText()) / 2) * -1) - 4).shiftYPos(-70);
 
 		GenericGradient gg = new GenericGradient();
 		gg.setBottomColor(bottom).setTopColor(bottom);
 		gg.setAnchor(WidgetAnchor.CENTER_CENTER);
-		gg.shiftXPos(-45).shiftYPos(-55).setMaxWidth(130);
-		gg.setWidth(130).setHeight(1);
+		gg.shiftXPos(-100).shiftYPos(-55).setMaxWidth(200);
+		gg.setWidth(200).setHeight(1);
 
-		GenericLabel cl = new GenericLabel("Select Account: ");
+		GenericLabel windowLabel = new GenericLabel("- Close Account -");
+		windowLabel.setScale(1.0F);
+		windowLabel.setAnchor(WidgetAnchor.CENTER_CENTER);
+		windowLabel.setHeight(15).setWidth(GenericLabel.getStringWidth(windowLabel.getText()));
+		windowLabel.shiftXPos(((GenericLabel.getStringWidth(windowLabel.getText()) / 2) * -1)).shiftYPos(-52);
+		
+		GenericLabel cl = new GenericLabel("Account: ");
 		cl.setScale(1.0F);
 		cl.setAnchor(WidgetAnchor.CENTER_CENTER);
 		cl.setHeight(15).setWidth(GenericLabel.getStringWidth(cl.getText()));
-		cl.shiftXPos(-95).shiftYPos(-42);
+		cl.shiftXPos(-110).shiftYPos(-32);
 
 		box = new AccountDeleteCombo(this);
 		box.setText("Accounts");
 		box.setAnchor(WidgetAnchor.CENTER_CENTER);
 		box.setWidth(GenericLabel.getStringWidth("12345678901234567890123459"));
 		box.setHeight(18);
-		box.shiftXPos(-15).shiftYPos(-47);
+		box.shiftXPos(-58).shiftYPos(-37);
 		box.setAuto(true);
 		box.setPriority(RenderPriority.Low);
 		populateList();
 
-		GenericLabel an = new GenericLabel("Account Balance: ");
+		GenericLabel an = new GenericLabel("Current Balance: ");
 		an.setScale(1.0F);
 		an.setAnchor(WidgetAnchor.CENTER_CENTER);
 		an.setHeight(15).setWidth(GenericLabel.getStringWidth(an.getText()));
-		an.shiftXPos(-95).shiftYPos(-10);
+		an.shiftXPos(-110).shiftYPos(-10);
 
 		depositAmountField = new GenericTextField();
 		depositAmountField.setWidth(110).setHeight(16);
 		depositAmountField.setAnchor(WidgetAnchor.CENTER_CENTER);
-		depositAmountField.shiftXPos(-10).shiftYPos(-13);
+		depositAmountField.shiftXPos(-15).shiftYPos(-13);
 		depositAmountField.setText("0.00");
 		depositAmountField.setMaximumCharacters(15);
 		depositAmountField.setMaximumLines(1);
 
-		GenericButton depositButton = new CommandButton(this, 1, "Deposit");
+		GenericButton depositButton = new CommandButton(this, 1, "Close Account");
 		GenericButton close = new CommandButton(this, 2, "Close");
 
 		depositButton.setAnchor(WidgetAnchor.CENTER_CENTER);
 		close.setAnchor(WidgetAnchor.CENTER_CENTER);
 
-		depositButton.setHeight(16).setWidth(50).shiftXPos(30).shiftYPos(47);
-		close.setHeight(16).setWidth(40).shiftXPos(85).shiftYPos(47);
+		depositButton.setHeight(16).setWidth(80).shiftXPos(-10).shiftYPos(47);
+		close.setHeight(16).setWidth(40).shiftXPos(75).shiftYPos(47);
 
-		attachWidgets(plugin, border, gl, gg, box, cl, depositAmountField, an, depositButton, close);
+		attachWidgets(plugin, border, gl, gg, box, cl, windowLabel, depositAmountField, an, depositButton, close);
 
 		sPlayer.getMainScreen().closePopup();
 		sPlayer.getMainScreen().attachPopupScreen(this);
@@ -125,30 +132,22 @@ public class DeleteAccountGUI extends GenericPopup {
 		switch (commandGoal) {
 		case 1: // Ok
 			if (box.getSelectedItem() == null) {
-				new AckGUI(plugin, sPlayer, selectedBank, "Please specify account.", "depositgui");
+				new AckGUI(plugin, sPlayer, selectedBank, "Please specify account.", "deleteaccountgui");
 			} else {
-
 				Account myAccount = ReservePlugin.getReserve().getAccountFromNameIn(selectedBank, box.getSelectedItem(), sPlayer.getName());
-				double deposit = 0;
+				double balance = 0;
 				try {
-					deposit = Math.abs(Double.parseDouble(depositAmountField.getText()));												
+					balance = Math.abs(Double.parseDouble(depositAmountField.getText()));												
 				} catch (Exception e) {
 					//do nothing
 				}
-				if (deposit == 0) {
+				if (balance != 0) {
 					sPlayer.getMainScreen().closePopup();					
-					new AckGUI(plugin, sPlayer, selectedBank, "Deposit amount has to be more than zero.", "depositgui");
+					new AckGUI(plugin, sPlayer, selectedBank, "Account balance is not zero.", "deleteaccountgui");
 				} else {
-				// Remove from Users Economy
-					if (VaultUtil.getBalance(sPlayer.getName()) < deposit) {
-						sPlayer.getMainScreen().closePopup();					
-						new AckGUI(plugin, sPlayer, selectedBank, "Insuffient funds available for deposit.", "depositgui");
-					} else {
-						myAccount.add(deposit);
-						VaultUtil.add(sPlayer.getName(), 0-deposit);
-						sPlayer.getMainScreen().closePopup();				
-						new AckGUI(plugin, sPlayer, selectedBank, "Funds Deposited Successfully", "depositgui");
-					}
+					selectedBank.removeAccount(box.getSelectedItem(), sPlayer.getName());
+					sPlayer.getMainScreen().closePopup();				
+					new AckGUI(plugin, sPlayer, selectedBank, "Account Removed", "deleteaccountgui");					
 				}
 			}
 			break;
@@ -170,5 +169,11 @@ public class DeleteAccountGUI extends GenericPopup {
 			box.setItems(items);
 			box.setDirty(true);
 		}		
+	}
+	
+	void onSelect(int i, String text) {
+		Account myAccount = ReservePlugin.getReserve().getAccountFromNameIn(selectedBank, box.getSelectedItem(), sPlayer.getName());
+		double balance = 0;
+		depositAmountField.setText(Double.toString(myAccount.getBalance()));	
 	}
 }
