@@ -92,7 +92,7 @@ public class Storage implements Listener {
 				accountTypeSection = accounts.createSection(account.getName());
 			}
 			final ConfigurationSection accountHolderSection = accountTypeSection.createSection(account.getHolder());
-			accountHolderSection.set("balance", account.getBalance());
+			accountHolderSection.set("balance", Double.toString(account.getBalance()));
 			accountHolderSection.set("interest-rate", account.getInterestRate());
 			accountHolderSection.set("tax-rate", account.getTaxRate());
 		}
