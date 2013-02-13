@@ -17,35 +17,29 @@
  * You should have received a copy of the GNU General Public License. If not,
  * see <http://www.gnu.org/licenses/> for the GNU General Public License.
  */
-package com.almuradev.reserve.task;
+package com.almuradev.reserve.gui;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+
+import org.bukkit.ChatColor;
+import org.bukkit.plugin.Plugin;
+import org.getspout.spoutapi.gui.GenericListWidget;
+import org.getspout.spoutapi.gui.ListWidgetItem;
 
 import com.almuradev.reserve.ReservePlugin;
-import com.almuradev.reserve.econ.Account;
 import com.almuradev.reserve.econ.Bank;
-import com.almuradev.reserve.storage.Reserve;
 
-public class InterestTask implements Runnable {
-	private final ReservePlugin plugin;
-	private final Reserve reserve;
+public class BankListApplet extends GenericListWidget {
 
-	public InterestTask(ReservePlugin plugin, Reserve reserve) {
-		this.plugin = plugin;
-		this.reserve = reserve;
-	}
-
-	@Override  // 
-	public void run() {
-		final Map<String, List<Bank>> BANKS = reserve.retrieveBanks();
-		for (String world : BANKS.keySet()) {
-			for (Bank bank : BANKS.get(world)) {
-				for (Account account : bank.retrieveAccounts()) {
-					//I = P r t
-					final double interest = account.getBalance() * account.getInterestRate() * (1 / 365);
-					account.add(interest);
-				}
+	public BankListApplet() {		
+		Map<String, List<Bank>> allBanks = ReservePlugin.getReserve().retrieveBanks();
+		System.out.println("Hello World");
+		for (String world : allBanks.keySet()) {		
+			for (Bank bank : allBanks.get(world)) {					
+			System.out.println("Account: " + world);
+				this.addItem(new ListWidgetItem(bank.getName(), world ));
 			}
 		}
 	}

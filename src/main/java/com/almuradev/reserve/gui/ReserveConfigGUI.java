@@ -25,7 +25,6 @@ package com.almuradev.reserve.gui;
 
 import com.almuradev.reserve.ReservePlugin;
 
-import org.bukkit.plugin.Plugin;
 import org.getspout.spoutapi.gui.CheckBox;
 import org.getspout.spoutapi.gui.Color;
 import org.getspout.spoutapi.gui.GenericButton;
@@ -38,12 +37,12 @@ import org.getspout.spoutapi.gui.RenderPriority;
 import org.getspout.spoutapi.gui.WidgetAnchor;
 import org.getspout.spoutapi.player.SpoutPlayer;
 
-public class BankConfigGUI extends GenericPopup {
+public class ReserveConfigGUI extends GenericPopup {
 	private final ReservePlugin plugin;
 	private final SpoutPlayer sPlayer;
 	Color bottom = new Color(1.0F, 1.0F, 1.0F, 0.50F);
 
-	public BankConfigGUI(ReservePlugin plugin, SpoutPlayer sPlayer) {
+	public ReserveConfigGUI(ReservePlugin plugin, SpoutPlayer sPlayer) {
 		this.plugin = plugin;
 		this.sPlayer = sPlayer;
 
@@ -53,7 +52,7 @@ public class BankConfigGUI extends GenericPopup {
 		border.setWidth(255).setHeight(150);
 		border.shiftXPos(-105).shiftYPos(-80);
 
-		GenericLabel gl = new GenericLabel("Bank Configuration");
+		GenericLabel gl = new GenericLabel("Reserve Configuration");
 		gl.setScale(1.2F);
 		gl.setAnchor(WidgetAnchor.CENTER_CENTER);
 		gl.setHeight(15).setWidth(GenericLabel.getStringWidth(gl.getText()));

@@ -34,8 +34,12 @@ public class CommandButton extends GenericButton {
 
 	@Override
 	public void onButtonClick(ButtonClickEvent event) {
-		if (gui instanceof MainGUI) {
-			((MainGUI) gui).onClickCommand(commandGoal);
+		if (gui instanceof BankMainGUI) {
+			((BankMainGUI) gui).onClickCommand(commandGoal);
+		}
+		
+		if (gui instanceof ReserveMainGUI) {
+			((ReserveMainGUI) gui).onClickCommand(commandGoal);
 		}
 
 		if (gui instanceof CreateAccountGUI) {
@@ -54,8 +58,12 @@ public class CommandButton extends GenericButton {
 			((WithdrawGUI) gui).onClickCommand(commandGoal);
 		}
 
-		if (gui instanceof BankConfigGUI) {
-			((BankConfigGUI) gui).onClickCommand(commandGoal);
+		if (gui instanceof ReserveConfigGUI) {
+			((ReserveConfigGUI) gui).onClickCommand(commandGoal);
+		}
+		
+		if (gui instanceof OptionsGUI) {
+			((OptionsGUI) gui).onClickCommand(commandGoal);
 		}
 	}
 }

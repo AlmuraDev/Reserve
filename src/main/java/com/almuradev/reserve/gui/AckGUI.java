@@ -88,7 +88,7 @@ public class AckGUI extends GenericPopup {
 		switch (commandGoal) {
 			case 1: //OK
 				sPlayer.getMainScreen().closePopup();
-				new MainGUI(plugin, sPlayer);
+				new BankMainGUI(plugin, sPlayer);
 				break;
 		}
 	}

@@ -20,7 +20,7 @@
 package com.almuradev.reserve;
 
 import com.almuradev.reserve.config.ReserveConfiguration;
-import com.almuradev.reserve.gui.MainGUI;
+import com.almuradev.reserve.gui.ReserveMainGUI;
 import com.almuradev.reserve.storage.Reserve;
 import com.almuradev.reserve.storage.Storage;
 import com.almuradev.reserve.task.InterestTask;
@@ -93,7 +93,7 @@ public class ReservePlugin extends JavaPlugin {
 			if (player == null) {
 				sender.sendMessage("Reserve cannot be opened from the server console.");
 			} else {
-				((SpoutPlayer) sender).getMainScreen().attachPopupScreen(new MainGUI(this, (SpoutPlayer) sender));
+				((SpoutPlayer) sender).getMainScreen().attachPopupScreen(new ReserveMainGUI(this, (SpoutPlayer) sender));
 			}
 			return true;
 		}

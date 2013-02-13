@@ -105,7 +105,7 @@ public class CreateAccountGUI extends GenericPopup {
 				break;
 			case 2:
 				sPlayer.getMainScreen().closePopup();
-				new MainGUI(plugin, sPlayer);
+				new BankMainGUI(plugin, sPlayer);
 				break;
 		}
 	}

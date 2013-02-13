@@ -19,15 +19,16 @@
  */
 package com.almuradev.reserve.gui;
 
+import org.bukkit.plugin.Plugin;
 import org.getspout.spoutapi.event.screen.ButtonClickEvent;
 import org.getspout.spoutapi.gui.GenericCheckBox;
 import org.getspout.spoutapi.player.SpoutPlayer;
 
 public class ConfigMultipleCheckBox extends GenericCheckBox {
-	private BankConfigGUI plugin;
+	private Plugin plugin;
 	private SpoutPlayer sPlayer;
 
-	public ConfigMultipleCheckBox(SpoutPlayer player, BankConfigGUI plugin) {
+	public ConfigMultipleCheckBox(SpoutPlayer player, Plugin plugin) {
 		super();
 		setTooltip("Click this to enabled / disable Multiple Accounts");
 		this.plugin = plugin;

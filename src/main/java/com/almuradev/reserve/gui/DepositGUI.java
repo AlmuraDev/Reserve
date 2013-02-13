@@ -24,6 +24,7 @@
 package com.almuradev.reserve.gui;
 
 import com.almuradev.reserve.ReservePlugin;
+import com.almuradev.reserve.econ.Bank;
 
 import org.getspout.spoutapi.gui.Color;
 import org.getspout.spoutapi.gui.ComboBox;
@@ -116,7 +117,7 @@ public class DepositGUI extends GenericPopup {
 				break;
 			case 2:
 				sPlayer.getMainScreen().closePopup();
-				new MainGUI(plugin, sPlayer);
+				new BankMainGUI(plugin, sPlayer);
 				break;
 		}
 	}

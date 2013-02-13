@@ -19,15 +19,16 @@
  */
 package com.almuradev.reserve.gui;
 
+import org.bukkit.plugin.Plugin;
 import org.getspout.spoutapi.event.screen.ButtonClickEvent;
 import org.getspout.spoutapi.gui.GenericCheckBox;
 import org.getspout.spoutapi.player.SpoutPlayer;
 
 public class ConfigShareCheckBox extends GenericCheckBox {
-	private BankConfigGUI plugin;
+	private Plugin plugin;
 	private SpoutPlayer sPlayer;
 
-	public ConfigShareCheckBox(SpoutPlayer player, BankConfigGUI plugin) {
+	public ConfigShareCheckBox(SpoutPlayer player, Plugin plugin) {
 		super();
 		setTooltip("Click this to enabled / disable Account Sharing");
 		this.plugin = plugin;
