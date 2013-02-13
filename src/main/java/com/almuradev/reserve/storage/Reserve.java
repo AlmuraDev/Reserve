@@ -146,7 +146,7 @@ public final class Reserve {
 		}
 		final ArrayList<Account> accounts = new ArrayList<>();
 		for (Account account : bank.retrieveAccounts()) {
-			if (account.getName().equalsIgnoreCase(holder)) {
+			if (account.getHolder().equalsIgnoreCase(holder)) {
 				accounts.add(account);
 			}
 		}
