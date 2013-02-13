@@ -140,7 +140,7 @@ class CleanupVisitor extends SimpleFileVisitor<Path> {
 	@Override
 	public FileVisitResult visitFile(Path path, BasicFileAttributes attr) {
 		if (path.getFileName().toString().endsWith(".yml") && path.getNameCount() == 5) {
-			if (plugin.getReserve().get(path.getName(4).toString().split(".yml")[0], path.getName(3).toString(), false) == null) {
+			if (plugin.getReserve().get(path.getName(4).toString().split(".yml")[0], path.getName(3).toString()) == null) {
 				try {
 					Files.deleteIfExists(path);
 				} catch (IOException e) {
