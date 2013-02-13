@@ -24,6 +24,7 @@
 package com.almuradev.reserve.gui;
 
 import com.almuradev.reserve.ReservePlugin;
+import com.almuradev.reserve.econ.Account;
 import com.almuradev.reserve.econ.Bank;
 
 import org.getspout.spoutapi.gui.Color;
@@ -41,6 +42,7 @@ public class CreateAccountGUI extends GenericPopup {
 	private final ReservePlugin plugin;
 	private final SpoutPlayer sPlayer;
 	private Bank selectedBank;
+	private GenericTextField accountNameField;
 	Color bottom = new Color(1.0F, 1.0F, 1.0F, 0.50F);
 
 	public CreateAccountGUI(ReservePlugin plugin, SpoutPlayer sPlayer, Bank bank) {
@@ -78,7 +80,7 @@ public class CreateAccountGUI extends GenericPopup {
 		an.setHeight(15).setWidth(GenericLabel.getStringWidth(an.getText()));
 		an.shiftXPos(-90).shiftYPos(-25);
 
-		GenericTextField accountNameField = new GenericTextField();
+		accountNameField = new GenericTextField();
 		accountNameField.setWidth(110).setHeight(16);
 		accountNameField.setAnchor(WidgetAnchor.CENTER_CENTER);
 		accountNameField.shiftXPos(-10).shiftYPos(-28);
@@ -103,8 +105,13 @@ public class CreateAccountGUI extends GenericPopup {
 	public void onClickCommand(int commandGoal) {
 		switch (commandGoal) {
 			case 1: //Create
+				if (accountNameField.getText().isEmpty()) {
+					new AckGUI(plugin, sPlayer, selectedBank, "Please specify name.", "createaccountgui");
+				} else {
+				selectedBank.addAccount(new Account(accountNameField.getText(), sPlayer.getName()));
 				sPlayer.getMainScreen().closePopup();
 				new AckGUI(plugin, sPlayer, selectedBank, "Account Created Successfully", "createaccountgui");
+				}
 				break;
 			case 2:
 				sPlayer.getMainScreen().closePopup();

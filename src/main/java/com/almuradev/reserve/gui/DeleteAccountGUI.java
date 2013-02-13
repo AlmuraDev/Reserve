@@ -23,6 +23,11 @@
  */
 package com.almuradev.reserve.gui;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+
 import com.almuradev.reserve.ReservePlugin;
 import com.almuradev.reserve.econ.Account;
 import com.almuradev.reserve.econ.Bank;
@@ -40,15 +45,15 @@ import org.getspout.spoutapi.gui.RenderPriority;
 import org.getspout.spoutapi.gui.WidgetAnchor;
 import org.getspout.spoutapi.player.SpoutPlayer;
 
-public class WithdrawGUI extends GenericPopup {
+public class DeleteAccountGUI extends GenericPopup {
 	private final ReservePlugin plugin;
 	private final SpoutPlayer sPlayer;
 	private final Bank selectedBank;
-	private final ComboBox box;
 	private final GenericTextField depositAmountField;
+	private final ComboBox box;
 	Color bottom = new Color(1.0F, 1.0F, 1.0F, 0.50F);
 
-	public WithdrawGUI(ReservePlugin plugin, SpoutPlayer sPlayer, Bank bank) {
+	public DeleteAccountGUI(ReservePlugin plugin, SpoutPlayer sPlayer, Bank bank) {
 		this.plugin = plugin;
 		this.sPlayer = sPlayer;
 		this.selectedBank = bank;
@@ -59,7 +64,7 @@ public class WithdrawGUI extends GenericPopup {
 		border.setWidth(255).setHeight(150);
 		border.shiftXPos(-105).shiftYPos(-80);
 
-		GenericLabel gl = new GenericLabel("Reserve");
+		GenericLabel gl = new GenericLabel("Bank");
 		gl.setScale(1.2F);
 		gl.setAnchor(WidgetAnchor.CENTER_CENTER);
 		gl.setHeight(15).setWidth(GenericLabel.getStringWidth(gl.getText()));
@@ -77,7 +82,7 @@ public class WithdrawGUI extends GenericPopup {
 		cl.setHeight(15).setWidth(GenericLabel.getStringWidth(cl.getText()));
 		cl.shiftXPos(-95).shiftYPos(-42);
 
-		box = new AccountWithdrawCombo(this);
+		box = new AccountDeleteCombo(this);
 		box.setText("Accounts");
 		box.setAnchor(WidgetAnchor.CENTER_CENTER);
 		box.setWidth(GenericLabel.getStringWidth("12345678901234567890123459"));
@@ -85,8 +90,9 @@ public class WithdrawGUI extends GenericPopup {
 		box.shiftXPos(-15).shiftYPos(-47);
 		box.setAuto(true);
 		box.setPriority(RenderPriority.Low);
+		populateList();
 
-		GenericLabel an = new GenericLabel("Withdraw Amount: ");
+		GenericLabel an = new GenericLabel("Account Balance: ");
 		an.setScale(1.0F);
 		an.setAnchor(WidgetAnchor.CENTER_CENTER);
 		an.setHeight(15).setWidth(GenericLabel.getStringWidth(an.getText()));
@@ -100,7 +106,7 @@ public class WithdrawGUI extends GenericPopup {
 		depositAmountField.setMaximumCharacters(15);
 		depositAmountField.setMaximumLines(1);
 
-		GenericButton depositButton = new CommandButton(this, 1, "Withdraw");
+		GenericButton depositButton = new CommandButton(this, 1, "Deposit");
 		GenericButton close = new CommandButton(this, 2, "Close");
 
 		depositButton.setAnchor(WidgetAnchor.CENTER_CENTER);
@@ -123,23 +129,25 @@ public class WithdrawGUI extends GenericPopup {
 			} else {
 
 				Account myAccount = ReservePlugin.getReserve().getAccountFromNameIn(selectedBank, box.getSelectedItem(), sPlayer.getName());
-				double withdraw = 0;
+				double deposit = 0;
 				try {
-					withdraw = Math.abs(Double.parseDouble(depositAmountField.getText()));										
+					deposit = Math.abs(Double.parseDouble(depositAmountField.getText()));												
 				} catch (Exception e) {
 					//do nothing
 				}
-				if (withdraw == 0) {
-					sPlayer.getMainScreen().closePopup();
-					new AckGUI(plugin, sPlayer, selectedBank, "Deposit amount has to be more than zero.", "withdrawgui");
-				} else {				
-					if (myAccount.getBalance()<withdraw) {
-						new AckGUI(plugin, sPlayer, selectedBank, "Withdraw amount cannot be greater than current balance.", "withdrawgui");
+				if (deposit == 0) {
+					sPlayer.getMainScreen().closePopup();					
+					new AckGUI(plugin, sPlayer, selectedBank, "Deposit amount has to be more than zero.", "depositgui");
+				} else {
+				// Remove from Users Economy
+					if (VaultUtil.getBalance(sPlayer.getName()) < deposit) {
+						sPlayer.getMainScreen().closePopup();					
+						new AckGUI(plugin, sPlayer, selectedBank, "Insuffient funds available for deposit.", "depositgui");
 					} else {
-						myAccount.add(0-withdraw);
-						VaultUtil.add(sPlayer.getName(), withdraw);
+						myAccount.add(deposit);
+						VaultUtil.add(sPlayer.getName(), 0-deposit);
 						sPlayer.getMainScreen().closePopup();				
-						new AckGUI(plugin, sPlayer, selectedBank, "Funds Withdrawn Successfully.", "withdrawgui");
+						new AckGUI(plugin, sPlayer, selectedBank, "Funds Deposited Successfully", "depositgui");
 					}
 				}
 			}
@@ -150,8 +158,17 @@ public class WithdrawGUI extends GenericPopup {
 			break;
 		}
 	}
-
-	void onSelect(int i, String text) {
-		// set Current loaded econ
+	
+	private void populateList() {		
+		List<String> items = new ArrayList<String>();
+		List<Account> accountNames = ReservePlugin.getReserve().getAccountsInBankFor(sPlayer.getName(), selectedBank);    	
+		for (Account account: accountNames) {
+			items.add(account.getName());
+		}
+		if (items != null) {	
+			Collections.sort(items, String.CASE_INSENSITIVE_ORDER);
+			box.setItems(items);
+			box.setDirty(true);
+		}		
 	}
 }

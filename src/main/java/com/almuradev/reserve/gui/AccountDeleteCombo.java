@@ -21,15 +21,15 @@ package com.almuradev.reserve.gui;
 
 import org.getspout.spoutapi.gui.GenericComboBox;
 
-public class AccountDepositCombo extends GenericComboBox {
-	private DepositGUI plugin;
+public class AccountDeleteCombo extends GenericComboBox {
+	private DeleteAccountGUI plugin;
 
 	@Override
 	public void onSelectionChanged(int i, String text) {
 		super.onSelectionChanged(i, text);		
 	}
 
-	public AccountDepositCombo(DepositGUI plugin) {
+	public AccountDeleteCombo(DeleteAccountGUI plugin) {
 		super();
 		this.plugin = plugin;
 	}

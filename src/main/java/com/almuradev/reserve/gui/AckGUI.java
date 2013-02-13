@@ -104,9 +104,15 @@ public class AckGUI extends GenericPopup {
 				} else if (ackMessage.equalsIgnoreCase("Deposit amount has to be more than zero.") && previousWindow.equalsIgnoreCase("depositgui") ) {
 					sPlayer.getMainScreen().closePopup();
 					new DepositGUI(plugin, sPlayer, selectedBank);		
+				} else if (ackMessage.equalsIgnoreCase("Insuffient funds available for deposit.") && previousWindow.equalsIgnoreCase("depositgui") ) {
+					sPlayer.getMainScreen().closePopup();
+					new DepositGUI(plugin, sPlayer, selectedBank);
 				} else if (ackMessage.equalsIgnoreCase("Withdraw amount cannot be greater than current balance.") && previousWindow.equalsIgnoreCase("withdrawgui")) {
 					sPlayer.getMainScreen().closePopup();
 					new WithdrawGUI(plugin, sPlayer, selectedBank);
+				} else if (ackMessage.equalsIgnoreCase("Please specify name.") && previousWindow.equalsIgnoreCase("createaccountgui")) {
+					sPlayer.getMainScreen().closePopup();
+					new CreateAccountGUI(plugin, sPlayer, selectedBank);
 				} else {
 					sPlayer.getMainScreen().closePopup();
 					new BankMainGUI(plugin, sPlayer, selectedBank);

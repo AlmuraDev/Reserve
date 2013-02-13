@@ -31,6 +31,7 @@ import java.util.Map;
 import com.almuradev.reserve.ReservePlugin;
 import com.almuradev.reserve.econ.Account;
 import com.almuradev.reserve.econ.Bank;
+import com.almuradev.reserve.econ.VaultUtil;
 
 import org.getspout.spoutapi.gui.Color;
 import org.getspout.spoutapi.gui.ComboBox;
@@ -128,21 +129,26 @@ public class DepositGUI extends GenericPopup {
 			} else {
 
 				Account myAccount = ReservePlugin.getReserve().getAccountFromNameIn(selectedBank, box.getSelectedItem(), sPlayer.getName());
-				double cost = 0;
+				double deposit = 0;
 				try {
-					double value = Math.abs(Double.parseDouble(depositAmountField.getText()));					
-					cost = value;					
+					deposit = Math.abs(Double.parseDouble(depositAmountField.getText()));												
 				} catch (Exception e) {
 					//do nothing
 				}
-				if (cost == 0) {
-					sPlayer.getMainScreen().closePopup();
+				if (deposit == 0) {
+					sPlayer.getMainScreen().closePopup();					
 					new AckGUI(plugin, sPlayer, selectedBank, "Deposit amount has to be more than zero.", "depositgui");
 				} else {
 				// Remove from Users Economy
-				myAccount.add(cost);
-				sPlayer.getMainScreen().closePopup();				
-				new AckGUI(plugin, sPlayer, selectedBank, "Funds Deposited Successfully", "depositgui");
+					if (VaultUtil.getBalance(sPlayer.getName()) < deposit) {
+						sPlayer.getMainScreen().closePopup();					
+						new AckGUI(plugin, sPlayer, selectedBank, "Insuffient funds available for deposit.", "depositgui");
+					} else {
+						myAccount.add(deposit);
+						VaultUtil.add(sPlayer.getName(), 0-deposit);
+						sPlayer.getMainScreen().closePopup();				
+						new AckGUI(plugin, sPlayer, selectedBank, "Funds Deposited Successfully", "depositgui");
+					}
 				}
 			}
 			break;
@@ -152,10 +158,6 @@ public class DepositGUI extends GenericPopup {
 			break;
 		}
 	}
-
-	public void onSelect(int i, String text) {
-		// set Current loaded econ
-	}
 	
 	private void populateList() {		
 		List<String> items = new ArrayList<String>();
@@ -163,8 +165,7 @@ public class DepositGUI extends GenericPopup {
 		for (Account account: accountNames) {
 			items.add(account.getName());
 		}
-		if (items != null) {
-			System.out.println("Populating List");
+		if (items != null) {	
 			Collections.sort(items, String.CASE_INSENSITIVE_ORDER);
 			box.setItems(items);
 			box.setDirty(true);
