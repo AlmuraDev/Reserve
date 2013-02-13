@@ -55,7 +55,7 @@ public final class Reserve {
 		List<Bank> ENTRY = BANKS.get(world);
 		if (ENTRY != null) {
 			for (Bank bank : ENTRY) {
-				if (bank.getHolder().equalsIgnoreCase(holder)) {
+				if (bank.getName().equalsIgnoreCase(name) && bank.getHolder().equalsIgnoreCase(holder)) {
 					return bank;
 				}
 			}
@@ -65,6 +65,7 @@ public final class Reserve {
 		}
 		final Bank toReturn = new Bank(name, holder);
 		ENTRY.add(toReturn);
+		System.out.println(BANKS.toString());
 		return toReturn;
 	}
 
