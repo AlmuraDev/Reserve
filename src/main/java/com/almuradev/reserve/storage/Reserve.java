@@ -48,16 +48,9 @@ public final class Reserve {
 		}
 	}
 
-	/**
-	 * Adds a new bank to the reserve under the holder and world's name. If it exists,
-	 * this function will return the existing one.
-	 * @param holder
-	 * @param world
-	 * @return
-	 */
-	public Bank add(String holder, String name, String world) {
-		if (holder == null || holder.isEmpty() || world == null || world.isEmpty()) {
-			throw new NullPointerException("Specified world or holder is null!");
+	public Bank add(String name, String holder, String world) {
+		if (name == null || name.isEmpty() || holder == null || holder.isEmpty() || world == null || world.isEmpty()) {
+			throw new NullPointerException("Specified name, holder, or world is null!");
 		}
 		List<Bank> ENTRY = BANKS.get(world);
 		if (ENTRY != null) {
@@ -70,17 +63,17 @@ public final class Reserve {
 			ENTRY = new ArrayList<>();
 			BANKS.put(world, ENTRY);
 		}
-		final Bank toReturn = new Bank(holder, name);
+		final Bank toReturn = new Bank(name, holder);
 		ENTRY.add(toReturn);
 		return toReturn;
 	}
 
-	public Bank get(String name, String world, boolean ignore) {
+	public Bank get(String name, String world) {
 		if (name == null || name.isEmpty() || world == null || world.isEmpty()) {
 			throw new NullPointerException("Specified name or world is null!");
 		}
 		List<Bank> WORLD_BANKS = BANKS.get(world);
-		if (WORLD_BANKS != null && !WORLD_BANKS.isEmpty()) {
+		if (WORLD_BANKS != null) {
 			for (Bank bank : WORLD_BANKS) {
 				if (bank.getName().equalsIgnoreCase(name)) {
 					return bank;
@@ -90,40 +83,14 @@ public final class Reserve {
 		return null;
 	}
 
-	/**
-	 * Fetches a bank from the reserve with the
-	 * @param holder
-	 * @param world
-	 * @return
-	 */
-	public Bank get(String holder, String world) {
-		if (holder == null || holder.isEmpty() || world == null || world.isEmpty()) {
-			throw new NullPointerException("Specified holder or world is null!");
-		}
-		List<Bank> WORLD_BANKS = BANKS.get(world);
-		if (WORLD_BANKS != null && !WORLD_BANKS.isEmpty()) {
-			for (Bank bank : WORLD_BANKS) {
-				if (bank.getHolder().equalsIgnoreCase(holder)) {
-					return bank;
-				}
-			}
-		}
-		return null;
-	}
-
-	/**
-	 * @param holder
-	 * @param world
-	 * @return
-	 */
-	public Bank remove(String holder, String world) {
-		if (holder == null || holder.isEmpty() || world == null || world.isEmpty()) {
+	public Bank remove(String name, String world) {
+		if (name == null || name.isEmpty() || world == null || world.isEmpty()) {
 			throw new NullPointerException("Specified holder or world is null!");
 		}
 		final List<Bank> ENTRY = BANKS.get(world);
 		if (ENTRY != null) {
 			for (Bank bank : ENTRY) {
-				if (bank.getHolder().equalsIgnoreCase(holder)) {
+				if (bank.getName().equalsIgnoreCase(name)) {
 					ENTRY.remove(bank);
 					return bank;
 				}
@@ -132,10 +99,6 @@ public final class Reserve {
 		return null;
 	}
 
-	/**
-	 * Retrieves all banks in the reserve.
-	 * @return All banks in the reserve.
-	 */
 	public Map<String, List<Bank>> retrieveBanks() {
 		return Collections.unmodifiableMap(BANKS);
 	}
@@ -145,9 +108,12 @@ public final class Reserve {
 			throw new NullPointerException("Specified holder or bank is null!");
 		}
 		final ArrayList<Account> accounts = new ArrayList<>();
-		for (Account account : bank.retrieveAccounts()) {
-			if (account.getHolder().equalsIgnoreCase(holder)) {
-				accounts.add(account);
+		final List<Account> injected = bank.retrieveAccounts();
+		if (injected != null) {
+			for (Account account : injected) {
+				if (account.getHolder().equalsIgnoreCase(holder)) {
+					accounts.add(account);
+				}
 			}
 		}
 		return accounts;
@@ -158,18 +124,17 @@ public final class Reserve {
 			throw new NullPointerException("Specified holder, bank, or name is null!");
 		}
 
-		for (Account account : bank.retrieveAccounts()) {
-			if (account.getName().equalsIgnoreCase(name) && account.getHolder().equalsIgnoreCase(holder)) {
-				return account;
+		final List<Account> injected = bank.retrieveAccounts();
+		if (injected != null) {
+			for (Account account : bank.retrieveAccounts()) {
+				if (account.getName().equalsIgnoreCase(name) && account.getHolder().equalsIgnoreCase(holder)) {
+					return account;
+				}
 			}
 		}
 		return null;
 	}
 
-	/**
-	 * @param world
-	 * @param injectBank
-	 */
 	protected void add(String world, Bank injectBank) {
 		if (world == null || world.isEmpty()) {
 			throw new NullPointerException("Specified world or holder is null!");
