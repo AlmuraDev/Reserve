@@ -23,7 +23,13 @@
  */
 package com.almuradev.reserve.gui;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+
 import com.almuradev.reserve.ReservePlugin;
+import com.almuradev.reserve.econ.Account;
 import com.almuradev.reserve.econ.Bank;
 
 import org.getspout.spoutapi.gui.Color;
@@ -41,11 +47,15 @@ import org.getspout.spoutapi.player.SpoutPlayer;
 public class DepositGUI extends GenericPopup {
 	private final ReservePlugin plugin;
 	private final SpoutPlayer sPlayer;
+	private final Bank selectedBank;
+	private final GenericTextField depositAmountField;
+	private final ComboBox box;
 	Color bottom = new Color(1.0F, 1.0F, 1.0F, 0.50F);
 
-	public DepositGUI(ReservePlugin plugin, SpoutPlayer sPlayer) {
+	public DepositGUI(ReservePlugin plugin, SpoutPlayer sPlayer, Bank bank) {
 		this.plugin = plugin;
 		this.sPlayer = sPlayer;
+		this.selectedBank = bank;
 
 		GenericTexture border = new GenericTexture("http://www.almuramc.com/images/playerplus.png");
 		border.setAnchor(WidgetAnchor.CENTER_CENTER);
@@ -71,7 +81,7 @@ public class DepositGUI extends GenericPopup {
 		cl.setHeight(15).setWidth(GenericLabel.getStringWidth(cl.getText()));
 		cl.shiftXPos(-95).shiftYPos(-42);
 
-		ComboBox box = new AccountDepositCombo(this);
+		box = new AccountDepositCombo(this);
 		box.setText("Accounts");
 		box.setAnchor(WidgetAnchor.CENTER_CENTER);
 		box.setWidth(GenericLabel.getStringWidth("12345678901234567890123459"));
@@ -79,6 +89,7 @@ public class DepositGUI extends GenericPopup {
 		box.shiftXPos(-15).shiftYPos(-47);
 		box.setAuto(true);
 		box.setPriority(RenderPriority.Low);
+		populateList();
 
 		GenericLabel an = new GenericLabel("Deposit Amount: ");
 		an.setScale(1.0F);
@@ -86,7 +97,7 @@ public class DepositGUI extends GenericPopup {
 		an.setHeight(15).setWidth(GenericLabel.getStringWidth(an.getText()));
 		an.shiftXPos(-95).shiftYPos(-10);
 
-		GenericTextField depositAmountField = new GenericTextField();
+		depositAmountField = new GenericTextField();
 		depositAmountField.setWidth(110).setHeight(16);
 		depositAmountField.setAnchor(WidgetAnchor.CENTER_CENTER);
 		depositAmountField.shiftXPos(-10).shiftYPos(-13);
@@ -111,18 +122,52 @@ public class DepositGUI extends GenericPopup {
 
 	public void onClickCommand(int commandGoal) {
 		switch (commandGoal) {
-			case 1: //Create
-				sPlayer.getMainScreen().closePopup();
-				new AckGUI(plugin, sPlayer, "Funds Deposited Successfully");
-				break;
-			case 2:
-				sPlayer.getMainScreen().closePopup();
-				new BankMainGUI(plugin, sPlayer);
-				break;
+		case 1: // Ok
+			if (box.getSelectedItem() == null) {
+				new AckGUI(plugin, sPlayer, selectedBank, "Please specify account.", "depositgui");
+			} else {
+
+				Account myAccount = ReservePlugin.getReserve().getAccountFromNameIn(selectedBank, box.getSelectedItem(), sPlayer.getName());
+				double cost = 0;
+				try {
+					double value = Math.abs(Double.parseDouble(depositAmountField.getText()));					
+					cost = value;					
+				} catch (Exception e) {
+					//do nothing
+				}
+				if (cost == 0) {
+					sPlayer.getMainScreen().closePopup();
+					new AckGUI(plugin, sPlayer, selectedBank, "Deposit amount has to be more than zero.", "depositgui");
+				} else {
+				// Remove from Users Economy
+				myAccount.add(cost);
+				sPlayer.getMainScreen().closePopup();				
+				new AckGUI(plugin, sPlayer, selectedBank, "Funds Deposited Successfully", "depositgui");
+				}
+			}
+			break;
+		case 2: // Close
+			sPlayer.getMainScreen().closePopup();
+			new BankMainGUI(plugin, sPlayer, selectedBank);
+			break;
 		}
 	}
 
 	public void onSelect(int i, String text) {
 		// set Current loaded econ
+	}
+	
+	private void populateList() {		
+		List<String> items = new ArrayList<String>();
+		List<Account> accountNames = ReservePlugin.getReserve().getAccountsInBankFor(sPlayer.getName(), selectedBank);    	
+		for (Account account: accountNames) {
+			items.add(account.getName());
+		}
+		if (items != null) {
+			System.out.println("Populating List");
+			Collections.sort(items, String.CASE_INSENSITIVE_ORDER);
+			box.setItems(items);
+			box.setDirty(true);
+		}		
 	}
 }

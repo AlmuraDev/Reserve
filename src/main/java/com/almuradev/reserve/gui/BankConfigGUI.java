@@ -24,6 +24,7 @@
 package com.almuradev.reserve.gui;
 
 import com.almuradev.reserve.ReservePlugin;
+import com.almuradev.reserve.econ.Bank;
 
 import org.bukkit.plugin.Plugin;
 import org.getspout.spoutapi.gui.CheckBox;
@@ -41,11 +42,13 @@ import org.getspout.spoutapi.player.SpoutPlayer;
 public class BankConfigGUI extends GenericPopup {
 	private final ReservePlugin plugin;
 	private final SpoutPlayer sPlayer;
+	private final Bank selectedBank;
 	Color bottom = new Color(1.0F, 1.0F, 1.0F, 0.50F);
 
-	public BankConfigGUI(ReservePlugin plugin, SpoutPlayer sPlayer) {
+	public BankConfigGUI(ReservePlugin plugin, SpoutPlayer sPlayer, Bank bank) {
 		this.plugin = plugin;
 		this.sPlayer = sPlayer;
+		this.selectedBank = bank;
 
 		GenericTexture border = new GenericTexture("http://www.almuramc.com/images/playerplus.png");
 		border.setAnchor(WidgetAnchor.CENTER_CENTER);
@@ -110,7 +113,7 @@ public class BankConfigGUI extends GenericPopup {
 		switch (commandGoal) {
 			case 1: //Create
 				sPlayer.getMainScreen().closePopup();
-				new AckGUI(plugin, sPlayer, "Bank Configuration Saved");
+				new AckGUI(plugin, sPlayer, selectedBank, "Bank Configuration Saved", "bankconfiggui");
 				break;
 			case 2:
 				sPlayer.getMainScreen().closePopup();

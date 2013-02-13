@@ -43,13 +43,15 @@ import org.getspout.spoutapi.player.SpoutPlayer;
 public class BankMainGUI extends GenericPopup {
 	private final ReservePlugin plugin;
 	private final SpoutPlayer sPlayer;
+	private final Bank selectedBank;
 	private static NumberFormat numForm;
 	private static Locale caLoc = new Locale("en", "US");
 	Color bottom = new Color(1.0F, 1.0F, 1.0F, 0.50F);
 
-	public BankMainGUI(ReservePlugin plugin, SpoutPlayer sPlayer) {
+	public BankMainGUI(ReservePlugin plugin, SpoutPlayer sPlayer, Bank bank) {
 		this.plugin = plugin;
 		this.sPlayer = sPlayer;
+		this.selectedBank = bank;
 
 		GenericTexture border = new GenericTexture("http://www.almuramc.com/images/playerplus.png");
 		border.setAnchor(WidgetAnchor.CENTER_CENTER);
@@ -61,7 +63,7 @@ public class BankMainGUI extends GenericPopup {
 		gl.setScale(1.2F);
 		gl.setAnchor(WidgetAnchor.CENTER_CENTER);
 		gl.setHeight(15).setWidth(GenericLabel.getStringWidth(gl.getText()));
-		gl.shiftXPos(-35).shiftYPos(-70);
+		gl.shiftXPos(((GenericLabel.getStringWidth(gl.getText())/2)*-1)-4).shiftYPos(-70);
 
 		GenericGradient gg = new GenericGradient();
 		gg.setBottomColor(bottom).setTopColor(bottom);
@@ -75,16 +77,12 @@ public class BankMainGUI extends GenericPopup {
 		gb.shiftXPos(-65).shiftYPos(-25).setMaxWidth(130);
 		gb.setWidth(130).setHeight(1);
 
-		//if (playerBank != null) {
-		//final String plat = numForm.format(playerBank.getTotalBalance());
 		GenericLabel bankNameLabel = new GenericLabel();
 		bankNameLabel.setScale(1.0F);
 		bankNameLabel.setAnchor(WidgetAnchor.CENTER_CENTER);		
-		bankNameLabel.setText("Test");
-		//bankNameLabel.setText("Bank Balance: " + ReservePlugin.getReserve().get(holder, world)
-		bankNameLabel.setHeight(15).setWidth(GenericLabel.getStringWidth(gl.getText()));
-		bankNameLabel.shiftXPos(-70).shiftYPos(-44);
-		//}
+		bankNameLabel.setText("Bank Name: " + selectedBank.getName());
+		bankNameLabel.setHeight(15).setWidth(GenericLabel.getStringWidth(bankNameLabel.getText()));
+		bankNameLabel.shiftXPos((GenericLabel.getStringWidth(bankNameLabel.getText())/2)*-1).shiftYPos(-44);
 
 		GenericButton createAccount = new CommandButton(this, 1, "Open New Account");
 		GenericButton makeDeposit = new CommandButton(this, 2, "Make Deposit");
@@ -122,15 +120,15 @@ public class BankMainGUI extends GenericPopup {
 		switch (commandGoal) {
 			case 1:
 				sPlayer.getMainScreen().closePopup();
-				new CreateAccountGUI(plugin, sPlayer);
+				new CreateAccountGUI(plugin, sPlayer, selectedBank);
 				break;
 			case 2:
 				sPlayer.getMainScreen().closePopup();
-				new DepositGUI(plugin, sPlayer);
+				new DepositGUI(plugin, sPlayer, selectedBank);
 				break;
 			case 3:
 				sPlayer.getMainScreen().closePopup();
-				new WithdrawGUI(plugin, sPlayer);
+				new WithdrawGUI(plugin, sPlayer, selectedBank);
 				break;
 			case 4:
 				sPlayer.getMainScreen().closePopup();

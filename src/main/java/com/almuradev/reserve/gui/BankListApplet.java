@@ -34,11 +34,9 @@ import com.almuradev.reserve.econ.Bank;
 public class BankListApplet extends GenericListWidget {
 
 	public BankListApplet() {		
-		Map<String, List<Bank>> allBanks = ReservePlugin.getReserve().retrieveBanks();
-		System.out.println("Hello World");
+		Map<String, List<Bank>> allBanks = ReservePlugin.getReserve().retrieveBanks();		
 		for (String world : allBanks.keySet()) {		
-			for (Bank bank : allBanks.get(world)) {					
-			System.out.println("Account: " + world);
+			for (Bank bank : allBanks.get(world)) {							
 				this.addItem(new ListWidgetItem(bank.getName(), world ));
 			}
 		}

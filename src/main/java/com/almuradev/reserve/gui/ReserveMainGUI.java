@@ -36,6 +36,7 @@ import org.getspout.spoutapi.gui.GenericLabel;
 import org.getspout.spoutapi.gui.GenericListWidget;
 import org.getspout.spoutapi.gui.GenericPopup;
 import org.getspout.spoutapi.gui.GenericTexture;
+import org.getspout.spoutapi.gui.ListWidget;
 import org.getspout.spoutapi.gui.RenderPriority;
 import org.getspout.spoutapi.gui.Screen;
 import org.getspout.spoutapi.gui.WidgetAnchor;
@@ -46,6 +47,7 @@ public class ReserveMainGUI extends GenericPopup {
 	private final SpoutPlayer sPlayer;
 	private static NumberFormat numForm;
 	private static Locale caLoc = new Locale("en", "US");
+	private ListWidget list;
 	Color bottom = new Color(1.0F, 1.0F, 1.0F, 0.50F);
 
 	public ReserveMainGUI(ReservePlugin plugin, SpoutPlayer sPlayer) {
@@ -62,7 +64,7 @@ public class ReserveMainGUI extends GenericPopup {
 		gl.setScale(1.2F);
 		gl.setAnchor(WidgetAnchor.CENTER_CENTER);
 		gl.setHeight(15).setWidth(GenericLabel.getStringWidth(gl.getText()));
-		gl.shiftXPos(-30).shiftYPos(-110);
+		gl.shiftXPos(((GenericLabel.getStringWidth(gl.getText())/2)*-1)-4).shiftYPos(-110);
 
 		GenericGradient gg = new GenericGradient();
 		gg.setBottomColor(bottom).setTopColor(bottom);
@@ -73,37 +75,43 @@ public class ReserveMainGUI extends GenericPopup {
 		GenericGradient gb = new GenericGradient();
 		gb.setBottomColor(bottom).setTopColor(bottom);
 		gb.setAnchor(WidgetAnchor.CENTER_CENTER);
-		gb.shiftXPos(-115).shiftYPos(-35).setMaxWidth(230);
+		gb.shiftXPos(-115).shiftYPos(-5).setMaxWidth(230);
 		gb.setWidth(230).setHeight(1);	
 
-		GenericListWidget list = new BankListApplet();
+		list = new BankListApplet();
 		list.setAnchor(WidgetAnchor.CENTER_CENTER);
 		list.shiftXPos(-80).shiftYPos(-90);
-		list.setWidth(155).setHeight(50);
+		list.setWidth(155).setHeight(80);
 		list.setPriority(RenderPriority.Lowest);
 		
 		GenericButton createNewBank = new CommandButton(this, 1, "Make New Bank");
 		GenericButton renameBank = new CommandButton(this, 2, "Rename Bank");			
 		GenericButton deleteBank = new CommandButton(this, 3, "Delete Bank");
-		GenericButton lockBank = new CommandButton(this, 4, "Open Bank");
+		GenericButton openBank = new CommandButton(this, 4, "Open Bank");
 		GenericButton options = new CommandButton(this, 5, "Options");
 		GenericButton close = new CommandButton(this, 6, "Close");
 
 		createNewBank.setAnchor(WidgetAnchor.CENTER_CENTER);
 		renameBank.setAnchor(WidgetAnchor.CENTER_CENTER);
 		deleteBank.setAnchor(WidgetAnchor.CENTER_CENTER);
-		lockBank.setAnchor(WidgetAnchor.CENTER_CENTER);
+		openBank.setAnchor(WidgetAnchor.CENTER_CENTER);
 		options.setAnchor(WidgetAnchor.CENTER_CENTER);
 		close.setAnchor(WidgetAnchor.CENTER_CENTER);
 
 		createNewBank.setHeight(16).setWidth(120).shiftXPos(-60).shiftYPos(0);
 		renameBank.setHeight(16).setWidth(120).shiftXPos(-60).shiftYPos(20);
 		deleteBank.setHeight(16).setWidth(120).shiftXPos(-60).shiftYPos(40);
-		lockBank.setHeight(16).setWidth(120).shiftXPos(-60).shiftYPos(60);
+		openBank.setHeight(16).setWidth(120).shiftXPos(-60).shiftYPos(60);
 		options.setHeight(16).setWidth(40).shiftXPos(-60).shiftYPos(88);
 		close.setHeight(16).setWidth(40).shiftXPos(20).shiftYPos(88);
+		
+		if (list.getItems() == null) {
+			openBank.setEnabled(false);
+		} else {
+			openBank.setEnabled(true);
+		}
 
-		attachWidgets(plugin, border, gl, gg, gb, createNewBank, list, renameBank, deleteBank, lockBank, options, close);
+		attachWidgets(plugin, border, gl, gg, gb, createNewBank, list, renameBank, deleteBank, openBank, options, close);
 
 		sPlayer.getMainScreen().closePopup();
 		sPlayer.getMainScreen().attachPopupScreen(this);
@@ -124,12 +132,16 @@ public class ReserveMainGUI extends GenericPopup {
 				//new WithdrawGUI(plugin, sPlayer);
 				break;
 			case 4:
-				sPlayer.getMainScreen().closePopup();
-				new BankMainGUI(plugin, sPlayer, list.getSelectedItem().getTitle());
+				if (list.getSelectedItem() == null) {
+					new AckGUI(plugin, sPlayer, null, "Please Select Bank.", "reservemaingui");
+				} else {
+				sPlayer.getMainScreen().closePopup();				
+				new BankMainGUI(plugin, sPlayer, ReservePlugin.getReserve().get(list.getSelectedItem().getTitle(), list.getSelectedItem().getText(), true));
+				}
 				break;
 			case 5:
 				sPlayer.getMainScreen().closePopup();
-				//new OptionsGUI(plugin, sPlayer);
+				new OptionsGUI(plugin, sPlayer);
 				break;
 			case 6:
 				Screen screen = sPlayer.getMainScreen();

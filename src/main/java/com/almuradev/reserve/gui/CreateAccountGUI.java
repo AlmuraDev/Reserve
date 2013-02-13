@@ -24,6 +24,7 @@
 package com.almuradev.reserve.gui;
 
 import com.almuradev.reserve.ReservePlugin;
+import com.almuradev.reserve.econ.Bank;
 
 import org.getspout.spoutapi.gui.Color;
 import org.getspout.spoutapi.gui.GenericButton;
@@ -39,11 +40,13 @@ import org.getspout.spoutapi.player.SpoutPlayer;
 public class CreateAccountGUI extends GenericPopup {
 	private final ReservePlugin plugin;
 	private final SpoutPlayer sPlayer;
+	private Bank selectedBank;
 	Color bottom = new Color(1.0F, 1.0F, 1.0F, 0.50F);
 
-	public CreateAccountGUI(ReservePlugin plugin, SpoutPlayer sPlayer) {
+	public CreateAccountGUI(ReservePlugin plugin, SpoutPlayer sPlayer, Bank bank) {
 		this.plugin = plugin;
 		this.sPlayer = sPlayer;
+		this.selectedBank = bank;
 
 		GenericTexture border = new GenericTexture("http://www.almuramc.com/images/playerplus.png");
 		border.setAnchor(WidgetAnchor.CENTER_CENTER);
@@ -101,11 +104,11 @@ public class CreateAccountGUI extends GenericPopup {
 		switch (commandGoal) {
 			case 1: //Create
 				sPlayer.getMainScreen().closePopup();
-				new AckGUI(plugin, sPlayer, "Account Created Successfully");
+				new AckGUI(plugin, sPlayer, selectedBank, "Account Created Successfully", "createaccountgui");
 				break;
 			case 2:
 				sPlayer.getMainScreen().closePopup();
-				new BankMainGUI(plugin, sPlayer);
+				new BankMainGUI(plugin, sPlayer, selectedBank);
 				break;
 		}
 	}

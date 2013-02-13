@@ -103,15 +103,15 @@ public class OptionsGUI extends GenericPopup {
 			case 1:
 				sPlayer.getMainScreen().closePopup();
 				System.out.println("Open Reserve Config");
-				new ReserveConfigGUI(plugin, sPlayer);
+				new ReserveConfigGUI(plugin, sPlayer, null);
 				break;
 			case 2:
 				sPlayer.getMainScreen().closePopup();				
-				new BankConfigGUI(plugin, sPlayer);
+				new BankConfigGUI(plugin, sPlayer, null);
 				break;			
 			case 3:
 				sPlayer.getMainScreen().closePopup();				
-				new BankMainGUI(plugin, sPlayer);
+				new BankMainGUI(plugin, sPlayer, null);
 				break;
 		}
 	}
