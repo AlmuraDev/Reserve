@@ -116,38 +116,38 @@ public class WithdrawGUI extends GenericPopup {
 
 	public void onClickCommand(int commandGoal) {
 		switch (commandGoal) {
-		case 1: // Ok
-			if (box.getSelectedItem() == null) {
-				new AckGUI(plugin, sPlayer, selectedBank, "Please specify account.", "depositgui");
-			} else {
-
-				Account myAccount = ReservePlugin.getReserve().getAccountFromNameIn(selectedBank, box.getSelectedItem(), sPlayer.getName());
-				double withdraw = 0;
-				try {
-					double value = Math.abs(Double.parseDouble(depositAmountField.getText()));					
-					withdraw = value;					
-				} catch (Exception e) {
-					//do nothing
-				}
-				if (withdraw == 0) {
-					sPlayer.getMainScreen().closePopup();
-					new AckGUI(plugin, sPlayer, selectedBank, "Deposit amount has to be more than zero.", "withdrawgui");
+			case 1: // Ok
+				if (box.getSelectedItem() == null) {
+					new AckGUI(plugin, sPlayer, selectedBank, "Please specify account.", "depositgui");
 				} else {
-				// Remove from Users Economy
-					if (myAccount.getBalance()<withdraw) {
-						new AckGUI(plugin, sPlayer, selectedBank, "Withdraw amount cannot be greater than current balance.", "withdrawgui");
+
+					Account myAccount = ReservePlugin.getReserve().getAccountFromNameIn(selectedBank, box.getSelectedItem(), sPlayer.getName());
+					double withdraw = 0;
+					try {
+						double value = Math.abs(Double.parseDouble(depositAmountField.getText()));
+						withdraw = value;
+					} catch (Exception e) {
+						//do nothing
+					}
+					if (withdraw == 0) {
+						sPlayer.getMainScreen().closePopup();
+						new AckGUI(plugin, sPlayer, selectedBank, "Deposit amount has to be more than zero.", "withdrawgui");
 					} else {
-					myAccount.add(withdraw);
-				sPlayer.getMainScreen().closePopup();				
-				new AckGUI(plugin, sPlayer, selectedBank, "Funds Deposited Successfully", "depositgui");
+						// Remove from Users Economy
+						if (myAccount.getBalance() < withdraw) {
+							new AckGUI(plugin, sPlayer, selectedBank, "Withdraw amount cannot be greater than current balance.", "withdrawgui");
+						} else {
+							myAccount.add(withdraw);
+							sPlayer.getMainScreen().closePopup();
+							new AckGUI(plugin, sPlayer, selectedBank, "Funds Deposited Successfully", "depositgui");
+						}
 					}
 				}
-			}
-			break;
-		case 2: // Close
-			sPlayer.getMainScreen().closePopup();
-			new BankMainGUI(plugin, sPlayer, selectedBank);
-			break;
+				break;
+			case 2: // Close
+				sPlayer.getMainScreen().closePopup();
+				new BankMainGUI(plugin, sPlayer, selectedBank);
+				break;
 		}
 	}
 

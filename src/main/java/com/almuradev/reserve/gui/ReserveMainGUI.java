@@ -27,13 +27,11 @@ import java.text.NumberFormat;
 import java.util.Locale;
 
 import com.almuradev.reserve.ReservePlugin;
-import com.almuradev.reserve.econ.Bank;
 
 import org.getspout.spoutapi.gui.Color;
 import org.getspout.spoutapi.gui.GenericButton;
 import org.getspout.spoutapi.gui.GenericGradient;
 import org.getspout.spoutapi.gui.GenericLabel;
-import org.getspout.spoutapi.gui.GenericListWidget;
 import org.getspout.spoutapi.gui.GenericPopup;
 import org.getspout.spoutapi.gui.GenericTexture;
 import org.getspout.spoutapi.gui.ListWidget;
@@ -64,7 +62,7 @@ public class ReserveMainGUI extends GenericPopup {
 		gl.setScale(1.2F);
 		gl.setAnchor(WidgetAnchor.CENTER_CENTER);
 		gl.setHeight(15).setWidth(GenericLabel.getStringWidth(gl.getText()));
-		gl.shiftXPos(((GenericLabel.getStringWidth(gl.getText())/2)*-1)-4).shiftYPos(-110);
+		gl.shiftXPos(((GenericLabel.getStringWidth(gl.getText()) / 2) * -1) - 4).shiftYPos(-110);
 
 		GenericGradient gg = new GenericGradient();
 		gg.setBottomColor(bottom).setTopColor(bottom);
@@ -76,16 +74,16 @@ public class ReserveMainGUI extends GenericPopup {
 		gb.setBottomColor(bottom).setTopColor(bottom);
 		gb.setAnchor(WidgetAnchor.CENTER_CENTER);
 		gb.shiftXPos(-115).shiftYPos(-5).setMaxWidth(230);
-		gb.setWidth(230).setHeight(1);	
+		gb.setWidth(230).setHeight(1);
 
 		list = new BankListApplet();
 		list.setAnchor(WidgetAnchor.CENTER_CENTER);
 		list.shiftXPos(-80).shiftYPos(-90);
 		list.setWidth(155).setHeight(80);
 		list.setPriority(RenderPriority.Lowest);
-		
+
 		GenericButton createNewBank = new CommandButton(this, 1, "Make New Bank");
-		GenericButton renameBank = new CommandButton(this, 2, "Rename Bank");			
+		GenericButton renameBank = new CommandButton(this, 2, "Rename Bank");
 		GenericButton deleteBank = new CommandButton(this, 3, "Delete Bank");
 		GenericButton openBank = new CommandButton(this, 4, "Open Bank");
 		GenericButton options = new CommandButton(this, 5, "Options");
@@ -104,7 +102,7 @@ public class ReserveMainGUI extends GenericPopup {
 		openBank.setHeight(16).setWidth(120).shiftXPos(-60).shiftYPos(60);
 		options.setHeight(16).setWidth(40).shiftXPos(-60).shiftYPos(88);
 		close.setHeight(16).setWidth(40).shiftXPos(20).shiftYPos(88);
-		
+
 		if (list.getItems() == null) {
 			openBank.setEnabled(false);
 		} else {
@@ -135,8 +133,8 @@ public class ReserveMainGUI extends GenericPopup {
 				if (list.getSelectedItem() == null) {
 					new AckGUI(plugin, sPlayer, null, "Please Select Bank.", "reservemaingui");
 				} else {
-				sPlayer.getMainScreen().closePopup();				
-				new BankMainGUI(plugin, sPlayer, ReservePlugin.getReserve().get(list.getSelectedItem().getTitle(), list.getSelectedItem().getText(), true));
+					sPlayer.getMainScreen().closePopup();
+					new BankMainGUI(plugin, sPlayer, ReservePlugin.getReserve().get(list.getSelectedItem().getTitle(), list.getSelectedItem().getText(), true));
 				}
 				break;
 			case 5:

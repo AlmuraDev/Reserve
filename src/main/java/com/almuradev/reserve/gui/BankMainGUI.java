@@ -63,7 +63,7 @@ public class BankMainGUI extends GenericPopup {
 		gl.setScale(1.2F);
 		gl.setAnchor(WidgetAnchor.CENTER_CENTER);
 		gl.setHeight(15).setWidth(GenericLabel.getStringWidth(gl.getText()));
-		gl.shiftXPos(((GenericLabel.getStringWidth(gl.getText())/2)*-1)-4).shiftYPos(-70);
+		gl.shiftXPos(((GenericLabel.getStringWidth(gl.getText()) / 2) * -1) - 4).shiftYPos(-70);
 
 		GenericGradient gg = new GenericGradient();
 		gg.setBottomColor(bottom).setTopColor(bottom);
@@ -79,10 +79,10 @@ public class BankMainGUI extends GenericPopup {
 
 		GenericLabel bankNameLabel = new GenericLabel();
 		bankNameLabel.setScale(1.0F);
-		bankNameLabel.setAnchor(WidgetAnchor.CENTER_CENTER);		
+		bankNameLabel.setAnchor(WidgetAnchor.CENTER_CENTER);
 		bankNameLabel.setText("Bank Name: " + selectedBank.getName());
 		bankNameLabel.setHeight(15).setWidth(GenericLabel.getStringWidth(bankNameLabel.getText()));
-		bankNameLabel.shiftXPos((GenericLabel.getStringWidth(bankNameLabel.getText())/2)*-1).shiftYPos(-44);
+		bankNameLabel.shiftXPos((GenericLabel.getStringWidth(bankNameLabel.getText()) / 2) * -1).shiftYPos(-44);
 
 		GenericButton createAccount = new CommandButton(this, 1, "Open New Account");
 		GenericButton makeDeposit = new CommandButton(this, 2, "Make Deposit");

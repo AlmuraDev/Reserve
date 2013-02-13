@@ -26,7 +26,6 @@ package com.almuradev.reserve.gui;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 
 import com.almuradev.reserve.ReservePlugin;
 import com.almuradev.reserve.econ.Account;
@@ -122,45 +121,45 @@ public class DepositGUI extends GenericPopup {
 
 	public void onClickCommand(int commandGoal) {
 		switch (commandGoal) {
-		case 1: // Ok
-			if (box.getSelectedItem() == null) {
-				new AckGUI(plugin, sPlayer, selectedBank, "Please specify account.", "depositgui");
-			} else {
-
-				Account myAccount = ReservePlugin.getReserve().getAccountFromNameIn(selectedBank, box.getSelectedItem(), sPlayer.getName());
-				double cost = 0;
-				try {
-					double value = Math.abs(Double.parseDouble(depositAmountField.getText()));					
-					cost = value;					
-				} catch (Exception e) {
-					//do nothing
-				}
-				if (cost == 0) {
-					sPlayer.getMainScreen().closePopup();
-					new AckGUI(plugin, sPlayer, selectedBank, "Deposit amount has to be more than zero.", "depositgui");
+			case 1: // Ok
+				if (box.getSelectedItem() == null) {
+					new AckGUI(plugin, sPlayer, selectedBank, "Please specify account.", "depositgui");
 				} else {
-				// Remove from Users Economy
-				myAccount.add(cost);
-				sPlayer.getMainScreen().closePopup();				
-				new AckGUI(plugin, sPlayer, selectedBank, "Funds Deposited Successfully", "depositgui");
+
+					Account myAccount = ReservePlugin.getReserve().getAccountFromNameIn(selectedBank, box.getSelectedItem(), sPlayer.getName());
+					double cost = 0;
+					try {
+						double value = Math.abs(Double.parseDouble(depositAmountField.getText()));
+						cost = value;
+					} catch (Exception e) {
+						//do nothing
+					}
+					if (cost == 0) {
+						sPlayer.getMainScreen().closePopup();
+						new AckGUI(plugin, sPlayer, selectedBank, "Deposit amount has to be more than zero.", "depositgui");
+					} else {
+						// Remove from Users Economy
+						myAccount.add(cost);
+						sPlayer.getMainScreen().closePopup();
+						new AckGUI(plugin, sPlayer, selectedBank, "Funds Deposited Successfully", "depositgui");
+					}
 				}
-			}
-			break;
-		case 2: // Close
-			sPlayer.getMainScreen().closePopup();
-			new BankMainGUI(plugin, sPlayer, selectedBank);
-			break;
+				break;
+			case 2: // Close
+				sPlayer.getMainScreen().closePopup();
+				new BankMainGUI(plugin, sPlayer, selectedBank);
+				break;
 		}
 	}
 
 	public void onSelect(int i, String text) {
 		// set Current loaded econ
 	}
-	
-	private void populateList() {		
+
+	private void populateList() {
 		List<String> items = new ArrayList<String>();
-		List<Account> accountNames = ReservePlugin.getReserve().getAccountsInBankFor(sPlayer.getName(), selectedBank);    	
-		for (Account account: accountNames) {
+		List<Account> accountNames = ReservePlugin.getReserve().getAccountsInBankFor(sPlayer.getName(), selectedBank);
+		for (Account account : accountNames) {
 			items.add(account.getName());
 		}
 		if (items != null) {
@@ -168,6 +167,6 @@ public class DepositGUI extends GenericPopup {
 			Collections.sort(items, String.CASE_INSENSITIVE_ORDER);
 			box.setItems(items);
 			box.setDirty(true);
-		}		
+		}
 	}
 }

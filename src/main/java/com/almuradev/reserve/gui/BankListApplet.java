@@ -21,23 +21,19 @@ package com.almuradev.reserve.gui;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
-
-import org.bukkit.ChatColor;
-import org.bukkit.plugin.Plugin;
-import org.getspout.spoutapi.gui.GenericListWidget;
-import org.getspout.spoutapi.gui.ListWidgetItem;
 
 import com.almuradev.reserve.ReservePlugin;
 import com.almuradev.reserve.econ.Bank;
 
-public class BankListApplet extends GenericListWidget {
+import org.getspout.spoutapi.gui.GenericListWidget;
+import org.getspout.spoutapi.gui.ListWidgetItem;
 
-	public BankListApplet() {		
-		Map<String, List<Bank>> allBanks = ReservePlugin.getReserve().retrieveBanks();		
-		for (String world : allBanks.keySet()) {		
-			for (Bank bank : allBanks.get(world)) {							
-				this.addItem(new ListWidgetItem(bank.getName(), world ));
+public class BankListApplet extends GenericListWidget {
+	public BankListApplet() {
+		Map<String, List<Bank>> allBanks = ReservePlugin.getReserve().retrieveBanks();
+		for (String world : allBanks.keySet()) {
+			for (Bank bank : allBanks.get(world)) {
+				this.addItem(new ListWidgetItem(bank.getName(), world));
 			}
 		}
 	}
