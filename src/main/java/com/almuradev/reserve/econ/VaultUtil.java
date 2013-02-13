@@ -20,6 +20,7 @@
 package com.almuradev.reserve.econ;
 
 import net.milkbowl.vault.economy.Economy;
+import net.milkbowl.vault.economy.EconomyResponse;
 
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.RegisteredServiceProvider;
@@ -46,7 +47,7 @@ public class VaultUtil {
 		if (amount > 0) {
 			economy.depositPlayer(name, amount);
 		} else if (amount < 0) {
-			economy.withdrawPlayer(name, amount);
+			economy.withdrawPlayer(name, Math.abs(amount));
 		}
 	}
 
