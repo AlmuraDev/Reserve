@@ -150,6 +150,30 @@ public class Bank {
 		return total;
 	}
 
+	public double getTotalBalanceFor(String holder) {
+		double total = 0;
+
+		for (Account account : accounts) {
+			if (account.getHolder().equalsIgnoreCase(holder)) {
+				total += account.getBalance();
+			}
+		}
+
+		return total;
+	}
+
+	public int getAmountOfAccountsFor(String holder) {
+		int amount = 0;
+
+		for (Account account : accounts) {
+			if (account.getHolder().equalsIgnoreCase(holder)) {
+				amount++;
+			}
+		}
+
+		return amount;
+	}
+
 	/**
 	 * @param taxRate
 	 * @return
