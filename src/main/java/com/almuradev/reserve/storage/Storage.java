@@ -31,7 +31,11 @@ import java.util.Set;
 
 import com.almuradev.reserve.ReservePlugin;
 import com.almuradev.reserve.econ.Account;
+import com.almuradev.reserve.econ.AccountType;
 import com.almuradev.reserve.econ.Bank;
+
+import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.WordUtils;
 
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -87,11 +91,12 @@ public class Storage implements Listener {
 		reader.set("holder", bank.getHolder());
 		final ConfigurationSection accounts = reader.createSection("accounts");
 		for (Account account : bank.retrieveAccounts()) {
-			ConfigurationSection accountTypeSection = accounts.getConfigurationSection(account.getName());
+			ConfigurationSection accountTypeSection = accounts.getConfigurationSection(account.getType().name().toLowerCase());
 			if (accountTypeSection == null) {
-				accountTypeSection = accounts.createSection(account.getName());
+				accountTypeSection = accounts.createSection(account.getType().name().toLowerCase());
 			}
 			final ConfigurationSection accountHolderSection = accountTypeSection.createSection(account.getHolder());
+			accountHolderSection.set("name", account.getName());
 			accountHolderSection.set("balance", account.getBalance());
 			accountHolderSection.set("interest-rate", account.getInterestRate());
 			accountHolderSection.set("tax-rate", account.getTaxRate());
@@ -200,11 +205,20 @@ class BankFileSaveVisitor extends SimpleFileVisitor<Path> {
 		final Set<String> accountTypeNames = accounts.getKeys(false);
 		//Determine if there are types of accounts.
 		for (String accountTypeName : accountTypeNames) {
+			AccountType type;
+			try {
+				type = AccountType.valueOf(accountTypeName.toUpperCase());
+			} catch (Exception e) {
+				plugin.getLogger().severe("The account type " + accountTypeName + " is invalid! Skipping this section...");
+				continue;
+			}
 			final ConfigurationSection accountTypeSection = accounts.getConfigurationSection(accountTypeName);
 			//Determine the names of who holds the accounts.
 			final Set<String> accountHolderNames = accountTypeSection.getKeys(false);
 			for (String accountHolderName : accountHolderNames) {
 				final ConfigurationSection accountHolderSection = accountTypeSection.getConfigurationSection(accountHolderName);
+				//Grab the account name (nickname).
+				final String accountName = accountHolderSection.getString("name", "My " + StringUtils.capitalize(type.name().toLowerCase()));
 				//Grab the account holder's balance.
 				final double balance = accountHolderSection.getDouble("balance", 0.0);
 				//Grab the account holder's interest rate.
@@ -212,7 +226,7 @@ class BankFileSaveVisitor extends SimpleFileVisitor<Path> {
 				//Grab the account holder's tax rate.
 				final double taxRate = accountHolderSection.getDouble("tax-rate", 0.0);
 				//Create the account.
-				final Account accountToInject = new Account(accountTypeName, accountHolderName);
+				final Account accountToInject = new Account(type, accountName, accountHolderName);
 				accountToInject
 						.setBalance(balance)
 						.setInterestRate(interestRate)

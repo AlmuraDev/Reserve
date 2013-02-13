@@ -20,6 +20,7 @@
 package com.almuradev.reserve.econ;
 
 public class Account {
+	private AccountType type;
 	private String name;
 	private String holder;
 	private double balance = 0;
@@ -27,10 +28,19 @@ public class Account {
 	private double taxRate = 0;
 	private boolean dirty = false;
 
-	public Account(String name, String holder) {
+	public Account(AccountType type, String name, String holder) {
+		this.type = type;
 		this.name = name;
 		this.holder = holder;
 		setDirty(true);
+	}
+
+	public AccountType getType() {
+		return type;
+	}
+
+	public void setType(AccountType type) {
+		this.type = type;
 	}
 
 	/**
@@ -148,11 +158,11 @@ public class Account {
 		}
 
 		final Account account = (Account) other;
-		return account.getName().equalsIgnoreCase(name) && account.getHolder().equalsIgnoreCase(holder) && account.getInterestRate() == interestRate && account.getTaxRate() == taxRate && account.getBalance() == balance;
+		return account.getType().equals(type) && account.getName().equalsIgnoreCase(name) && account.getHolder().equalsIgnoreCase(holder) && account.getInterestRate() == interestRate && account.getTaxRate() == taxRate && account.getBalance() == balance;
 	}
 
 	@Override
 	public String toString() {
-		return "Account{name= " + name + ", holder= " + holder + ", interest= " + interestRate + ", tax= " + taxRate + ", balance= " + balance + ", dirty= " + dirty + "} ";
+		return "Account{type= " + type.name().toLowerCase() + ", name= " + name + ", holder= " + holder + ", interest= " + interestRate + ", tax= " + taxRate + ", balance= " + balance + ", dirty= " + dirty + "} ";
 	}
 }

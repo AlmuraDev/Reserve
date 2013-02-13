@@ -25,6 +25,7 @@ package com.almuradev.reserve.gui;
 
 import com.almuradev.reserve.ReservePlugin;
 import com.almuradev.reserve.econ.Account;
+import com.almuradev.reserve.econ.AccountType;
 import com.almuradev.reserve.econ.Bank;
 
 import org.getspout.spoutapi.gui.Color;
@@ -112,7 +113,7 @@ public class CreateAccountGUI extends GenericPopup {
 				if (selectedBank.getAccount(accountNameField.getText(), sPlayer.getName()) != null) {
 					new AckGUI(plugin, sPlayer, selectedBank, "Account already exists.", "createaccountgui");
 				} else {
-					selectedBank.addAccount(new Account(accountNameField.getText(), sPlayer.getName()));
+					selectedBank.addAccount(new Account(AccountType.CHECKING, accountNameField.getText(), sPlayer.getName())); //TODO Need a combobox for this!
 					sPlayer.getMainScreen().closePopup();
 					new AckGUI(plugin, sPlayer, selectedBank, "Account Created Successfully", "createaccountgui");
 				}

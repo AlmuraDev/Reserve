@@ -10,27 +10,26 @@ holder: ninjazidane
 accounts:
     checking:
         ninjazidane:
+            name: my checking
             balance: 20
             interest-rate: 0
             tax-rate: 0
         gregabyte:
+            name: greg checking
             balance: -20
             interest-rate: 0
             tax-rate: 0            
     savings:
         ninjazidane:
+            name: my backup
             balance: 28739
             interest-rate: 0
             tax-rate: 0            
         gregabyte:
+            name: greg backup
             balance: 100
             interest-rate: 0
-            tax-rate: 0                    
-    mutual:
-        gregabyte:
-            balance: 100000
-            interest-rate: 0
-            tax-rate: 0            
+            tax-rate: 0
 
 # - Each time a file is saved, it is wiped and re-made. This is done purely to make future upgrades to Banks 100% compatible with older systems.
 # - Files are not saved on transaction but on a schedule (every 2 mins). This may change to on transaction in the future.

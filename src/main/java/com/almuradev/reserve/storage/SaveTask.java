@@ -46,6 +46,7 @@ public class SaveTask implements Runnable {
 				if (!bank.isDirty()) {
 					continue;
 				}
+				System.out.println(bank.toString());
 				storage.save(world, bank);
 				//Save to flat file.
 				bank.setDirty(false);
