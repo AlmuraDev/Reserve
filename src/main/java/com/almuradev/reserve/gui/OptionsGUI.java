@@ -35,7 +35,6 @@ import org.getspout.spoutapi.gui.GenericLabel;
 import org.getspout.spoutapi.gui.GenericPopup;
 import org.getspout.spoutapi.gui.GenericTexture;
 import org.getspout.spoutapi.gui.RenderPriority;
-import org.getspout.spoutapi.gui.Screen;
 import org.getspout.spoutapi.gui.WidgetAnchor;
 import org.getspout.spoutapi.player.SpoutPlayer;
 
@@ -73,18 +72,17 @@ public class OptionsGUI extends GenericPopup {
 		gb.setAnchor(WidgetAnchor.CENTER_CENTER);
 		gb.shiftXPos(-65).shiftYPos(-25).setMaxWidth(130);
 		gb.setWidth(130).setHeight(1);
-	
 
 		GenericButton reserveConfig = new CommandButton(this, 1, "Reserve Configuration");
 		GenericButton bankConfig = new CommandButton(this, 2, "Bank Configuration");
 		GenericButton close = new CommandButton(this, 3, "Close");
 
 		reserveConfig.setAnchor(WidgetAnchor.CENTER_CENTER);
-		bankConfig.setAnchor(WidgetAnchor.CENTER_CENTER);		
+		bankConfig.setAnchor(WidgetAnchor.CENTER_CENTER);
 		close.setAnchor(WidgetAnchor.CENTER_CENTER);
 
 		reserveConfig.setHeight(16).setWidth(120).shiftXPos(-60).shiftYPos(-20);
-		bankConfig.setHeight(16).setWidth(120).shiftXPos(-60).shiftYPos(0);		
+		bankConfig.setHeight(16).setWidth(120).shiftXPos(-60).shiftYPos(0);
 		close.setHeight(16).setWidth(40).shiftXPos(20).shiftYPos(68);
 
 		//createAccount.setEnabled(sPlayer.hasPermission("reserve.createaccount") && playerBank == null);
@@ -106,11 +104,11 @@ public class OptionsGUI extends GenericPopup {
 				new ReserveConfigGUI(plugin, sPlayer, null);
 				break;
 			case 2:
-				sPlayer.getMainScreen().closePopup();				
+				sPlayer.getMainScreen().closePopup();
 				new BankConfigGUI(plugin, sPlayer, null);
-				break;			
+				break;
 			case 3:
-				sPlayer.getMainScreen().closePopup();				
+				sPlayer.getMainScreen().closePopup();
 				new BankMainGUI(plugin, sPlayer, null);
 				break;
 		}

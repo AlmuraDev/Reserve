@@ -50,7 +50,7 @@ public class AckGUI extends GenericPopup {
 		this.selectedBank = bank;
 		this.ackMessage = ackMessage;
 		this.previousWindow = prevWindow;
-
+		
 		//Check if playerBank is null here and handle appropriately. May want to check this BEFORE you get to actually
 		//constructing the GUI (ie in the right click of a NPC).
 
@@ -64,7 +64,7 @@ public class AckGUI extends GenericPopup {
 		gl.setScale(1.2F);
 		gl.setAnchor(WidgetAnchor.CENTER_CENTER);
 		gl.setHeight(15).setWidth(GenericLabel.getStringWidth(gl.getText()));
-		gl.shiftXPos(((GenericLabel.getStringWidth(gl.getText()) / 2) * -1) - 10).shiftYPos(-70);
+		gl.shiftXPos(((GenericLabel.getStringWidth(gl.getText())/2)*-1)-10).shiftYPos(-70);
 
 		GenericGradient gg = new GenericGradient();
 		gg.setBottomColor(bottom).setTopColor(bottom);
@@ -76,7 +76,7 @@ public class AckGUI extends GenericPopup {
 		an.setScale(1.0F);
 		an.setAnchor(WidgetAnchor.CENTER_CENTER);
 		an.setHeight(15).setWidth(GenericLabel.getStringWidth(an.getText()));
-		an.shiftXPos((GenericLabel.getStringWidth(an.getText()) / 2) * -1).shiftYPos(-40);
+		an.shiftXPos((GenericLabel.getStringWidth(an.getText())/2)*-1).shiftYPos(-40);
 
 		GenericButton close = new CommandButton(this, 1, "OK");
 
@@ -95,13 +95,13 @@ public class AckGUI extends GenericPopup {
 			case 1: //OK
 				System.out.println("AckMessage:" + ackMessage);
 				System.out.println("PreviousWindow: " + previousWindow);
-				if (ackMessage.equalsIgnoreCase("Please specify account.") && previousWindow.equalsIgnoreCase("depositgui")) {
+				if (ackMessage.equalsIgnoreCase("Please specify account.") && previousWindow.equalsIgnoreCase("depositgui") ) {
 					sPlayer.getMainScreen().closePopup();
-					new DepositGUI(plugin, sPlayer, selectedBank);
+					new DepositGUI(plugin, sPlayer, selectedBank);					
 				} else if (ackMessage.equalsIgnoreCase("Please select bank.") && previousWindow.equalsIgnoreCase("reservemaingui")) {
 					sPlayer.getMainScreen().closePopup();
 					new ReserveMainGUI(plugin, sPlayer);
-				} else if (ackMessage.equalsIgnoreCase("Deposit amount has to be more than zero.") && previousWindow.equalsIgnoreCase("depositgui")) {
+				} else if (ackMessage.equalsIgnoreCase("Deposit amount has to be more than zero.") && previousWindow.equalsIgnoreCase("depositgui") ) {
 					sPlayer.getMainScreen().closePopup();
 					new DepositGUI(plugin, sPlayer, selectedBank);		
 				} else if (ackMessage.equalsIgnoreCase("Insuffient funds available for deposit.") && previousWindow.equalsIgnoreCase("depositgui") ) {
@@ -117,7 +117,7 @@ public class AckGUI extends GenericPopup {
 					sPlayer.getMainScreen().closePopup();
 					new BankMainGUI(plugin, sPlayer, selectedBank);
 				}
-				break;
+				break;				
 		}
 	}
 }

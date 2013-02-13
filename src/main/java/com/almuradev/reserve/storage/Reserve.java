@@ -152,6 +152,7 @@ public final class Reserve {
 		}
 		return accounts;
 	}
+
 	public Account getAccountFromNameIn(Bank bank, String name, String holder) {
 		if (holder == null || holder.isEmpty() || bank == null || name == null || name.isEmpty()) {
 			throw new NullPointerException("Specified holder, bank, or name is null!");

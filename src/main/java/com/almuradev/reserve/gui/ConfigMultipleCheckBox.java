@@ -19,10 +19,11 @@
  */
 package com.almuradev.reserve.gui;
 
-import org.bukkit.plugin.Plugin;
 import org.getspout.spoutapi.event.screen.ButtonClickEvent;
 import org.getspout.spoutapi.gui.GenericCheckBox;
 import org.getspout.spoutapi.player.SpoutPlayer;
+
+import org.bukkit.plugin.Plugin;
 
 public class ConfigMultipleCheckBox extends GenericCheckBox {
 	private Plugin plugin;

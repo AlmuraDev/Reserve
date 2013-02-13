@@ -26,7 +26,6 @@ package com.almuradev.reserve.gui;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 
 import com.almuradev.reserve.ReservePlugin;
 import com.almuradev.reserve.econ.Account;
@@ -146,29 +145,33 @@ public class DepositGUI extends GenericPopup {
 					} else {
 						myAccount.add(deposit);
 						VaultUtil.add(sPlayer.getName(), 0-deposit);
-						sPlayer.getMainScreen().closePopup();				
+						sPlayer.getMainScreen().closePopup();
 						new AckGUI(plugin, sPlayer, selectedBank, "Funds Deposited Successfully", "depositgui");
 					}
 				}
 			}
-			break;
-		case 2: // Close
-			sPlayer.getMainScreen().closePopup();
-			new BankMainGUI(plugin, sPlayer, selectedBank);
-			break;
+				break;
+			case 2: // Close
+				sPlayer.getMainScreen().closePopup();
+				new BankMainGUI(plugin, sPlayer, selectedBank);
+				break;
 		}
 	}
-	
-	private void populateList() {		
+
+	public void onSelect(int i, String text) {
+		// set Current loaded econ
+	}
+
+	private void populateList() {
 		List<String> items = new ArrayList<String>();
-		List<Account> accountNames = ReservePlugin.getReserve().getAccountsInBankFor(sPlayer.getName(), selectedBank);    	
-		for (Account account: accountNames) {
+		List<Account> accountNames = ReservePlugin.getReserve().getAccountsInBankFor(sPlayer.getName(), selectedBank);
+		for (Account account : accountNames) {
 			items.add(account.getName());
 		}
 		if (items != null) {	
 			Collections.sort(items, String.CASE_INSENSITIVE_ORDER);
 			box.setItems(items);
 			box.setDirty(true);
-		}		
+		}
 	}
 }

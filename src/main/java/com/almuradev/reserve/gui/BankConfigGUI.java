@@ -26,7 +26,6 @@ package com.almuradev.reserve.gui;
 import com.almuradev.reserve.ReservePlugin;
 import com.almuradev.reserve.econ.Bank;
 
-import org.bukkit.plugin.Plugin;
 import org.getspout.spoutapi.gui.CheckBox;
 import org.getspout.spoutapi.gui.Color;
 import org.getspout.spoutapi.gui.GenericButton;
