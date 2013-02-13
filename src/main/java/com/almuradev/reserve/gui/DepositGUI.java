@@ -34,6 +34,7 @@ import com.almuradev.reserve.econ.Account;
 import com.almuradev.reserve.econ.Bank;
 import com.almuradev.reserve.econ.VaultUtil;
 
+import org.bukkit.ChatColor;
 import org.getspout.spoutapi.gui.Color;
 import org.getspout.spoutapi.gui.ComboBox;
 import org.getspout.spoutapi.gui.GenericButton;
@@ -111,7 +112,7 @@ public class DepositGUI extends GenericPopup {
 		at.shiftXPos(-95).shiftYPos(-10);
 		
 		att = new GenericLabel();
-		att.setText("0.00").setVisible(false);
+		att.setText(ChatColor.GREEN + "0.00").setVisible(false);
 		att.setScale(1.0F);
 		att.setAnchor(WidgetAnchor.CENTER_CENTER);
 		att.setHeight(15).setWidth(GenericLabel.getStringWidth(att.getText()));
@@ -125,7 +126,7 @@ public class DepositGUI extends GenericPopup {
 		
 		GenericLabel ab = new GenericLabel();
 		numForm = NumberFormat.getCurrencyInstance(caLoc);
-		ab.setText(numForm.format(VaultUtil.getBalance(sPlayer.getName())));
+		ab.setText(ChatColor.YELLOW + numForm.format(VaultUtil.getBalance(sPlayer.getName())));
 		ab.setScale(1.0F);
 		ab.setAnchor(WidgetAnchor.CENTER_CENTER);
 		ab.setHeight(15).setWidth(GenericLabel.getStringWidth(ab.getText()));
@@ -202,7 +203,7 @@ public class DepositGUI extends GenericPopup {
 		if (box.getSelectedItem() != null) {
 			numForm = NumberFormat.getCurrencyInstance(caLoc);
 			Account myAccount = selectedBank.getAccount(box.getSelectedItem(), sPlayer.getName());
-			att.setText(numForm.format(myAccount.getBalance()));
+			att.setText(ChatColor.GREEN + numForm.format(myAccount.getBalance()));
 			att.setVisible(true);
 			at.setVisible(true);
 		}

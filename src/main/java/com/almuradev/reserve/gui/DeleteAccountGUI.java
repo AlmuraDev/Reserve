@@ -23,9 +23,11 @@
  */
 package com.almuradev.reserve.gui;
 
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import com.almuradev.reserve.ReservePlugin;
@@ -33,6 +35,7 @@ import com.almuradev.reserve.econ.Account;
 import com.almuradev.reserve.econ.Bank;
 import com.almuradev.reserve.econ.VaultUtil;
 
+import org.bukkit.ChatColor;
 import org.getspout.spoutapi.gui.Color;
 import org.getspout.spoutapi.gui.ComboBox;
 import org.getspout.spoutapi.gui.GenericButton;
@@ -49,8 +52,10 @@ public class DeleteAccountGUI extends GenericPopup {
 	private final ReservePlugin plugin;
 	private final SpoutPlayer sPlayer;
 	private final Bank selectedBank;
-	private final GenericTextField depositAmountField;
+	private final GenericLabel an;	
 	private final ComboBox box;
+	private static NumberFormat numForm;
+	private static Locale caLoc = new Locale("en", "US");
 	Color bottom = new Color(1.0F, 1.0F, 1.0F, 0.50F);
 
 	public DeleteAccountGUI(ReservePlugin plugin, SpoutPlayer sPlayer, Bank bank) {
@@ -99,20 +104,14 @@ public class DeleteAccountGUI extends GenericPopup {
 		box.setPriority(RenderPriority.Low);
 		populateList();
 
-		GenericLabel an = new GenericLabel("Current Balance: ");
+		an = new GenericLabel();
+		numForm = NumberFormat.getCurrencyInstance(caLoc);
+		an.setText("Current Balance: ");
 		an.setScale(1.0F);
 		an.setAnchor(WidgetAnchor.CENTER_CENTER);
 		an.setHeight(15).setWidth(GenericLabel.getStringWidth(an.getText()));
 		an.shiftXPos(-110).shiftYPos(-10);
-
-		depositAmountField = new GenericTextField();
-		depositAmountField.setWidth(110).setHeight(16);
-		depositAmountField.setAnchor(WidgetAnchor.CENTER_CENTER);
-		depositAmountField.shiftXPos(-15).shiftYPos(-13);
-		depositAmountField.setText("0.00");
-		depositAmountField.setMaximumCharacters(15);
-		depositAmountField.setMaximumLines(1);
-
+				
 		GenericButton depositButton = new CommandButton(this, 1, "Close Account");
 		GenericButton close = new CommandButton(this, 2, "Close");
 
@@ -122,7 +121,7 @@ public class DeleteAccountGUI extends GenericPopup {
 		depositButton.setHeight(16).setWidth(80).shiftXPos(-10).shiftYPos(47);
 		close.setHeight(16).setWidth(40).shiftXPos(75).shiftYPos(47);
 
-		attachWidgets(plugin, border, gl, gg, box, cl, windowLabel, depositAmountField, an, depositButton, close);
+		attachWidgets(plugin, border, gl, gg, box, cl, windowLabel, an, depositButton, close);
 
 		sPlayer.getMainScreen().closePopup();
 		sPlayer.getMainScreen().attachPopupScreen(this);
@@ -134,14 +133,8 @@ public class DeleteAccountGUI extends GenericPopup {
 			if (box.getSelectedItem() == null) {
 				new AckGUI(plugin, sPlayer, selectedBank, "Please specify account.", "deleteaccountgui");
 			} else {
-				Account myAccount = ReservePlugin.getReserve().getAccountFromNameIn(selectedBank, box.getSelectedItem(), sPlayer.getName());
-				double balance = 0;
-				try {
-					balance = Math.abs(Double.parseDouble(depositAmountField.getText()));												
-				} catch (Exception e) {
-					//do nothing
-				}
-				if (balance != 0) {
+				Account myAccount = ReservePlugin.getReserve().getAccountFromNameIn(selectedBank, box.getSelectedItem(), sPlayer.getName());			
+				if (myAccount.getBalance() != 0) {
 					sPlayer.getMainScreen().closePopup();					
 					new AckGUI(plugin, sPlayer, selectedBank, "Account balance is not zero.", "deleteaccountgui");
 				} else {
@@ -174,6 +167,6 @@ public class DeleteAccountGUI extends GenericPopup {
 	void onSelect(int i, String text) {
 		Account myAccount = ReservePlugin.getReserve().getAccountFromNameIn(selectedBank, box.getSelectedItem(), sPlayer.getName());
 		double balance = 0;
-		depositAmountField.setText(Double.toString(myAccount.getBalance()));	
+		an.setText("Current Balance: " + ChatColor.GREEN + numForm.format(myAccount.getBalance()));	
 	}
 }

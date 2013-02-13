@@ -103,24 +103,12 @@ public class ReserveMainGUI extends GenericPopup {
 		options.setHeight(16).setWidth(50).shiftXPos(-60).shiftYPos(88);
 		close.setHeight(16).setWidth(40).shiftXPos(20).shiftYPos(88);
 		
-		if (sPlayer.hasPermission("reserve.admin") || sPlayer.hasPermission("reserve.addbank")) {
-			createNewBank.setVisible(true);
-			renameBank.setVisible(true);
-		}
+		createNewBank.setVisible(sPlayer.hasPermission("reserve.addbank"));
+		renameBank.setVisible(sPlayer.hasPermission("reserve.addbank"));	
+		deleteBank.setVisible(sPlayer.hasPermission("reserve.removebank"));	
+		options.setVisible(sPlayer.hasPermission("reserve.admin"));			
+		openBank.setVisible(sPlayer.hasPermission("reserve.viewbank"));			
 		
-		if (sPlayer.hasPermission("reserve.admin") || sPlayer.hasPermission("reserve.removebank")) {
-			renameBank.setVisible(true);
-			deleteBank.setVisible(true);			
-		}
-		
-		if (sPlayer.hasPermission("reserve.admin")) {
-			options.setVisible(true);			
-		}
-		
-		if (sPlayer.hasPermission("reserve.viewbank")) {
-			openBank.setVisible(true);			
-		}
-
 		if (list.getItems() == null) {
 			openBank.setEnabled(false);
 		} else {

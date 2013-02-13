@@ -29,12 +29,14 @@ import java.util.Locale;
 import com.almuradev.reserve.ReservePlugin;
 import com.almuradev.reserve.econ.Bank;
 
+import org.bukkit.ChatColor;
 import org.getspout.spoutapi.gui.Color;
 import org.getspout.spoutapi.gui.GenericButton;
 import org.getspout.spoutapi.gui.GenericGradient;
 import org.getspout.spoutapi.gui.GenericLabel;
 import org.getspout.spoutapi.gui.GenericPopup;
 import org.getspout.spoutapi.gui.GenericTexture;
+import org.getspout.spoutapi.gui.ListWidget;
 import org.getspout.spoutapi.gui.RenderPriority;
 import org.getspout.spoutapi.gui.Screen;
 import org.getspout.spoutapi.gui.WidgetAnchor;
@@ -44,6 +46,7 @@ public class BankMainGUI extends GenericPopup {
 	private final ReservePlugin plugin;
 	private final SpoutPlayer sPlayer;
 	private final Bank selectedBank;
+	private ListWidget list;
 	private static NumberFormat numForm;
 	private static Locale caLoc = new Locale("en", "US");
 	Color bottom = new Color(1.0F, 1.0F, 1.0F, 0.50F);	
@@ -56,35 +59,48 @@ public class BankMainGUI extends GenericPopup {
 		GenericTexture border = new GenericTexture("http://www.almuramc.com/images/playerplus.png");
 		border.setAnchor(WidgetAnchor.CENTER_CENTER);
 		border.setPriority(RenderPriority.High);
-		border.setWidth(250).setHeight(170);
-		border.shiftXPos(0-(border.getWidth()/2)).shiftYPos(-80);
+		border.setWidth(250).setHeight(250);
+		border.shiftXPos(0-(border.getWidth()/2)).shiftYPos(-120);
 
 		GenericLabel gl = new GenericLabel();
 		gl.setText(selectedBank.getName());
 		gl.setScale(1.2F);
 		gl.setAnchor(WidgetAnchor.CENTER_CENTER);
 		gl.setHeight(15).setWidth(GenericLabel.getStringWidth(gl.getText()));
-		gl.shiftXPos(((GenericLabel.getStringWidth(gl.getText()) / 2) * -1) - 4).shiftYPos(-70);
+		gl.shiftXPos(((GenericLabel.getStringWidth(gl.getText()) / 2) * -1) - 4).shiftYPos(-110);
 
 		GenericGradient gg = new GenericGradient();
 		gg.setBottomColor(bottom).setTopColor(bottom);
 		gg.setAnchor(WidgetAnchor.CENTER_CENTER);		
 		gg.setWidth(200).setHeight(1);
-		gg.shiftXPos(0-(gg.getWidth()/2)).shiftYPos(-55);
+		gg.shiftXPos(0-(gg.getWidth()/2)).shiftYPos(-95);
 
 		GenericGradient gb = new GenericGradient();
 		gb.setBottomColor(bottom).setTopColor(bottom);
 		gb.setAnchor(WidgetAnchor.CENTER_CENTER);		
 		gb.setWidth(200).setHeight(1);
-		gb.shiftXPos(0-(gb.getWidth()/2)).shiftYPos(-25);
+		gb.shiftXPos(0-(gb.getWidth()/2)).shiftYPos(-65);
 
+		list = new AccountListApplet(selectedBank, sPlayer);
+		list.setAnchor(WidgetAnchor.CENTER_CENTER);
+		list.shiftXPos(-80).shiftYPos(-60);
+		list.setWidth(155).setHeight(70);
+		list.setPriority(RenderPriority.Lowest);
+		
+		GenericLabel bankAccountsLabel = new GenericLabel();				
+		bankAccountsLabel.setScale(1.0F);
+		bankAccountsLabel.setAnchor(WidgetAnchor.CENTER_CENTER);
+		bankAccountsLabel.setText("Accounts: " + ChatColor.YELLOW + selectedBank.getAmountOfAccountsFor(sPlayer.getName()));
+		bankAccountsLabel.setHeight(15).setWidth(GenericLabel.getStringWidth(bankAccountsLabel.getText()));
+		bankAccountsLabel.shiftXPos((GenericLabel.getStringWidth(bankAccountsLabel.getText()) / 2) * -1).shiftYPos(-89);
+		
 		GenericLabel bankNameLabel = new GenericLabel();
-		numForm = NumberFormat.getCurrencyInstance(caLoc);
+		numForm = NumberFormat.getCurrencyInstance(caLoc);		
 		bankNameLabel.setScale(1.0F);
 		bankNameLabel.setAnchor(WidgetAnchor.CENTER_CENTER);
-		bankNameLabel.setText("Total Balance: " + numForm.format(selectedBank.getTotalBalance()));
+		bankNameLabel.setText("Total Balance: " + ChatColor.GOLD + numForm.format(selectedBank.getTotalBalanceFor(sPlayer.getName())));
 		bankNameLabel.setHeight(15).setWidth(GenericLabel.getStringWidth(bankNameLabel.getText()));
-		bankNameLabel.shiftXPos((GenericLabel.getStringWidth(bankNameLabel.getText()) / 2) * -1).shiftYPos(-44);
+		bankNameLabel.shiftXPos((GenericLabel.getStringWidth(bankNameLabel.getText()) / 2) * -1).shiftYPos(-79);
 
 		GenericButton createAccount = new CommandButton(this, 1, "Open New Account");
 		GenericButton makeDeposit = new CommandButton(this, 2, "Make Deposit");
@@ -100,19 +116,20 @@ public class BankMainGUI extends GenericPopup {
 		options.setAnchor(WidgetAnchor.CENTER_CENTER);
 		close.setAnchor(WidgetAnchor.CENTER_CENTER);
 
-		createAccount.setHeight(16).setWidth(120).shiftXPos(-60).shiftYPos(-20);
-		makeDeposit.setHeight(16).setWidth(120).shiftXPos(-60).shiftYPos(0);
-		makeWithdraw.setHeight(16).setWidth(120).shiftXPos(-60).shiftYPos(20);
-		closeAccount.setHeight(16).setWidth(120).shiftXPos(-60).shiftYPos(40);
-		options.setHeight(16).setWidth(50).shiftXPos(-60).shiftYPos(68);
-		close.setHeight(16).setWidth(40).shiftXPos(20).shiftYPos(68);
+		createAccount.setHeight(16).setWidth(120).shiftXPos(-60).shiftYPos(15);
+		makeDeposit.setHeight(16).setWidth(120).shiftXPos(-60).shiftYPos(35);
+		makeWithdraw.setHeight(16).setWidth(120).shiftXPos(-60).shiftYPos(55);
+		closeAccount.setHeight(16).setWidth(120).shiftXPos(-60).shiftYPos(75);
+		options.setHeight(16).setWidth(50).shiftXPos(-120).shiftYPos(95);
+		close.setHeight(16).setWidth(40).shiftXPos(80).shiftYPos(95);
 
-		//createAccount.setEnabled(sPlayer.hasPermission("reserve.createaccount") && playerBank == null);
-		//makeDeposit.setEnabled(sPlayer.hasPermission("reserve.deposit") && playerBank != null);
-		//makeWithdraw.setEnabled(sPlayer.hasPermission("reserve.withdraw") && playerBank != null);
-		//closeAccount.setEnabled(sPlayer.hasPermission("reserve.closeaccount") && playerBank != null) ;
+		createAccount.setEnabled(sPlayer.hasPermission("reserve.accountadd"));
+		makeDeposit.setEnabled(sPlayer.hasPermission("reserve.deposit"));
+		makeWithdraw.setEnabled(sPlayer.hasPermission("reserve.withdraw"));
+		closeAccount.setEnabled(sPlayer.hasPermission("reserve.accountremove"));
+		options.setEnabled(sPlayer.hasPermission("reserve.admin"));
 
-		attachWidgets(plugin, border, gl, bankNameLabel, gg, gb, createAccount, makeDeposit, makeWithdraw, closeAccount, options, close);
+		attachWidgets(plugin, border, gl, bankNameLabel, gg, gb, createAccount, list, bankAccountsLabel, makeDeposit, makeWithdraw, closeAccount, options, close);
 
 		sPlayer.getMainScreen().closePopup();
 		sPlayer.getMainScreen().attachPopupScreen(this);
