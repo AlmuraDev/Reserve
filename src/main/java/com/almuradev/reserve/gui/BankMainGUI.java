@@ -46,7 +46,7 @@ public class BankMainGUI extends GenericPopup {
 	private final Bank selectedBank;
 	private static NumberFormat numForm;
 	private static Locale caLoc = new Locale("en", "US");
-	Color bottom = new Color(1.0F, 1.0F, 1.0F, 0.50F);
+	Color bottom = new Color(1.0F, 1.0F, 1.0F, 0.50F);	
 
 	public BankMainGUI(ReservePlugin plugin, SpoutPlayer sPlayer, Bank bank) {
 		this.plugin = plugin;
@@ -79,9 +79,10 @@ public class BankMainGUI extends GenericPopup {
 		gb.shiftXPos(0-(gb.getWidth()/2)).shiftYPos(-25);
 
 		GenericLabel bankNameLabel = new GenericLabel();
+		numForm = NumberFormat.getCurrencyInstance(caLoc);
 		bankNameLabel.setScale(1.0F);
 		bankNameLabel.setAnchor(WidgetAnchor.CENTER_CENTER);
-		bankNameLabel.setText("Total Balance: " + selectedBank.getTotalBalance());
+		bankNameLabel.setText("Total Balance: " + numForm.format(selectedBank.getTotalBalance()));
 		bankNameLabel.setHeight(15).setWidth(GenericLabel.getStringWidth(bankNameLabel.getText()));
 		bankNameLabel.shiftXPos((GenericLabel.getStringWidth(bankNameLabel.getText()) / 2) * -1).shiftYPos(-44);
 
@@ -103,8 +104,8 @@ public class BankMainGUI extends GenericPopup {
 		makeDeposit.setHeight(16).setWidth(120).shiftXPos(-60).shiftYPos(0);
 		makeWithdraw.setHeight(16).setWidth(120).shiftXPos(-60).shiftYPos(20);
 		closeAccount.setHeight(16).setWidth(120).shiftXPos(-60).shiftYPos(40);
-		options.setHeight(16).setWidth(40).shiftXPos(-60).shiftYPos(68);
-		close.setHeight(16).setWidth(50).shiftXPos(20).shiftYPos(68);
+		options.setHeight(16).setWidth(50).shiftXPos(-60).shiftYPos(68);
+		close.setHeight(16).setWidth(40).shiftXPos(20).shiftYPos(68);
 
 		//createAccount.setEnabled(sPlayer.hasPermission("reserve.createaccount") && playerBank == null);
 		//makeDeposit.setEnabled(sPlayer.hasPermission("reserve.deposit") && playerBank != null);

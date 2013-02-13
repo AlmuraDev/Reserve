@@ -23,9 +23,11 @@
  */
 package com.almuradev.reserve.gui;
 
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 
 import com.almuradev.reserve.ReservePlugin;
 import com.almuradev.reserve.econ.Account;
@@ -49,7 +51,10 @@ public class DepositGUI extends GenericPopup {
 	private final SpoutPlayer sPlayer;
 	private final Bank selectedBank;
 	private final GenericTextField depositAmountField;
+	private final GenericLabel att, at;
 	private final ComboBox box;
+	private static NumberFormat numForm;
+	private static Locale caLoc = new Locale("en", "US");
 	Color bottom = new Color(1.0F, 1.0F, 1.0F, 0.50F);
 
 	public DepositGUI(ReservePlugin plugin, SpoutPlayer sPlayer, Bank bank) {
@@ -61,46 +66,81 @@ public class DepositGUI extends GenericPopup {
 		border.setAnchor(WidgetAnchor.CENTER_CENTER);
 		border.setPriority(RenderPriority.High);
 		border.setWidth(255).setHeight(150);
-		border.shiftXPos(-105).shiftYPos(-80);
+		border.shiftXPos(0-(border.getWidth()/2)).shiftYPos(-80);
 
-		GenericLabel gl = new GenericLabel("Reserve");
+		GenericLabel gl = new GenericLabel();
+		gl.setText(selectedBank.getName());
 		gl.setScale(1.2F);
 		gl.setAnchor(WidgetAnchor.CENTER_CENTER);
 		gl.setHeight(15).setWidth(GenericLabel.getStringWidth(gl.getText()));
-		gl.shiftXPos(-10).shiftYPos(-70);
+		gl.shiftXPos(((GenericLabel.getStringWidth(gl.getText()) / 2) * -1) - 4).shiftYPos(-70);
 
 		GenericGradient gg = new GenericGradient();
 		gg.setBottomColor(bottom).setTopColor(bottom);
 		gg.setAnchor(WidgetAnchor.CENTER_CENTER);
-		gg.shiftXPos(-45).shiftYPos(-55).setMaxWidth(130);
-		gg.setWidth(130).setHeight(1);
+		gg.setWidth(200).setHeight(1);
+		gg.shiftXPos(0-(gg.getWidth()/2)).shiftYPos(-55);
+		
 
 		GenericLabel cl = new GenericLabel("Select Account: ");
 		cl.setScale(1.0F);
 		cl.setAnchor(WidgetAnchor.CENTER_CENTER);
 		cl.setHeight(15).setWidth(GenericLabel.getStringWidth(cl.getText()));
-		cl.shiftXPos(-95).shiftYPos(-42);
+		cl.shiftXPos(-115).shiftYPos(-42);
+		
+		GenericGradient gm = new GenericGradient();
+		gm.setBottomColor(bottom).setTopColor(bottom);
+		gm.setAnchor(WidgetAnchor.CENTER_CENTER);
+		gm.setWidth(200).setHeight(1);
+		gm.shiftXPos(0-(gm.getWidth()/2)).shiftYPos(-25);
 
 		box = new AccountDepositCombo(this);
 		box.setText("Accounts");
 		box.setAnchor(WidgetAnchor.CENTER_CENTER);
 		box.setWidth(GenericLabel.getStringWidth("12345678901234567890123459"));
 		box.setHeight(18);
-		box.shiftXPos(-15).shiftYPos(-47);
+		box.shiftXPos(-35).shiftYPos(-47);
 		box.setAuto(true);
 		box.setPriority(RenderPriority.Low);
 		populateList();
 
+		at = new GenericLabel("Account Balance: ");
+		at.setScale(1.0F).setVisible(false);
+		at.setAnchor(WidgetAnchor.CENTER_CENTER);
+		at.setHeight(15).setWidth(GenericLabel.getStringWidth(at.getText()));
+		at.shiftXPos(-95).shiftYPos(-10);
+		
+		att = new GenericLabel();
+		att.setText("0.00").setVisible(false);
+		att.setScale(1.0F);
+		att.setAnchor(WidgetAnchor.CENTER_CENTER);
+		att.setHeight(15).setWidth(GenericLabel.getStringWidth(att.getText()));
+		att.shiftXPos(0).shiftYPos(-10);
+		
+		GenericLabel ag = new GenericLabel("Carrying Balance: ");
+		ag.setScale(1.0F);
+		ag.setAnchor(WidgetAnchor.CENTER_CENTER);
+		ag.setHeight(15).setWidth(GenericLabel.getStringWidth(ag.getText()));
+		ag.shiftXPos(-95).shiftYPos(10);
+		
+		GenericLabel ab = new GenericLabel();
+		numForm = NumberFormat.getCurrencyInstance(caLoc);
+		ab.setText(numForm.format(VaultUtil.getBalance(sPlayer.getName())));
+		ab.setScale(1.0F);
+		ab.setAnchor(WidgetAnchor.CENTER_CENTER);
+		ab.setHeight(15).setWidth(GenericLabel.getStringWidth(ab.getText()));
+		ab.shiftXPos(0).shiftYPos(10);
+		
 		GenericLabel an = new GenericLabel("Deposit Amount: ");
 		an.setScale(1.0F);
 		an.setAnchor(WidgetAnchor.CENTER_CENTER);
 		an.setHeight(15).setWidth(GenericLabel.getStringWidth(an.getText()));
-		an.shiftXPos(-95).shiftYPos(-10);
+		an.shiftXPos(-95).shiftYPos(31);
 
 		depositAmountField = new GenericTextField();
 		depositAmountField.setWidth(110).setHeight(16);
 		depositAmountField.setAnchor(WidgetAnchor.CENTER_CENTER);
-		depositAmountField.shiftXPos(-10).shiftYPos(-13);
+		depositAmountField.shiftXPos(-10).shiftYPos(27);
 		depositAmountField.setText("0.00");
 		depositAmountField.setMaximumCharacters(15);
 		depositAmountField.setMaximumLines(1);
@@ -111,10 +151,10 @@ public class DepositGUI extends GenericPopup {
 		depositButton.setAnchor(WidgetAnchor.CENTER_CENTER);
 		close.setAnchor(WidgetAnchor.CENTER_CENTER);
 
-		depositButton.setHeight(16).setWidth(50).shiftXPos(30).shiftYPos(47);
-		close.setHeight(16).setWidth(40).shiftXPos(85).shiftYPos(47);
+		depositButton.setHeight(16).setWidth(50).shiftXPos(20).shiftYPos(50);
+		close.setHeight(16).setWidth(40).shiftXPos(75).shiftYPos(50);
 
-		attachWidgets(plugin, border, gl, gg, box, cl, depositAmountField, an, depositButton, close);
+		attachWidgets(plugin, border, gl, gg, ag, ab, at, att, gm, box, cl, depositAmountField, an, depositButton, close);
 
 		sPlayer.getMainScreen().closePopup();
 		sPlayer.getMainScreen().attachPopupScreen(this);
@@ -159,7 +199,13 @@ public class DepositGUI extends GenericPopup {
 	}
 
 	public void onSelect(int i, String text) {
-		// set Current loaded econ
+		if (box.getSelectedItem() != null) {
+			numForm = NumberFormat.getCurrencyInstance(caLoc);
+			Account myAccount = selectedBank.getAccount(box.getSelectedItem(), sPlayer.getName());
+			att.setText(numForm.format(myAccount.getBalance()));
+			att.setVisible(true);
+			at.setVisible(true);
+		}
 	}
 
 	private void populateList() {

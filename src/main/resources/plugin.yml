@@ -14,3 +14,41 @@ commands:
     usage: /reserve [player]
     permission: reserve.use
     permissions-message: You don't have <permission>
+
+permissions:
+    reserve.*:
+        description: Gives access to all reserve abilities
+        children:
+            reserve.admin: true
+            reserve.view: true
+            reserve.addbank: true
+            reserve.viewbank: true
+            reserve.removebank: true
+            reserve.accountadd: true
+            reserve.accountremove: true
+            reserve.withdraw: true
+            reserve.deposit: true
+    reserve.admin:
+        description:
+        default: op
+    reserve.view:
+        description: 
+        default: op
+    reserve.addbank:
+        description: 
+        default: op
+    reserve.removebank:
+        description: 
+        default: op
+    reserve.accountadd:
+        description: 
+        default: op
+    reserve.accountremove:
+        description: 
+        default: op
+    reserve.withdraw:
+        description: Preset Default guide based on moderator Permissions
+        default: op
+    reserve.deposit:
+        description: Preset Default guide based on moderator Permissions
+        default: op

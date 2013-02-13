@@ -54,23 +54,11 @@ public class AckGUI extends GenericPopup {
 		//Check if playerBank is null here and handle appropriately. May want to check this BEFORE you get to actually
 		//constructing the GUI (ie in the right click of a NPC).
 
-		GenericTexture border = new GenericTexture("http://www.almuramc.com/images/playerplus.png");
-		border.setAnchor(WidgetAnchor.CENTER_CENTER);
-		border.setPriority(RenderPriority.High);
-		border.setWidth(245).setHeight(90);
-		border.shiftXPos(-125).shiftYPos(-80);
-
 		GenericLabel gl = new GenericLabel("Reserve");
 		gl.setScale(1.2F);
 		gl.setAnchor(WidgetAnchor.CENTER_CENTER);
 		gl.setHeight(15).setWidth(GenericLabel.getStringWidth(gl.getText()));
 		gl.shiftXPos(((GenericLabel.getStringWidth(gl.getText()) / 2) * -1) - 10).shiftYPos(-70);
-
-		GenericGradient gg = new GenericGradient();
-		gg.setBottomColor(bottom).setTopColor(bottom);
-		gg.setAnchor(WidgetAnchor.CENTER_CENTER);
-		gg.shiftXPos(-65).shiftYPos(-55).setMaxWidth(130);
-		gg.setWidth(130).setHeight(1);
 
 		GenericLabel an = new GenericLabel(ackMessage);
 		an.setScale(1.0F);
@@ -78,6 +66,17 @@ public class AckGUI extends GenericPopup {
 		an.setHeight(15).setWidth(GenericLabel.getStringWidth(an.getText()));
 		an.shiftXPos((GenericLabel.getStringWidth(an.getText()) / 2) * -1).shiftYPos(-40);
 
+		GenericTexture border = new GenericTexture("http://www.almuramc.com/images/playerplus.png");
+		border.setAnchor(WidgetAnchor.CENTER_CENTER);
+		border.setPriority(RenderPriority.High);
+		border.setWidth(an.getWidth()+25).setHeight(90);
+		border.shiftXPos(0-(border.getWidth()/2)).shiftYPos(-80);
+		
+		GenericGradient gg = new GenericGradient();
+		gg.setBottomColor(bottom).setTopColor(bottom);
+		gg.setAnchor(WidgetAnchor.CENTER_CENTER);
+		gg.setWidth(border.getWidth()-25).setHeight(1);
+		gg.shiftXPos(0-gg.getWidth()/2).shiftYPos(-55);		
 		GenericButton close = new CommandButton(this, 1, "OK");
 
 		close.setAnchor(WidgetAnchor.CENTER_CENTER);
@@ -122,6 +121,15 @@ public class AckGUI extends GenericPopup {
 				} else if (ackMessage.equalsIgnoreCase("Please specify account.") && previousWindow.equalsIgnoreCase("deleteaccountgui")) {
 					sPlayer.getMainScreen().closePopup();
 					new DepositGUI(plugin, sPlayer, selectedBank);
+				} else if (ackMessage.equalsIgnoreCase("Bank Created Successfully.") && previousWindow.equalsIgnoreCase("createbankgui")) {
+					sPlayer.getMainScreen().closePopup();
+					new ReserveMainGUI(plugin, sPlayer);					
+				} else if (ackMessage.equalsIgnoreCase("Please specify name.") && previousWindow.equalsIgnoreCase("createbankgui")) {
+					sPlayer.getMainScreen().closePopup();
+					new CreateBankGUI(plugin, sPlayer);
+				} else if (ackMessage.equalsIgnoreCase("Bank already exists.") && previousWindow.equalsIgnoreCase("createbankgui")) {
+					sPlayer.getMainScreen().closePopup();
+					new CreateBankGUI(plugin, sPlayer);					
 				} else {
 					sPlayer.getMainScreen().closePopup();
 					new BankMainGUI(plugin, sPlayer, selectedBank);
