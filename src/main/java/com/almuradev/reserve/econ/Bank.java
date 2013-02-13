@@ -89,9 +89,9 @@ public class Bank {
 	 * @param name
 	 * @return
 	 */
-	public Account getAccount(String name) {
+	public Account getAccount(String name, String holder) {
 		for (Account account : accounts) {
-			if (account.getName().equalsIgnoreCase(name)) {
+			if (account.getName().equalsIgnoreCase(name) && account.getHolder().equalsIgnoreCase(holder)) {
 				return account;
 			}
 		}
@@ -102,8 +102,8 @@ public class Bank {
 	 * @param name
 	 * @return
 	 */
-	public Account removeAccount(String name) {
-		final Account account = getAccount(name);
+	public Account removeAccount(String name, String holder) {
+		final Account account = getAccount(name, holder);
 		if (account == null) {
 			return null;
 		}
@@ -133,7 +133,7 @@ public class Bank {
 		for (Account account : retrieveAccounts()) {
 			account.wipe();
 			if (erase) {
-				removeAccount(account.getName());
+				removeAccount(account.getName(), account.getHolder());
 			}
 		}
 		return this;
