@@ -25,6 +25,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.almuradev.reserve.econ.Account;
 import com.almuradev.reserve.econ.Bank;
 
 public final class Reserve {
@@ -137,6 +138,19 @@ public final class Reserve {
 	 */
 	public Map<String, List<Bank>> retrieveBanks() {
 		return Collections.unmodifiableMap(BANKS);
+	}
+
+	public List<Account> getAccountsInBankFor(String holder, Bank bank) {
+		if (holder == null || holder.isEmpty() || bank == null) {
+			throw new NullPointerException("Specified holder or bank is null!");
+		}
+		final ArrayList<Account> accounts = new ArrayList<>();
+		for (Account account : bank.retrieveAccounts()) {
+			if (account.getName().equalsIgnoreCase(holder)) {
+				accounts.add(account);
+			}
+		}
+		return accounts;
 	}
 
 	/**
