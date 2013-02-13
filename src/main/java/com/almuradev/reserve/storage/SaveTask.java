@@ -43,7 +43,6 @@ public class SaveTask implements Runnable {
 		//Step 1, save all to files
 		for (String world : BANKS.keySet()) {
 			for (Bank bank : BANKS.get(world)) {
-				System.out.println(bank.toString());
 				if (!bank.isDirty()) {
 					continue;
 				}

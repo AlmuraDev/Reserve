@@ -65,7 +65,6 @@ public final class Reserve {
 		}
 		final Bank toReturn = new Bank(name, holder);
 		ENTRY.add(toReturn);
-		System.out.println(BANKS.toString());
 		return toReturn;
 	}
 
