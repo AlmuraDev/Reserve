@@ -28,6 +28,7 @@ import java.util.Locale;
 
 import com.almuradev.reserve.ReservePlugin;
 
+import org.bukkit.ChatColor;
 import org.getspout.spoutapi.gui.Color;
 import org.getspout.spoutapi.gui.GenericButton;
 import org.getspout.spoutapi.gui.GenericGradient;
@@ -145,8 +146,9 @@ public class ReserveMainGUI extends GenericPopup {
 					new AckGUI(plugin, sPlayer, null, "Please Select Bank.", "reservemaingui");
 				} else {
 					sPlayer.getMainScreen().closePopup();
-					String [] split = list.getSelectedItem().getTitle().split("//");
-					new BankMainGUI(plugin, sPlayer, ReservePlugin.getReserve().get(split[0], split[1]));
+					String [] split = list.getSelectedItem().getTitle().split("\\/");
+					System.out.println("Line: " + list.getSelectedItem().getTitle());
+					new BankMainGUI(plugin, sPlayer, ReservePlugin.getReserve().get(split[0].trim(), ChatColor.stripColor(split[1].trim())));
 				}
 				break;
 			case 5:
@@ -155,7 +157,8 @@ public class ReserveMainGUI extends GenericPopup {
 					new AckGUI(plugin, sPlayer, null, "Please Select Bank.", "reservemaingui");
 				} else {
 					sPlayer.getMainScreen().closePopup();
-					new BankStatusGUI(plugin, sPlayer, ReservePlugin.getReserve().get(list.getSelectedItem().getTitle(), list.getSelectedItem().getText()));
+					String [] split = list.getSelectedItem().getTitle().split("\\/");
+					new BankStatusGUI(plugin, sPlayer, ReservePlugin.getReserve().get(split[0].trim(), ChatColor.stripColor(split[1].trim())));
 				}
 				break;
 			case 6:

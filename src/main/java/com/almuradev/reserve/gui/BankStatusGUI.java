@@ -91,9 +91,8 @@ public class BankStatusGUI extends GenericPopup {
 		
 		GenericLabel bankAccountsLabel = new GenericLabel();				
 		bankAccountsLabel.setScale(1.0F);
-		bankAccountsLabel.setAnchor(WidgetAnchor.CENTER_CENTER);
-		bankAccountsLabel.setText("TotalAccounts:");
-		//bankAccountsLabel.setText("Total Accounts: " + ChatColor.YELLOW + selectedBank.getAmountOfAccounts());
+		bankAccountsLabel.setAnchor(WidgetAnchor.CENTER_CENTER);		
+		bankAccountsLabel.setText("Total Accounts: " + ChatColor.YELLOW + selectedBank.getAmountOfAccounts());
 		bankAccountsLabel.setHeight(15).setWidth(GenericLabel.getStringWidth(bankAccountsLabel.getText()));
 		bankAccountsLabel.shiftXPos((GenericLabel.getStringWidth(bankAccountsLabel.getText()) / 2) * -1).shiftYPos(-89);
 		

@@ -69,8 +69,14 @@ public class AckGUI extends GenericPopup {
 		GenericTexture border = new GenericTexture("http://www.almuramc.com/images/playerplus.png");
 		border.setAnchor(WidgetAnchor.CENTER_CENTER);
 		border.setPriority(RenderPriority.High);
-		border.setWidth(an.getWidth()+25).setHeight(90);
-		border.shiftXPos(0-(border.getWidth()/2)).shiftYPos(-80);
+		
+		if (an.getWidth()< gl.getWidth()) {
+			border.setWidth(gl.getWidth()+25).setHeight(90);
+			border.shiftXPos(0-(border.getWidth()/2)).shiftYPos(-80);
+		} else {
+			border.setWidth(an.getWidth()+25).setHeight(90);
+			border.shiftXPos(0-(border.getWidth()/2)).shiftYPos(-80);
+		}
 		
 		GenericGradient gg = new GenericGradient();
 		gg.setBottomColor(bottom).setTopColor(bottom);
@@ -81,7 +87,9 @@ public class AckGUI extends GenericPopup {
 
 		close.setAnchor(WidgetAnchor.CENTER_CENTER);
 
-		close.setHeight(16).setWidth(40).shiftXPos(-25).shiftYPos(-20);
+		close.setHeight(16).setWidth(40).shiftXPos(-20).shiftYPos(-20);
+		
+		
 
 		attachWidgets(plugin, border, gl, gg, an, close);
 

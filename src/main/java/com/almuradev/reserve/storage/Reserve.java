@@ -87,11 +87,14 @@ public final class Reserve {
 		if (name == null || name.isEmpty() || world == null || world.isEmpty()) {
 			throw new NullPointerException("Specified holder or world is null!");
 		}
+		System.out.println("Name: " + name);
+		System.out.println("World: " + world);
 		final List<Bank> ENTRY = BANKS.get(world);
 		if (ENTRY != null) {
 			for (Bank bank : ENTRY) {
 				if (bank.getName().equalsIgnoreCase(name)) {
 					ENTRY.remove(bank);
+					System.out.println("Line: " + ENTRY.toString());					
 					return bank;
 				}
 			}

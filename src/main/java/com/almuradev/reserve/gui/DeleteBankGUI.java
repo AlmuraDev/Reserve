@@ -128,8 +128,9 @@ public class DeleteBankGUI extends GenericPopup {
 			if (list.getSelectedItem() == null) {
 				new AckGUI(plugin, sPlayer, null, "Please Select Bank.", "deletebankgui");
 			} else {
-				ReservePlugin.getReserve().remove(list.getSelectedItem().getTitle(), list.getSelectedItem().getText());
-				new AckGUI(plugin, sPlayer, null, "Bank Removed.", "reservemaingui");
+				String [] split = list.getSelectedItem().getTitle().split("\\/");
+				ReservePlugin.getReserve().remove(split[0].trim(), ChatColor.stripColor(split[1].trim()));
+				new AckGUI(plugin, sPlayer, null, "Bank Removed.", "deletebankgui");
 			}
 			break;
 		case 2: // Close
