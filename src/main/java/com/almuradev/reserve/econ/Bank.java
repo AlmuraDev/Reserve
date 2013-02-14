@@ -21,6 +21,7 @@ package com.almuradev.reserve.econ;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -146,25 +147,33 @@ public class Bank {
 	 * @return
 	 */
 	public Account removeAccount(String name, String holder) {
-		final Account account = getAccount(name, holder);
-		if (account == null) {
-			return null;
+		if (name == null || name.isEmpty() || holder == null || holder.isEmpty()) {
+			throw new NullPointerException("Specified name or holder is null!");
 		}
-		accounts.remove(account);
-		setDirty(true);
-		return account;
+		final Iterator<Account> entry = accounts.iterator();
+		while(entry.hasNext()) {
+			final Account temp = entry.next();
+			if (temp.getName().equalsIgnoreCase(name) && temp.getHolder().equalsIgnoreCase(holder)) {
+				entry.remove();
+				return temp;
+			}
+		}
+		return null;
 	}
 
 	public AccountType removeType(String name) {
 		if (name == null || name.isEmpty()) {
 			throw new NullPointerException("Specified name is null!");
 		}
-		final AccountType type = getType(name);
-		if (type == null) {
-			return null;
+		final Iterator<AccountType> entry = types.iterator();
+		while(entry.hasNext()) {
+			final AccountType temp = entry.next();
+			if (temp.getName().equalsIgnoreCase(name)) {
+				entry.remove();
+				return temp;
+			}
 		}
-		types.remove(type);
-		return type;
+		return null;
 	}
 
 	/**
@@ -298,11 +307,11 @@ public class Bank {
 		}
 
 		final Bank bank = (Bank) other;
-		return bank.getName().equalsIgnoreCase(name) && bank.getHolder().equalsIgnoreCase(holder) && !bank.retrieveAccounts().equals(accounts);
+		return bank.getName().equalsIgnoreCase(name) && bank.getHolder().equalsIgnoreCase(holder) && bank.retrieveAccounts().equals(accounts);
 	}
 
 	@Override
 	public String toString() {
-		return "Bank{holder= " + holder + ", name= " + name + ", accounts= {" + accounts.toString() + "}, dirty= " + dirty + "} ";
+		return "Bank{name= " + name + ", holder= " + holder + ", accounts= {" + accounts.toString() + "}, dirty= " + dirty + "} ";
 	}
 }

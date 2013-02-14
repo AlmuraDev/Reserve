@@ -22,6 +22,7 @@ package com.almuradev.reserve.storage;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -87,15 +88,14 @@ public final class Reserve {
 		if (name == null || name.isEmpty() || world == null || world.isEmpty()) {
 			throw new NullPointerException("Specified holder or world is null!");
 		}
-		System.out.println("Name: " + name);
-		System.out.println("World: " + world);
-		final List<Bank> ENTRY = BANKS.get(world);
-		if (ENTRY != null) {
-			for (Bank bank : ENTRY) {
-				if (bank.getName().equalsIgnoreCase(name)) {
-					ENTRY.remove(bank);
-					System.out.println("Line: " + ENTRY.toString());					
-					return bank;
+		final List<Bank> entry = BANKS.get(world);
+		if (entry != null) {
+			final Iterator<Bank> entryIterator = entry.iterator();
+			while(entryIterator.hasNext()) {
+				final Bank temp = entryIterator.next();
+				if (temp.getName().equalsIgnoreCase(name)) {
+					entryIterator.remove();
+					return temp;
 				}
 			}
 		}
