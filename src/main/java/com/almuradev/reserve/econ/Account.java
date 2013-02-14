@@ -24,8 +24,6 @@ public class Account {
 	private String name;
 	private String holder;
 	private double balance = 0;
-	private double interestRate = 0;
-	private double taxRate = 0;
 	private boolean dirty = false;
 
 	public Account(AccountType type, String name, String holder) {
@@ -39,8 +37,10 @@ public class Account {
 		return type;
 	}
 
-	public void setType(AccountType type) {
+	public Account setType(AccountType type) {
 		this.type = type;
+		setDirty(true);
+		return this;
 	}
 
 	/**
@@ -108,38 +108,6 @@ public class Account {
 	/**
 	 * @return
 	 */
-	public double getInterestRate() {
-		return interestRate;
-	}
-
-	/**
-	 * @param interestRate
-	 */
-	public Account setInterestRate(double interestRate) {
-		this.interestRate = interestRate;
-		setDirty(true);
-		return this;
-	}
-
-	/**
-	 * @return
-	 */
-	public double getTaxRate() {
-		return taxRate;
-	}
-
-	/**
-	 * @param taxRate
-	 */
-	public Account setTaxRate(double taxRate) {
-		this.taxRate = taxRate;
-		setDirty(true);
-		return this;
-	}
-
-	/**
-	 * @return
-	 */
 	public boolean isDirty() {
 		return dirty;
 	}
@@ -158,11 +126,11 @@ public class Account {
 		}
 
 		final Account account = (Account) other;
-		return account.getType().equals(type) && account.getName().equalsIgnoreCase(name) && account.getHolder().equalsIgnoreCase(holder) && account.getInterestRate() == interestRate && account.getTaxRate() == taxRate && account.getBalance() == balance;
+		return account.getType().equals(type) && account.getName().equalsIgnoreCase(name) && account.getHolder().equalsIgnoreCase(holder) && account.getBalance() == balance;
 	}
 
 	@Override
 	public String toString() {
-		return "Account{type= " + type.name().toLowerCase() + ", name= " + name + ", holder= " + holder + ", interest= " + interestRate + ", tax= " + taxRate + ", balance= " + balance + ", dirty= " + dirty + "} ";
+		return "Account{type= {" + type.toString() + "}, name= " + name + ", holder= " + holder + ", balance= " + balance + ", dirty= " + dirty + "} ";
 	}
 }

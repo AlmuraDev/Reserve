@@ -25,7 +25,6 @@ import com.almuradev.reserve.storage.Reserve;
 import com.almuradev.reserve.storage.SaveTask;
 import com.almuradev.reserve.storage.Storage;
 import com.almuradev.reserve.task.InterestTask;
-import com.almuradev.reserve.task.TaxTask;
 
 import org.getspout.spoutapi.player.SpoutPlayer;
 
@@ -65,9 +64,6 @@ public class ReservePlugin extends JavaPlugin {
 			scheduler.scheduleSyncRepeatingTask(this, new InterestTask(this, reserve), 0, config.getInterestInterval());
 		}
 		scheduler.scheduleSyncRepeatingTask(this, new SaveTask(this, reserve, storage), 0, config.getSaveInterval());
-		if (config.shouldTax()) {
-			scheduler.scheduleSyncRepeatingTask(this, new TaxTask(this, reserve), 0, config.getTaxInterval());
-		}
 	}
 
 	public static Reserve getReserve() {

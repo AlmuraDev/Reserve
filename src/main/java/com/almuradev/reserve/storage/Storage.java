@@ -91,15 +91,19 @@ public class Storage implements Listener {
 		reader.set("holder", bank.getHolder());
 		final ConfigurationSection accounts = reader.createSection("accounts");
 		for (Account account : bank.retrieveAccounts()) {
-			ConfigurationSection accountTypeSection = accounts.getConfigurationSection(account.getType().name().toLowerCase());
+			ConfigurationSection accountTypeSection = accounts.getConfigurationSection(account.getType().getName().toLowerCase());
 			if (accountTypeSection == null) {
-				accountTypeSection = accounts.createSection(account.getType().name().toLowerCase());
+				accountTypeSection = accounts.createSection(account.getType().getName().toLowerCase());
 			}
 			final ConfigurationSection accountHolderSection = accountTypeSection.createSection(account.getHolder());
 			accountHolderSection.set("name", account.getName());
 			accountHolderSection.set("balance", account.getBalance());
-			accountHolderSection.set("interest-rate", account.getInterestRate());
-			accountHolderSection.set("tax-rate", account.getTaxRate());
+		}
+		final ConfigurationSection types = reader.createSection("types");
+		for (AccountType type : bank.retrieveTypes()) {
+			final ConfigurationSection typeNameSection = types.createSection(type.getName());
+			typeNameSection.set("interest", type.recievesInterest());
+			typeNameSection.set("interest-rate", type.getInterestRate());
 		}
 		try {
 			reader.save(bankPath.toFile());
@@ -196,6 +200,24 @@ class BankFileSaveVisitor extends SimpleFileVisitor<Path> {
 		//Create the empty bank.
 		final Bank bankToInject = new Bank(name, holder);
 
+		final ConfigurationSection types = reader.getConfigurationSection("types");
+		if (types == null) {
+			return null;
+		}
+
+		//Grab the type names
+		final Set<String> typeNames = types.getKeys(false);
+		for (String typeName : typeNames) {
+			final ConfigurationSection typeSection = types.getConfigurationSection(typeName);
+			final boolean hasInterest = typeSection.getBoolean("interest", false);
+			final double interestRate = typeSection.getDouble("interest-rate", 0.0);
+			final AccountType type = new AccountType(typeName);
+			type
+					.shouldReceiveInterest(hasInterest)
+					.setInterestRate(interestRate);
+			bankToInject.addType(type);
+		}
+
 		final ConfigurationSection accounts = reader.getConfigurationSection("accounts");
 		if (accounts == null) {
 			return null;
@@ -205,11 +227,9 @@ class BankFileSaveVisitor extends SimpleFileVisitor<Path> {
 		final Set<String> accountTypeNames = accounts.getKeys(false);
 		//Determine if there are types of accounts.
 		for (String accountTypeName : accountTypeNames) {
-			AccountType type;
-			try {
-				type = AccountType.valueOf(accountTypeName.toUpperCase());
-			} catch (Exception e) {
-				plugin.getLogger().severe("The account type " + accountTypeName + " is invalid! Skipping this section...");
+			final AccountType type = bankToInject.getType(accountTypeName);
+			if (type == null) {
+				plugin.getLogger().severe("Account type " + accountTypeName + " in accounts section isn't found in this bank! Skipping...");
 				continue;
 			}
 			final ConfigurationSection accountTypeSection = accounts.getConfigurationSection(accountTypeName);
@@ -218,19 +238,12 @@ class BankFileSaveVisitor extends SimpleFileVisitor<Path> {
 			for (String accountHolderName : accountHolderNames) {
 				final ConfigurationSection accountHolderSection = accountTypeSection.getConfigurationSection(accountHolderName);
 				//Grab the account name (nickname).
-				final String accountName = accountHolderSection.getString("name", "My " + StringUtils.capitalize(type.name().toLowerCase()));
+				final String accountName = accountHolderSection.getString("name", "My " + StringUtils.capitalize(type.getName().toLowerCase()));
 				//Grab the account holder's balance.
 				final double balance = accountHolderSection.getDouble("balance", 0.0);
-				//Grab the account holder's interest rate.
-				final double interestRate = accountHolderSection.getDouble("interest-rate", 0.0);
-				//Grab the account holder's tax rate.
-				final double taxRate = accountHolderSection.getDouble("tax-rate", 0.0);
 				//Create the account.
 				final Account accountToInject = new Account(type, accountName, accountHolderName);
-				accountToInject
-						.setBalance(balance)
-						.setInterestRate(interestRate)
-						.setTaxRate(taxRate);
+				accountToInject.setBalance(balance);
 				//Finally add it.
 				bankToInject.addAccount(accountToInject);
 			}

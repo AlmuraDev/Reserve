@@ -30,12 +30,17 @@ public class Bank {
 	private String name;
 	private String holder;
 	private List<Account> accounts;
+	private List<AccountType> types;
 	private boolean dirty = false;
 
 	public Bank(String name, String holder) {
+		if (name == null || name.isEmpty() || holder == null || holder.isEmpty()) {
+			throw new NullPointerException("Specified name or holder is null!");
+		}
 		this.name = name;
 		this.holder = holder;
 		this.accounts = new ArrayList<>();
+		types = new ArrayList<>();
 		setDirty(true);
 	}
 
@@ -50,6 +55,9 @@ public class Bank {
 	 * @param name
 	 */
 	public Bank setName(String name) {
+		if (name == null || name.isEmpty()) {
+			throw new NullPointerException("Specified name is null!");
+		}
 		this.name = name;
 		setDirty(true);
 		return this;
@@ -69,6 +77,9 @@ public class Bank {
 	 * @param holder
 	 */
 	public Bank setHolder(String holder) {
+		if (holder == null || holder.isEmpty()) {
+			throw new NullPointerException("Specified holder is null!");
+		}
 		this.holder = holder;
 		setDirty(true);
 		return this;
@@ -78,6 +89,9 @@ public class Bank {
 	 * @param account
 	 */
 	public Account addAccount(Account account) {
+		if (account == null) {
+			throw new NullPointerException("Specified account is null!");
+		}
 		if (!accounts.contains(account)) {
 			accounts.add(account);
 			setDirty(true);
@@ -85,16 +99,45 @@ public class Bank {
 		return account;
 	}
 
+	public AccountType addType(AccountType type) {
+		if (name == null || name.isEmpty()) {
+			throw new NullPointerException("Specified name is null!");
+		}
+
+		if (!types.contains(type)) {
+			types.add(type);
+			setDirty(true);
+		}
+		return type;
+	}
+
 	/**
 	 * @param name
 	 * @return
 	 */
 	public Account getAccount(String name, String holder) {
+		if (name == null || name.isEmpty() || holder == null || holder.isEmpty()) {
+			throw new NullPointerException("Specified name or holder is null!");
+		}
 		for (Account account : accounts) {
 			if (account.getName().equalsIgnoreCase(name) && account.getHolder().equalsIgnoreCase(holder)) {
 				return account;
 			}
 		}
+		return null;
+	}
+
+	public AccountType getType(String name) {
+		if (name == null || name.isEmpty()) {
+			throw new NullPointerException("Specified name is null!");
+		}
+
+		for (AccountType type : types) {
+			if (type.getName().equalsIgnoreCase(name)) {
+				return type;
+			}
+		}
+
 		return null;
 	}
 
@@ -112,6 +155,18 @@ public class Bank {
 		return account;
 	}
 
+	public AccountType removeType(String name) {
+		if (name == null || name.isEmpty()) {
+			throw new NullPointerException("Specified name is null!");
+		}
+		final AccountType type = getType(name);
+		if (type == null) {
+			return null;
+		}
+		types.remove(type);
+		return type;
+	}
+
 	/**
 	 * @return
 	 */
@@ -119,11 +174,19 @@ public class Bank {
 		return Collections.unmodifiableList(accounts);
 	}
 
+	public List<AccountType> retrieveTypes() {
+		return Collections.unmodifiableList(types);
+	}
+
 	/**
 	 * @return
 	 */
 	public boolean hasAccounts() {
 		return accounts.size() > 0;
+	}
+
+	public boolean hasTypes() {
+		return types.size() > 0;
 	}
 
 	/**
@@ -162,6 +225,10 @@ public class Bank {
 		return total;
 	}
 
+	public int getAmountOfAccounts() {
+		return accounts.size();
+	}
+
 	public int getAmountOfAccountsFor(String holder) {
 		int amount = 0;
 
@@ -175,23 +242,13 @@ public class Bank {
 	}
 
 	/**
-	 * @param taxRate
-	 * @return
-	 */
-	public Bank setGlobalTaxRate(double taxRate) {
-		for (Account account : accounts) {
-			account.setTaxRate(taxRate);
-		}
-		return this;
-	}
-
-	/**
 	 * @param interestRate
 	 * @return
 	 */
 	public Bank setGlobalInterestRate(double interestRate) {
-		for (Account account : accounts) {
-			account.setInterestRate(interestRate);
+		for (AccountType type : types)  {
+			type.shouldReceiveInterest(true);
+			type.setInterestRate(interestRate);
 		}
 		return this;
 	}
@@ -210,6 +267,14 @@ public class Bank {
 				break;
 			}
 		}
+		if (!dirty)  {
+			for (AccountType type : types) {
+				if (type.isDirty()) {
+					dirty = true;
+					break;
+				}
+			}
+		}
 		return dirty;
 	}
 
@@ -220,6 +285,9 @@ public class Bank {
 		this.dirty = dirty;
 		for (Account account : accounts) {
 			account.setDirty(dirty);
+		}
+		for (AccountType type : types) {
+			type.setDirty(dirty);
 		}
 	}
 
