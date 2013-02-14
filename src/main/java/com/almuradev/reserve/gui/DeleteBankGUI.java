@@ -23,81 +23,100 @@
  */
 package com.almuradev.reserve.gui;
 
+import java.text.NumberFormat;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+
 import com.almuradev.reserve.ReservePlugin;
 import com.almuradev.reserve.econ.Account;
-import com.almuradev.reserve.econ.AccountType;
 import com.almuradev.reserve.econ.Bank;
+import com.almuradev.reserve.econ.VaultUtil;
 
+import org.bukkit.ChatColor;
 import org.getspout.spoutapi.gui.Color;
+import org.getspout.spoutapi.gui.ComboBox;
 import org.getspout.spoutapi.gui.GenericButton;
 import org.getspout.spoutapi.gui.GenericGradient;
 import org.getspout.spoutapi.gui.GenericLabel;
 import org.getspout.spoutapi.gui.GenericPopup;
 import org.getspout.spoutapi.gui.GenericTextField;
 import org.getspout.spoutapi.gui.GenericTexture;
+import org.getspout.spoutapi.gui.ListWidget;
+import org.getspout.spoutapi.gui.ListWidgetItem;
 import org.getspout.spoutapi.gui.RenderPriority;
 import org.getspout.spoutapi.gui.WidgetAnchor;
 import org.getspout.spoutapi.player.SpoutPlayer;
 
-public class CreateAccountGUI extends GenericPopup {
+public class DeleteBankGUI extends GenericPopup {
 	private final ReservePlugin plugin;
-	private final SpoutPlayer sPlayer;
-	private Bank selectedBank;
-	private GenericTextField accountNameField;
+	private final SpoutPlayer sPlayer;	
+	private final GenericLabel an;	
+	private ListWidget list;
+	private static NumberFormat numForm;
+	private static Locale caLoc = new Locale("en", "US");
 	Color bottom = new Color(1.0F, 1.0F, 1.0F, 0.50F);
 
-	public CreateAccountGUI(ReservePlugin plugin, SpoutPlayer sPlayer, Bank bank) {
+	public DeleteBankGUI(ReservePlugin plugin, SpoutPlayer sPlayer) {
 		this.plugin = plugin;
-		this.sPlayer = sPlayer;
-		this.selectedBank = bank;
+		this.sPlayer = sPlayer;		
 
 		GenericTexture border = new GenericTexture("http://www.almuramc.com/images/playerplus.png");
 		border.setAnchor(WidgetAnchor.CENTER_CENTER);
 		border.setPriority(RenderPriority.High);
-		border.setWidth(225).setHeight(100);
-		border.shiftXPos(-105).shiftYPos(-80);
+		border.setWidth(255).setHeight(150);
+		border.shiftXPos(0-(border.getWidth()/2)).shiftYPos(-80);
 
 		GenericLabel gl = new GenericLabel();
-		gl.setScale(1.4F).setText(selectedBank.getName());		
+		gl.setScale(1.4F).setText("Reserve");		
 		gl.setAnchor(WidgetAnchor.CENTER_CENTER);
 		gl.setHeight(15).setWidth(GenericLabel.getStringWidth(gl.getText(), gl.getScale()));
 		gl.shiftXPos((GenericLabel.getStringWidth(gl.getText(), gl.getScale()) / 2) * -1).shiftYPos(-70);
 
 		GenericGradient gg = new GenericGradient();
 		gg.setBottomColor(bottom).setTopColor(bottom);
-		gg.setAnchor(WidgetAnchor.CENTER_CENTER);		
+		gg.setAnchor(WidgetAnchor.CENTER_CENTER);
+		gg.shiftXPos(-100).shiftYPos(-55).setMaxWidth(200);
 		gg.setWidth(200).setHeight(1);
-		gg.shiftXPos(-100).shiftYPos(-55);
 
-		GenericLabel cl = new GenericLabel("-- Create Account --");
+		GenericLabel windowLabel = new GenericLabel("- Remove Bank -");
+		windowLabel.setScale(1.0F);
+		windowLabel.setAnchor(WidgetAnchor.CENTER_CENTER);
+		windowLabel.setHeight(15).setWidth(GenericLabel.getStringWidth(windowLabel.getText()));
+		windowLabel.shiftXPos(((GenericLabel.getStringWidth(windowLabel.getText()) / 2) * -1)).shiftYPos(-52);
+		
+		GenericLabel cl = new GenericLabel("Bank: ");
 		cl.setScale(1.0F);
 		cl.setAnchor(WidgetAnchor.CENTER_CENTER);
 		cl.setHeight(15).setWidth(GenericLabel.getStringWidth(cl.getText()));
-		cl.shiftXPos(-45).shiftYPos(-47);
+		cl.shiftXPos(-110).shiftYPos(-32);
+		
+		list = new BankListApplet();
+		list.setAnchor(WidgetAnchor.CENTER_CENTER);
+		list.shiftXPos(-80).shiftYPos(-35);
+		list.setWidth(155).setHeight(60);
+		list.setPriority(RenderPriority.Lowest);
 
-		GenericLabel an = new GenericLabel("Account Name: ");
+		an = new GenericLabel();
+		numForm = NumberFormat.getCurrencyInstance(caLoc);
+		an.setText("Bank Balance: ");
 		an.setScale(1.0F);
 		an.setAnchor(WidgetAnchor.CENTER_CENTER);
 		an.setHeight(15).setWidth(GenericLabel.getStringWidth(an.getText()));
-		an.shiftXPos(-90).shiftYPos(-25);
-
-		accountNameField = new GenericTextField();
-		accountNameField.setWidth(110).setHeight(16);
-		accountNameField.setAnchor(WidgetAnchor.CENTER_CENTER);
-		accountNameField.shiftXPos(-10).shiftYPos(-28);
-		accountNameField.setMaximumCharacters(30);
-		accountNameField.setMaximumLines(1);
-
-		GenericButton createAccount = new CommandButton(this, 1, "Create");
+		an.shiftXPos(-110).shiftYPos(30);
+				
+		GenericButton depositButton = new CommandButton(this, 1, "Remove Bank");
 		GenericButton close = new CommandButton(this, 2, "Close");
 
-		createAccount.setAnchor(WidgetAnchor.CENTER_CENTER);
+		depositButton.setAnchor(WidgetAnchor.CENTER_CENTER);
 		close.setAnchor(WidgetAnchor.CENTER_CENTER);
 
-		createAccount.setHeight(16).setWidth(50).shiftXPos(7).shiftYPos(0);
-		close.setHeight(16).setWidth(40).shiftXPos(62).shiftYPos(0);
+		depositButton.setHeight(16).setWidth(80).shiftXPos(-10).shiftYPos(47);
+		close.setHeight(16).setWidth(40).shiftXPos(75).shiftYPos(47);
 
-		attachWidgets(plugin, border, gl, gg, cl, an, accountNameField, createAccount, close);
+		attachWidgets(plugin, border, gl, gg, list, cl, windowLabel, an, depositButton, close);
 
 		sPlayer.getMainScreen().closePopup();
 		sPlayer.getMainScreen().attachPopupScreen(this);
@@ -105,22 +124,17 @@ public class CreateAccountGUI extends GenericPopup {
 
 	public void onClickCommand(int commandGoal) {
 		switch (commandGoal) {
-		case 1: //Create
-			if (accountNameField.getText().isEmpty()) {
-				new AckGUI(plugin, sPlayer, selectedBank, "Please specify name.", "createaccountgui");
+		case 1: // Ok
+			if (list.getSelectedItem() == null) {
+				new AckGUI(plugin, sPlayer, null, "Please Select Bank.", "deletebankgui");
 			} else {
-				if (selectedBank.getAccount(accountNameField.getText(), sPlayer.getName()) != null) {
-					new AckGUI(plugin, sPlayer, selectedBank, "Account already exists.", "createaccountgui");
-				} else {
-					selectedBank.addAccount(new Account(AccountType.CHECKING, accountNameField.getText(), sPlayer.getName())); //TODO Need a combobox for this!
-					sPlayer.getMainScreen().closePopup();
-					new AckGUI(plugin, sPlayer, selectedBank, "Account Created Successfully", "createaccountgui");
-				}
+				ReservePlugin.getReserve().remove(list.getSelectedItem().getTitle(), list.getSelectedItem().getText());
+				new AckGUI(plugin, sPlayer, null, "Bank Removed.", "reservemaingui");
 			}
 			break;
-		case 2:
+		case 2: // Close
 			sPlayer.getMainScreen().closePopup();
-			new BankMainGUI(plugin, sPlayer, selectedBank);
+			new ReserveMainGUI(plugin, sPlayer);
 			break;
 		}
 	}

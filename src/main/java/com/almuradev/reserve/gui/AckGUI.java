@@ -54,11 +54,11 @@ public class AckGUI extends GenericPopup {
 		//Check if playerBank is null here and handle appropriately. May want to check this BEFORE you get to actually
 		//constructing the GUI (ie in the right click of a NPC).
 
-		GenericLabel gl = new GenericLabel("Reserve");
-		gl.setScale(1.2F);
+		GenericLabel gl = new GenericLabel();
+		gl.setScale(1.4F).setText("Message Center");
 		gl.setAnchor(WidgetAnchor.CENTER_CENTER);
-		gl.setHeight(15).setWidth(GenericLabel.getStringWidth(gl.getText()));
-		gl.shiftXPos(((GenericLabel.getStringWidth(gl.getText()) / 2) * -1) - 10).shiftYPos(-70);
+		gl.setHeight(15).setWidth(GenericLabel.getStringWidth(gl.getText(), gl.getScale()));
+		gl.shiftXPos((GenericLabel.getStringWidth(gl.getText(), gl.getScale()) / 2) * -1).shiftYPos(-70);
 
 		GenericLabel an = new GenericLabel(ackMessage);
 		an.setScale(1.0F);
@@ -96,19 +96,19 @@ public class AckGUI extends GenericPopup {
 				System.out.println("PreviousWindow: " + previousWindow);
 				if (ackMessage.equalsIgnoreCase("Please specify account.") && previousWindow.equalsIgnoreCase("depositgui")) {
 					sPlayer.getMainScreen().closePopup();
-					new DepositGUI(plugin, sPlayer, selectedBank);
+					new DepositGUI(plugin, sPlayer, selectedBank, null);
 				} else if (ackMessage.equalsIgnoreCase("Please select bank.") && previousWindow.equalsIgnoreCase("reservemaingui")) {
 					sPlayer.getMainScreen().closePopup();
 					new ReserveMainGUI(plugin, sPlayer);
 				} else if (ackMessage.equalsIgnoreCase("Deposit amount has to be more than zero.") && previousWindow.equalsIgnoreCase("depositgui")) {
 					sPlayer.getMainScreen().closePopup();
-					new DepositGUI(plugin, sPlayer, selectedBank);		
+					new DepositGUI(plugin, sPlayer, selectedBank, null);		
 				} else if (ackMessage.equalsIgnoreCase("Insuffient funds available for deposit.") && previousWindow.equalsIgnoreCase("depositgui") ) {
 					sPlayer.getMainScreen().closePopup();
-					new DepositGUI(plugin, sPlayer, selectedBank);
+					new DepositGUI(plugin, sPlayer, selectedBank, null);
 				} else if (ackMessage.equalsIgnoreCase("Withdraw amount cannot be greater than current balance.") && previousWindow.equalsIgnoreCase("withdrawgui")) {
 					sPlayer.getMainScreen().closePopup();
-					new WithdrawGUI(plugin, sPlayer, selectedBank);
+					new WithdrawGUI(plugin, sPlayer, selectedBank, null);
 				} else if (ackMessage.equalsIgnoreCase("Please specify name.") && previousWindow.equalsIgnoreCase("createaccountgui")) {
 					sPlayer.getMainScreen().closePopup();
 					new CreateAccountGUI(plugin, sPlayer, selectedBank);
@@ -120,7 +120,7 @@ public class AckGUI extends GenericPopup {
 					new DeleteAccountGUI(plugin, sPlayer, selectedBank);
 				} else if (ackMessage.equalsIgnoreCase("Please specify account.") && previousWindow.equalsIgnoreCase("deleteaccountgui")) {
 					sPlayer.getMainScreen().closePopup();
-					new DepositGUI(plugin, sPlayer, selectedBank);
+					new DepositGUI(plugin, sPlayer, selectedBank, null);
 				} else if (ackMessage.equalsIgnoreCase("Bank Created Successfully.") && previousWindow.equalsIgnoreCase("createbankgui")) {
 					sPlayer.getMainScreen().closePopup();
 					new ReserveMainGUI(plugin, sPlayer);					
@@ -129,7 +129,13 @@ public class AckGUI extends GenericPopup {
 					new CreateBankGUI(plugin, sPlayer);
 				} else if (ackMessage.equalsIgnoreCase("Bank already exists.") && previousWindow.equalsIgnoreCase("createbankgui")) {
 					sPlayer.getMainScreen().closePopup();
-					new CreateBankGUI(plugin, sPlayer);					
+					new CreateBankGUI(plugin, sPlayer);	
+				} else if (ackMessage.equalsIgnoreCase("Bank Removed.") && previousWindow.equalsIgnoreCase("deletebankgui")) {
+					sPlayer.getMainScreen().closePopup();
+					new ReserveMainGUI(plugin, sPlayer);
+				} else if (ackMessage.equalsIgnoreCase("Please Select Bank.") && previousWindow.equalsIgnoreCase("deletebankgui")) {
+					sPlayer.getMainScreen().closePopup();
+					new DeleteBankGUI(plugin, sPlayer);
 				} else {
 					sPlayer.getMainScreen().closePopup();
 					new BankMainGUI(plugin, sPlayer, selectedBank);

@@ -51,6 +51,7 @@ public class DepositGUI extends GenericPopup {
 	private final ReservePlugin plugin;
 	private final SpoutPlayer sPlayer;
 	private final Bank selectedBank;
+	private final Account selectedAccount;
 	private final GenericTextField depositAmountField;
 	private final GenericLabel att, at;
 	private final ComboBox box;
@@ -58,10 +59,11 @@ public class DepositGUI extends GenericPopup {
 	private static Locale caLoc = new Locale("en", "US");
 	Color bottom = new Color(1.0F, 1.0F, 1.0F, 0.50F);
 
-	public DepositGUI(ReservePlugin plugin, SpoutPlayer sPlayer, Bank bank) {
+	public DepositGUI(ReservePlugin plugin, SpoutPlayer sPlayer, Bank bank, Account account) {
 		this.plugin = plugin;
 		this.sPlayer = sPlayer;
 		this.selectedBank = bank;
+		this.selectedAccount = account;
 
 		GenericTexture border = new GenericTexture("http://www.almuramc.com/images/playerplus.png");
 		border.setAnchor(WidgetAnchor.CENTER_CENTER);
@@ -70,11 +72,10 @@ public class DepositGUI extends GenericPopup {
 		border.shiftXPos(0-(border.getWidth()/2)).shiftYPos(-80);
 
 		GenericLabel gl = new GenericLabel();
-		gl.setText(selectedBank.getName());
-		gl.setScale(1.2F);
+		gl.setScale(1.4F).setText(selectedBank.getName());		
 		gl.setAnchor(WidgetAnchor.CENTER_CENTER);
-		gl.setHeight(15).setWidth(GenericLabel.getStringWidth(gl.getText()));
-		gl.shiftXPos(((GenericLabel.getStringWidth(gl.getText()) / 2) * -1) - 4).shiftYPos(-70);
+		gl.setHeight(15).setWidth(GenericLabel.getStringWidth(gl.getText(), gl.getScale()));
+		gl.shiftXPos((GenericLabel.getStringWidth(gl.getText(), gl.getScale()) / 2) * -1).shiftYPos(-70);
 
 		GenericGradient gg = new GenericGradient();
 		gg.setBottomColor(bottom).setTopColor(bottom);
@@ -83,8 +84,7 @@ public class DepositGUI extends GenericPopup {
 		gg.shiftXPos(0-(gg.getWidth()/2)).shiftYPos(-55);
 		
 
-		GenericLabel cl = new GenericLabel("Select Account: ");
-		cl.setScale(1.0F);
+		GenericLabel cl = new GenericLabel("Select Account: ");		
 		cl.setAnchor(WidgetAnchor.CENTER_CENTER);
 		cl.setHeight(15).setWidth(GenericLabel.getStringWidth(cl.getText()));
 		cl.shiftXPos(-115).shiftYPos(-42);
@@ -103,7 +103,7 @@ public class DepositGUI extends GenericPopup {
 		box.shiftXPos(-35).shiftYPos(-47);
 		box.setAuto(true);
 		box.setPriority(RenderPriority.Low);
-		populateList();
+		
 
 		at = new GenericLabel("Account Balance: ");
 		at.setScale(1.0F).setVisible(false);
@@ -155,10 +155,19 @@ public class DepositGUI extends GenericPopup {
 		depositButton.setHeight(16).setWidth(50).shiftXPos(20).shiftYPos(50);
 		close.setHeight(16).setWidth(40).shiftXPos(75).shiftYPos(50);
 
+		populateList();
+		
 		attachWidgets(plugin, border, gl, gg, ag, ab, at, att, gm, box, cl, depositAmountField, an, depositButton, close);
 
 		sPlayer.getMainScreen().closePopup();
 		sPlayer.getMainScreen().attachPopupScreen(this);
+		
+		plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable () {
+			@Override
+			public void run() {				
+				setDirty(true);
+			}			 
+		} ,5L);
 	}
 
 	public void onClickCommand(int commandGoal) {
@@ -199,26 +208,41 @@ public class DepositGUI extends GenericPopup {
 		}
 	}
 
-	public void onSelect(int i, String text) {
+	private void populateList() {
+		List<String> items = new ArrayList<String>();
+		List<Account> accountNames = ReservePlugin.getReserve().getAccountsInBankFor(sPlayer.getName(), selectedBank);    	
+		int selectionID = 0;		
+		for (Account account: accountNames) {
+			items.add(account.getName());			
+		}
+	
+		if (items != null) {	
+			Collections.sort(items, String.CASE_INSENSITIVE_ORDER);
+			box.setItems(items);			
+		}
+		
+		if (items != null && selectedAccount != null) {
+			for (int i=0; i<items.size(); i++) {
+				if (items.get(i).equalsIgnoreCase(selectedAccount.getName())) {
+					selectionID = i;
+					break;
+				}
+			}	
+		}
+		if (selectedAccount	!= null) {
+			box.setSelection(selectionID);			
+			box.setText(null);
+		}		
+	}
+	
+	void onSelect(int i, String text) {
 		if (box.getSelectedItem() != null) {
 			numForm = NumberFormat.getCurrencyInstance(caLoc);
 			Account myAccount = selectedBank.getAccount(box.getSelectedItem(), sPlayer.getName());
 			att.setText(ChatColor.GREEN + numForm.format(myAccount.getBalance()));
 			att.setVisible(true);
 			at.setVisible(true);
-		}
-	}
-
-	private void populateList() {
-		List<String> items = new ArrayList<String>();
-		List<Account> accountNames = ReservePlugin.getReserve().getAccountsInBankFor(sPlayer.getName(), selectedBank);
-		for (Account account : accountNames) {
-			items.add(account.getName());
-		}
-		if (items != null) {	
-			Collections.sort(items, String.CASE_INSENSITIVE_ORDER);
-			box.setItems(items);
-			box.setDirty(true);
+			box.setText(null);
 		}
 	}
 }

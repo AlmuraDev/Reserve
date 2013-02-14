@@ -70,11 +70,10 @@ public class DeleteAccountGUI extends GenericPopup {
 		border.shiftXPos(0-(border.getWidth()/2)).shiftYPos(-80);
 
 		GenericLabel gl = new GenericLabel();
-		gl.setText(selectedBank.getName());
-		gl.setScale(1.2F);
+		gl.setScale(1.4F).setText(selectedBank.getName());		
 		gl.setAnchor(WidgetAnchor.CENTER_CENTER);
-		gl.setHeight(15).setWidth(GenericLabel.getStringWidth(gl.getText()));
-		gl.shiftXPos(((GenericLabel.getStringWidth(gl.getText()) / 2) * -1) - 4).shiftYPos(-70);
+		gl.setHeight(15).setWidth(GenericLabel.getStringWidth(gl.getText(), gl.getScale()));
+		gl.shiftXPos((GenericLabel.getStringWidth(gl.getText(), gl.getScale()) / 2) * -1).shiftYPos(-70);
 
 		GenericGradient gg = new GenericGradient();
 		gg.setBottomColor(bottom).setTopColor(bottom);
@@ -95,7 +94,7 @@ public class DeleteAccountGUI extends GenericPopup {
 		cl.shiftXPos(-110).shiftYPos(-32);
 
 		box = new AccountDeleteCombo(this);
-		box.setText("Accounts");
+		box.setText("");
 		box.setAnchor(WidgetAnchor.CENTER_CENTER);
 		box.setWidth(GenericLabel.getStringWidth("12345678901234567890123459"));
 		box.setHeight(18);
@@ -161,6 +160,7 @@ public class DeleteAccountGUI extends GenericPopup {
 			Collections.sort(items, String.CASE_INSENSITIVE_ORDER);
 			box.setItems(items);
 			box.setDirty(true);
+			
 		}		
 	}
 	

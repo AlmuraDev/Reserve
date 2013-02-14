@@ -43,7 +43,7 @@ import org.getspout.spoutapi.gui.Screen;
 import org.getspout.spoutapi.gui.WidgetAnchor;
 import org.getspout.spoutapi.player.SpoutPlayer;
 
-public class BankMainGUI extends GenericPopup {
+public class BankStatusGUI extends GenericPopup {
 	private final ReservePlugin plugin;
 	private final SpoutPlayer sPlayer;
 	private final Bank selectedBank;
@@ -53,7 +53,7 @@ public class BankMainGUI extends GenericPopup {
 	private static Locale caLoc = new Locale("en", "US");
 	Color bottom = new Color(1.0F, 1.0F, 1.0F, 0.50F);	
 
-	public BankMainGUI(ReservePlugin plugin, SpoutPlayer sPlayer, Bank bank) {
+	public BankStatusGUI(ReservePlugin plugin, SpoutPlayer sPlayer, Bank bank) {
 		this.plugin = plugin;
 		this.sPlayer = sPlayer;
 		this.selectedBank = bank;
@@ -92,7 +92,8 @@ public class BankMainGUI extends GenericPopup {
 		GenericLabel bankAccountsLabel = new GenericLabel();				
 		bankAccountsLabel.setScale(1.0F);
 		bankAccountsLabel.setAnchor(WidgetAnchor.CENTER_CENTER);
-		bankAccountsLabel.setText("Accounts: " + ChatColor.YELLOW + selectedBank.getAmountOfAccountsFor(sPlayer.getName()));
+		bankAccountsLabel.setText("TotalAccounts:");
+		//bankAccountsLabel.setText("Total Accounts: " + ChatColor.YELLOW + selectedBank.getAmountOfAccounts());
 		bankAccountsLabel.setHeight(15).setWidth(GenericLabel.getStringWidth(bankAccountsLabel.getText()));
 		bankAccountsLabel.shiftXPos((GenericLabel.getStringWidth(bankAccountsLabel.getText()) / 2) * -1).shiftYPos(-89);
 		
@@ -100,7 +101,7 @@ public class BankMainGUI extends GenericPopup {
 		numForm = NumberFormat.getCurrencyInstance(caLoc);		
 		bankNameLabel.setScale(1.0F);
 		bankNameLabel.setAnchor(WidgetAnchor.CENTER_CENTER);
-		bankNameLabel.setText("Total Balance: " + ChatColor.GOLD + numForm.format(selectedBank.getTotalBalanceFor(sPlayer.getName())));
+		bankNameLabel.setText("Total Balance: " + ChatColor.GOLD + numForm.format(selectedBank.getTotalBalance()));
 		bankNameLabel.setHeight(15).setWidth(GenericLabel.getStringWidth(bankNameLabel.getText()));
 		bankNameLabel.shiftXPos((GenericLabel.getStringWidth(bankNameLabel.getText()) / 2) * -1).shiftYPos(-79);
 
@@ -140,40 +141,23 @@ public class BankMainGUI extends GenericPopup {
 	public void onClickCommand(int commandGoal) {
 		switch (commandGoal) {
 			case 1:
-				sPlayer.getMainScreen().closePopup();
-				new CreateAccountGUI(plugin, sPlayer, selectedBank);
+				
 				break;
 			case 2:
-				sPlayer.getMainScreen().closePopup();
-				if (list.getSelectedItem() == null) {					
-					new DepositGUI(plugin, sPlayer, selectedBank, selectedAccount);
-				} else {
-					Account myAccount = selectedBank.getAccount(list.getSelectedItem().getTitle(), sPlayer.getName());
-					new DepositGUI(plugin, sPlayer, selectedBank, myAccount);
-				}				
+								
 				break;
 			case 3:				
-				sPlayer.getMainScreen().closePopup();
-				if (list.getSelectedItem() == null) {					
-					new WithdrawGUI(plugin, sPlayer, selectedBank, selectedAccount);
-				} else {
-					Account myAccount = selectedBank.getAccount(list.getSelectedItem().getTitle(), sPlayer.getName());
-					new WithdrawGUI(plugin, sPlayer, selectedBank, myAccount);
-				}
 				
 				break;
 			case 4:
-				sPlayer.getMainScreen().closePopup();
-				new DeleteAccountGUI(plugin, sPlayer, selectedBank);
+				
 				break;
 			case 5:
-				sPlayer.getMainScreen().closePopup();
-				new OptionsGUI(plugin, sPlayer);
+				
 				break;
 			case 6:
-				Screen screen = sPlayer.getMainScreen();
-				screen.removeWidget(this);
-				sPlayer.closeActiveWindow();
+				sPlayer.getMainScreen().closePopup();
+				new ReserveMainGUI(plugin, sPlayer);
 				break;
 		}
 	}

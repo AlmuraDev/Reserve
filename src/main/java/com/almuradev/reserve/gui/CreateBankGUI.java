@@ -55,11 +55,10 @@ public class CreateBankGUI extends GenericPopup {
 		border.shiftXPos(-105).shiftYPos(-80);
 
 		GenericLabel gl = new GenericLabel();
-		gl.setText("Reserve");				
-		gl.setScale(1.2F);
+		gl.setScale(1.4F).setText("Create Account");		
 		gl.setAnchor(WidgetAnchor.CENTER_CENTER);
 		gl.setHeight(15).setWidth(GenericLabel.getStringWidth(gl.getText()));
-		gl.shiftXPos(-30).shiftYPos(-70);
+		gl.shiftXPos(0).shiftYPos(-70);
 
 		GenericGradient gg = new GenericGradient();
 		gg.setBottomColor(bottom).setTopColor(bottom);

@@ -51,6 +51,7 @@ public class WithdrawGUI extends GenericPopup {
 	private final ReservePlugin plugin;
 	private final SpoutPlayer sPlayer;
 	private final Bank selectedBank;
+	private final Account selectedAccount;
 	private final ComboBox box;
 	private final GenericLabel at, att;
 	private final GenericTextField depositAmountField;
@@ -58,10 +59,11 @@ public class WithdrawGUI extends GenericPopup {
 	private static Locale caLoc = new Locale("en", "US");
 	Color bottom = new Color(1.0F, 1.0F, 1.0F, 0.50F);
 
-	public WithdrawGUI(ReservePlugin plugin, SpoutPlayer sPlayer, Bank bank) {
+	public WithdrawGUI(ReservePlugin plugin, SpoutPlayer sPlayer, Bank bank, Account account) {
 		this.plugin = plugin;
 		this.sPlayer = sPlayer;
 		this.selectedBank = bank;
+		this.selectedAccount = account;
 
 		GenericTexture border = new GenericTexture("http://www.almuramc.com/images/playerplus.png");
 		border.setAnchor(WidgetAnchor.CENTER_CENTER);
@@ -70,11 +72,10 @@ public class WithdrawGUI extends GenericPopup {
 		border.shiftXPos(0-(border.getWidth()/2)).shiftYPos(-80);
 
 		GenericLabel gl = new GenericLabel();
-		gl.setText(selectedBank.getName());
-		gl.setScale(1.2F);
+		gl.setScale(1.4F).setText(selectedBank.getName());		
 		gl.setAnchor(WidgetAnchor.CENTER_CENTER);
-		gl.setHeight(15).setWidth(GenericLabel.getStringWidth(gl.getText()));
-		gl.shiftXPos(((GenericLabel.getStringWidth(gl.getText()) / 2) * -1) - 4).shiftYPos(-70);
+		gl.setHeight(15).setWidth(GenericLabel.getStringWidth(gl.getText(), gl.getScale()));
+		gl.shiftXPos((GenericLabel.getStringWidth(gl.getText(), gl.getScale()) / 2) * -1).shiftYPos(-70);
 
 		GenericGradient gg = new GenericGradient();
 		gg.setBottomColor(bottom).setTopColor(bottom);
@@ -83,8 +84,7 @@ public class WithdrawGUI extends GenericPopup {
 		gg.shiftXPos(0-(gg.getWidth()/2)).shiftYPos(-55);
 		
 
-		GenericLabel cl = new GenericLabel("Select Account: ");
-		cl.setScale(1.0F);
+		GenericLabel cl = new GenericLabel("Select Account: ");		
 		cl.setAnchor(WidgetAnchor.CENTER_CENTER);
 		cl.setHeight(15).setWidth(GenericLabel.getStringWidth(cl.getText()));
 		cl.shiftXPos(-115).shiftYPos(-42);
@@ -96,14 +96,14 @@ public class WithdrawGUI extends GenericPopup {
 		gm.shiftXPos(0-(gm.getWidth()/2)).shiftYPos(-25);
 
 		box = new AccountWithdrawCombo(this);
-		box.setText("Accounts");
+		box.setText("Account");
 		box.setAnchor(WidgetAnchor.CENTER_CENTER);
 		box.setWidth(GenericLabel.getStringWidth("12345678901234567890123459"));
 		box.setHeight(18);
 		box.shiftXPos(-35).shiftYPos(-47);
 		box.setAuto(true);
 		box.setPriority(RenderPriority.Low);
-		populateList();
+			
 
 		at = new GenericLabel("Account Balance: ");
 		at.setScale(1.0F).setVisible(false);
@@ -112,8 +112,7 @@ public class WithdrawGUI extends GenericPopup {
 		at.shiftXPos(-95).shiftYPos(-10);
 		
 		att = new GenericLabel();
-		att.setText(ChatColor.GREEN + "0.00").setVisible(false);
-		att.setScale(1.0F);
+		att.setText(ChatColor.GREEN + "0.00").setVisible(false);		
 		att.setAnchor(WidgetAnchor.CENTER_CENTER);
 		att.setHeight(15).setWidth(GenericLabel.getStringWidth(att.getText()));
 		att.shiftXPos(0).shiftYPos(-10);
@@ -148,17 +147,30 @@ public class WithdrawGUI extends GenericPopup {
 
 		GenericButton depositButton = new CommandButton(this, 1, "Withdraw");
 		GenericButton close = new CommandButton(this, 2, "Close");
+		GenericButton test = new CommandButton(this, 3, "Test");
 
 		depositButton.setAnchor(WidgetAnchor.CENTER_CENTER);
 		close.setAnchor(WidgetAnchor.CENTER_CENTER);
+		test.setAnchor(WidgetAnchor.CENTER_CENTER);
 
 		depositButton.setHeight(16).setWidth(50).shiftXPos(20).shiftYPos(50);
 		close.setHeight(16).setWidth(40).shiftXPos(75).shiftYPos(50);
+		test.setHeight(16).setWidth(40).shiftXPos(-20).shiftYPos(50);
 
-		attachWidgets(plugin, border, gl, gg, ag, ab, at, att, gm, box, cl, depositAmountField, an, depositButton, close);
+		populateList();
+		
+		attachWidgets(plugin, border, gl, gg, ag, ab, at, att, gm, box, cl, depositAmountField, an, depositButton, close, test);
 
 		sPlayer.getMainScreen().closePopup();
-		sPlayer.getMainScreen().attachPopupScreen(this);
+		sPlayer.getMainScreen().attachPopupScreen(this);		
+		
+		plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable () {
+			@Override
+			public void run() {				
+				setDirty(true);
+			}			 
+		} ,5L);
+		                                                                                  
 	}
 
 	public void onClickCommand(int commandGoal) {
@@ -194,19 +206,37 @@ public class WithdrawGUI extends GenericPopup {
 			sPlayer.getMainScreen().closePopup();
 			new BankMainGUI(plugin, sPlayer, selectedBank);
 			break;
+			
+		case 3:
+			//box.setText(box.getSelectedItem());
+			box.setDirty(true);
 		}
 	}
 
-	private void populateList() {		
+	private void populateList() {	
 		List<String> items = new ArrayList<String>();
 		List<Account> accountNames = ReservePlugin.getReserve().getAccountsInBankFor(sPlayer.getName(), selectedBank);    	
+		int selectionID = 0;		
 		for (Account account: accountNames) {
-			items.add(account.getName());
+			items.add(account.getName());			
 		}
+	
 		if (items != null) {	
 			Collections.sort(items, String.CASE_INSENSITIVE_ORDER);
-			box.setItems(items);
-			box.setDirty(true);
+			box.setItems(items);			
+		}
+		
+		if (items != null && selectedAccount != null) {
+			for (int i=0; i<items.size(); i++) {
+				if (items.get(i).equalsIgnoreCase(selectedAccount.getName())) {
+					selectionID = i;
+					break;
+				}
+			}	
+		}
+		if (selectedAccount	!= null) {
+			box.setSelection(selectionID);			
+			box.setText(null);
 		}		
 	}
 	
@@ -217,6 +247,7 @@ public class WithdrawGUI extends GenericPopup {
 			att.setText(ChatColor.GREEN + numForm.format(myAccount.getBalance()));
 			att.setVisible(true);
 			at.setVisible(true);
+			box.setText(null);
 		}
 	}
 }
