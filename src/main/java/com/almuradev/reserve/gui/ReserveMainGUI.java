@@ -28,7 +28,6 @@ import java.util.Locale;
 
 import com.almuradev.reserve.ReservePlugin;
 
-import org.bukkit.ChatColor;
 import org.getspout.spoutapi.gui.Color;
 import org.getspout.spoutapi.gui.GenericButton;
 import org.getspout.spoutapi.gui.GenericGradient;
@@ -40,6 +39,8 @@ import org.getspout.spoutapi.gui.RenderPriority;
 import org.getspout.spoutapi.gui.Screen;
 import org.getspout.spoutapi.gui.WidgetAnchor;
 import org.getspout.spoutapi.player.SpoutPlayer;
+
+import org.bukkit.ChatColor;
 
 public class ReserveMainGUI extends GenericPopup {
 	private final ReservePlugin plugin;
@@ -59,7 +60,7 @@ public class ReserveMainGUI extends GenericPopup {
 		border.setWidth(250).setHeight(250);
 		border.shiftXPos(-125).shiftYPos(-120);
 
-		GenericLabel gl = new GenericLabel();	
+		GenericLabel gl = new GenericLabel();
 		gl.setScale(1.4F).setText("Reserve");
 		gl.setAnchor(WidgetAnchor.CENTER_CENTER);
 		gl.setHeight(15).setWidth(GenericLabel.getStringWidth(gl.getText(), gl.getScale()));
@@ -106,14 +107,14 @@ public class ReserveMainGUI extends GenericPopup {
 		bankStatus.setHeight(16).setWidth(120).shiftXPos(-60).shiftYPos(40);
 		options.setHeight(16).setWidth(50).shiftXPos(-110).shiftYPos(95);
 		close.setHeight(16).setWidth(40).shiftXPos(70).shiftYPos(95);
-		
+
 		createNewBank.setEnabled(sPlayer.hasPermission("reserve.addbank"));
-		renameBank.setEnabled(sPlayer.hasPermission("reserve.addbank"));	
-		deleteBank.setEnabled(sPlayer.hasPermission("reserve.removebank"));	
-		options.setEnabled(sPlayer.hasPermission("reserve.admin"));			
-		openBank.setEnabled(sPlayer.hasPermission("reserve.viewbank"));			
+		renameBank.setEnabled(sPlayer.hasPermission("reserve.addbank"));
+		deleteBank.setEnabled(sPlayer.hasPermission("reserve.removebank"));
+		options.setEnabled(sPlayer.hasPermission("reserve.admin"));
+		openBank.setEnabled(sPlayer.hasPermission("reserve.viewbank"));
 		bankStatus.setEnabled(sPlayer.hasPermission("reserve.viewbank"));
-		
+
 		if (list.getItems() == null) {
 			openBank.setEnabled(false);
 		} else {
@@ -146,7 +147,7 @@ public class ReserveMainGUI extends GenericPopup {
 					new AckGUI(plugin, sPlayer, null, "Please Select Bank.", "reservemaingui");
 				} else {
 					sPlayer.getMainScreen().closePopup();
-					String [] split = list.getSelectedItem().getTitle().split("\\/");
+					String[] split = list.getSelectedItem().getTitle().split("\\/");
 					System.out.println("Line: " + list.getSelectedItem().getTitle());
 					new BankMainGUI(plugin, sPlayer, ReservePlugin.getReserve().get(split[0].trim(), ChatColor.stripColor(split[1].trim())));
 				}
@@ -157,7 +158,7 @@ public class ReserveMainGUI extends GenericPopup {
 					new AckGUI(plugin, sPlayer, null, "Please Select Bank.", "reservemaingui");
 				} else {
 					sPlayer.getMainScreen().closePopup();
-					String [] split = list.getSelectedItem().getTitle().split("\\/");
+					String[] split = list.getSelectedItem().getTitle().split("\\/");
 					new BankStatusGUI(plugin, sPlayer, ReservePlugin.getReserve().get(split[0].trim(), ChatColor.stripColor(split[1].trim())));
 				}
 				break;

@@ -168,7 +168,7 @@ public class Bank {
 			throw new NullPointerException("Specified name or holder is null!");
 		}
 		final Iterator<Account> entry = accounts.iterator();
-		while(entry.hasNext()) {
+		while (entry.hasNext()) {
 			final Account temp = entry.next();
 			if (temp.getName().equalsIgnoreCase(name) && temp.getHolder().equalsIgnoreCase(holder)) {
 				entry.remove();
@@ -188,7 +188,7 @@ public class Bank {
 			throw new NullPointerException("Specified name is null!");
 		}
 		final Iterator<AccountType> entry = types.iterator();
-		while(entry.hasNext()) {
+		while (entry.hasNext()) {
 			final AccountType temp = entry.next();
 			if (temp.getName().equalsIgnoreCase(name)) {
 				entry.remove();
@@ -333,7 +333,7 @@ public class Bank {
 	 * @return This bank
 	 */
 	public Bank setGlobalInterestRate(double interestRate) {
-		for (AccountType type : types)  {
+		for (AccountType type : types) {
 			type.shouldReceiveInterest(true);
 			type.setInterestRate(interestRate);
 		}
@@ -356,7 +356,7 @@ public class Bank {
 				break;
 			}
 		}
-		if (!dirty)  {
+		if (!dirty) {
 			for (AccountType type : types) {
 				if (type.isDirty()) {
 					dirty = true;
@@ -368,9 +368,10 @@ public class Bank {
 	}
 
 	/**
-	 * Sets the bank as dirty. Great caution should be used as unintentionally setting a dirty bank to false means
+	 * Sets the bank's dirty status. Great caution should be used as unintentionally setting a dirty bank to false means
 	 * the storage system won't save it. On the flip side, setting a bank to always dirty will kill SSD computers. In short,
 	 * if un-decided, leave it alone.
+	 * @param dirty Flag indicating true or false dirty status
 	 */
 	public void setDirty(boolean dirty) {
 		this.dirty = dirty;

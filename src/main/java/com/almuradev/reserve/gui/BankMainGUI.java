@@ -30,7 +30,6 @@ import com.almuradev.reserve.ReservePlugin;
 import com.almuradev.reserve.econ.Account;
 import com.almuradev.reserve.econ.Bank;
 
-import org.bukkit.ChatColor;
 import org.getspout.spoutapi.gui.Color;
 import org.getspout.spoutapi.gui.GenericButton;
 import org.getspout.spoutapi.gui.GenericGradient;
@@ -43,6 +42,8 @@ import org.getspout.spoutapi.gui.Screen;
 import org.getspout.spoutapi.gui.WidgetAnchor;
 import org.getspout.spoutapi.player.SpoutPlayer;
 
+import org.bukkit.ChatColor;
+
 public class BankMainGUI extends GenericPopup {
 	private final ReservePlugin plugin;
 	private final SpoutPlayer sPlayer;
@@ -51,7 +52,7 @@ public class BankMainGUI extends GenericPopup {
 	private ListWidget list;
 	private static NumberFormat numForm;
 	private static Locale caLoc = new Locale("en", "US");
-	Color bottom = new Color(1.0F, 1.0F, 1.0F, 0.50F);	
+	Color bottom = new Color(1.0F, 1.0F, 1.0F, 0.50F);
 
 	public BankMainGUI(ReservePlugin plugin, SpoutPlayer sPlayer, Bank bank) {
 		this.plugin = plugin;
@@ -63,41 +64,41 @@ public class BankMainGUI extends GenericPopup {
 		border.setAnchor(WidgetAnchor.CENTER_CENTER);
 		border.setPriority(RenderPriority.High);
 		border.setWidth(250).setHeight(250);
-		border.shiftXPos(0-(border.getWidth()/2)).shiftYPos(-120);
+		border.shiftXPos(0 - (border.getWidth() / 2)).shiftYPos(-120);
 
 		GenericLabel gl = new GenericLabel();
-		gl.setScale(1.4F).setText(selectedBank.getName());		
+		gl.setScale(1.4F).setText(selectedBank.getName());
 		gl.setAnchor(WidgetAnchor.CENTER_CENTER);
 		gl.setHeight(15).setWidth(GenericLabel.getStringWidth(gl.getText(), gl.getScale()));
 		gl.shiftXPos((GenericLabel.getStringWidth(gl.getText(), gl.getScale()) / 2) * -1).shiftYPos(-110);
 
 		GenericGradient gg = new GenericGradient();
 		gg.setBottomColor(bottom).setTopColor(bottom);
-		gg.setAnchor(WidgetAnchor.CENTER_CENTER);		
+		gg.setAnchor(WidgetAnchor.CENTER_CENTER);
 		gg.setWidth(200).setHeight(1);
-		gg.shiftXPos(0-(gg.getWidth()/2)).shiftYPos(-95);
+		gg.shiftXPos(0 - (gg.getWidth() / 2)).shiftYPos(-95);
 
 		GenericGradient gb = new GenericGradient();
 		gb.setBottomColor(bottom).setTopColor(bottom);
-		gb.setAnchor(WidgetAnchor.CENTER_CENTER);		
+		gb.setAnchor(WidgetAnchor.CENTER_CENTER);
 		gb.setWidth(200).setHeight(1);
-		gb.shiftXPos(0-(gb.getWidth()/2)).shiftYPos(-65);
+		gb.shiftXPos(0 - (gb.getWidth() / 2)).shiftYPos(-65);
 
 		list = new AccountListApplet(selectedBank, sPlayer);
 		list.setAnchor(WidgetAnchor.CENTER_CENTER);
 		list.shiftXPos(-80).shiftYPos(-60);
 		list.setWidth(155).setHeight(70);
 		list.setPriority(RenderPriority.Lowest);
-		
-		GenericLabel bankAccountsLabel = new GenericLabel();				
+
+		GenericLabel bankAccountsLabel = new GenericLabel();
 		bankAccountsLabel.setScale(1.0F);
 		bankAccountsLabel.setAnchor(WidgetAnchor.CENTER_CENTER);
 		bankAccountsLabel.setText("Accounts: " + ChatColor.YELLOW + selectedBank.getAmountOfAccountsFor(sPlayer.getName()));
 		bankAccountsLabel.setHeight(15).setWidth(GenericLabel.getStringWidth(bankAccountsLabel.getText()));
 		bankAccountsLabel.shiftXPos((GenericLabel.getStringWidth(bankAccountsLabel.getText()) / 2) * -1).shiftYPos(-89);
-		
+
 		GenericLabel bankNameLabel = new GenericLabel();
-		numForm = NumberFormat.getCurrencyInstance(caLoc);		
+		numForm = NumberFormat.getCurrencyInstance(caLoc);
 		bankNameLabel.setScale(1.0F);
 		bankNameLabel.setAnchor(WidgetAnchor.CENTER_CENTER);
 		bankNameLabel.setText("Total Balance: " + ChatColor.GOLD + numForm.format(selectedBank.getTotalBalanceFor(sPlayer.getName())));
@@ -145,22 +146,22 @@ public class BankMainGUI extends GenericPopup {
 				break;
 			case 2:
 				sPlayer.getMainScreen().closePopup();
-				if (list.getSelectedItem() == null) {					
+				if (list.getSelectedItem() == null) {
 					new DepositGUI(plugin, sPlayer, selectedBank, selectedAccount);
 				} else {
 					Account myAccount = selectedBank.getAccount(list.getSelectedItem().getTitle(), sPlayer.getName());
 					new DepositGUI(plugin, sPlayer, selectedBank, myAccount);
-				}				
+				}
 				break;
-			case 3:				
+			case 3:
 				sPlayer.getMainScreen().closePopup();
-				if (list.getSelectedItem() == null) {					
+				if (list.getSelectedItem() == null) {
 					new WithdrawGUI(plugin, sPlayer, selectedBank, selectedAccount);
 				} else {
 					Account myAccount = selectedBank.getAccount(list.getSelectedItem().getTitle(), sPlayer.getName());
 					new WithdrawGUI(plugin, sPlayer, selectedBank, myAccount);
 				}
-				
+
 				break;
 			case 4:
 				sPlayer.getMainScreen().closePopup();

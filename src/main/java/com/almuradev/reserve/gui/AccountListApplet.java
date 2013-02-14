@@ -22,29 +22,28 @@ package com.almuradev.reserve.gui;
 import java.text.NumberFormat;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 
-import com.almuradev.reserve.ReservePlugin;
 import com.almuradev.reserve.econ.Account;
 import com.almuradev.reserve.econ.Bank;
 
-import org.bukkit.ChatColor;
 import org.getspout.spoutapi.gui.GenericListWidget;
 import org.getspout.spoutapi.gui.ListWidgetItem;
 import org.getspout.spoutapi.player.SpoutPlayer;
+
+import org.bukkit.ChatColor;
 
 public class AccountListApplet extends GenericListWidget {
 	private final SpoutPlayer sPlayer;
 	private final Bank selectedBank;
 	private static NumberFormat numForm;
 	private static Locale caLoc = new Locale("en", "US");
-	
+
 	public AccountListApplet(Bank mySelectedBank, SpoutPlayer player) {
 		this.selectedBank = mySelectedBank;
 		this.sPlayer = player;
-		numForm = NumberFormat.getCurrencyInstance(caLoc);	
+		numForm = NumberFormat.getCurrencyInstance(caLoc);
 		List<Account> accountNames = selectedBank.getAccountsFor(sPlayer.getName());
-		for (Account account: accountNames) {
+		for (Account account : accountNames) {
 			this.addItem(new ListWidgetItem(account.getName(), ChatColor.GREEN + numForm.format(account.getBalance())));
 		}
 	}

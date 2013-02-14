@@ -28,31 +28,29 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 
 import com.almuradev.reserve.ReservePlugin;
 import com.almuradev.reserve.econ.Account;
 import com.almuradev.reserve.econ.Bank;
-import com.almuradev.reserve.econ.VaultUtil;
 
-import org.bukkit.ChatColor;
 import org.getspout.spoutapi.gui.Color;
 import org.getspout.spoutapi.gui.ComboBox;
 import org.getspout.spoutapi.gui.GenericButton;
 import org.getspout.spoutapi.gui.GenericGradient;
 import org.getspout.spoutapi.gui.GenericLabel;
 import org.getspout.spoutapi.gui.GenericPopup;
-import org.getspout.spoutapi.gui.GenericTextField;
 import org.getspout.spoutapi.gui.GenericTexture;
 import org.getspout.spoutapi.gui.RenderPriority;
 import org.getspout.spoutapi.gui.WidgetAnchor;
 import org.getspout.spoutapi.player.SpoutPlayer;
 
+import org.bukkit.ChatColor;
+
 public class DeleteAccountGUI extends GenericPopup {
 	private final ReservePlugin plugin;
 	private final SpoutPlayer sPlayer;
 	private final Bank selectedBank;
-	private final GenericLabel an;	
+	private final GenericLabel an;
 	private final ComboBox box;
 	private static NumberFormat numForm;
 	private static Locale caLoc = new Locale("en", "US");
@@ -67,10 +65,10 @@ public class DeleteAccountGUI extends GenericPopup {
 		border.setAnchor(WidgetAnchor.CENTER_CENTER);
 		border.setPriority(RenderPriority.High);
 		border.setWidth(255).setHeight(150);
-		border.shiftXPos(0-(border.getWidth()/2)).shiftYPos(-80);
+		border.shiftXPos(0 - (border.getWidth() / 2)).shiftYPos(-80);
 
 		GenericLabel gl = new GenericLabel();
-		gl.setScale(1.4F).setText(selectedBank.getName());		
+		gl.setScale(1.4F).setText(selectedBank.getName());
 		gl.setAnchor(WidgetAnchor.CENTER_CENTER);
 		gl.setHeight(15).setWidth(GenericLabel.getStringWidth(gl.getText(), gl.getScale()));
 		gl.shiftXPos((GenericLabel.getStringWidth(gl.getText(), gl.getScale()) / 2) * -1).shiftYPos(-70);
@@ -86,7 +84,7 @@ public class DeleteAccountGUI extends GenericPopup {
 		windowLabel.setAnchor(WidgetAnchor.CENTER_CENTER);
 		windowLabel.setHeight(15).setWidth(GenericLabel.getStringWidth(windowLabel.getText()));
 		windowLabel.shiftXPos(((GenericLabel.getStringWidth(windowLabel.getText()) / 2) * -1)).shiftYPos(-52);
-		
+
 		GenericLabel cl = new GenericLabel("Account: ");
 		cl.setScale(1.0F);
 		cl.setAnchor(WidgetAnchor.CENTER_CENTER);
@@ -110,7 +108,7 @@ public class DeleteAccountGUI extends GenericPopup {
 		an.setAnchor(WidgetAnchor.CENTER_CENTER);
 		an.setHeight(15).setWidth(GenericLabel.getStringWidth(an.getText()));
 		an.shiftXPos(-110).shiftYPos(-10);
-				
+
 		GenericButton depositButton = new CommandButton(this, 1, "Close Account");
 		GenericButton close = new CommandButton(this, 2, "Close");
 
@@ -128,45 +126,44 @@ public class DeleteAccountGUI extends GenericPopup {
 
 	public void onClickCommand(int commandGoal) {
 		switch (commandGoal) {
-		case 1: // Ok
-			if (box.getSelectedItem() == null) {
-				new AckGUI(plugin, sPlayer, selectedBank, "Please specify account.", "deleteaccountgui");
-			} else {
-				Account myAccount = selectedBank.getAccount(box.getSelectedItem(), sPlayer.getName());
-				if (myAccount.getBalance() != 0) {
-					sPlayer.getMainScreen().closePopup();					
-					new AckGUI(plugin, sPlayer, selectedBank, "Account balance is not zero.", "deleteaccountgui");
+			case 1: // Ok
+				if (box.getSelectedItem() == null) {
+					new AckGUI(plugin, sPlayer, selectedBank, "Please specify account.", "deleteaccountgui");
 				} else {
-					selectedBank.removeAccount(box.getSelectedItem(), sPlayer.getName());
-					sPlayer.getMainScreen().closePopup();				
-					new AckGUI(plugin, sPlayer, selectedBank, "Account Removed", "deleteaccountgui");					
+					Account myAccount = selectedBank.getAccount(box.getSelectedItem(), sPlayer.getName());
+					if (myAccount.getBalance() != 0) {
+						sPlayer.getMainScreen().closePopup();
+						new AckGUI(plugin, sPlayer, selectedBank, "Account balance is not zero.", "deleteaccountgui");
+					} else {
+						selectedBank.removeAccount(box.getSelectedItem(), sPlayer.getName());
+						sPlayer.getMainScreen().closePopup();
+						new AckGUI(plugin, sPlayer, selectedBank, "Account Removed", "deleteaccountgui");
+					}
 				}
-			}
-			break;
-		case 2: // Close
-			sPlayer.getMainScreen().closePopup();
-			new BankMainGUI(plugin, sPlayer, selectedBank);
-			break;
+				break;
+			case 2: // Close
+				sPlayer.getMainScreen().closePopup();
+				new BankMainGUI(plugin, sPlayer, selectedBank);
+				break;
 		}
 	}
-	
-	private void populateList() {		
+
+	private void populateList() {
 		List<String> items = new ArrayList<String>();
 		List<Account> accountNames = selectedBank.getAccountsFor(sPlayer.getName());
-		for (Account account: accountNames) {
+		for (Account account : accountNames) {
 			items.add(account.getName());
 		}
-		if (items != null) {	
+		if (items != null) {
 			Collections.sort(items, String.CASE_INSENSITIVE_ORDER);
 			box.setItems(items);
 			box.setDirty(true);
-			
-		}		
+		}
 	}
-	
+
 	void onSelect(int i, String text) {
 		Account myAccount = selectedBank.getAccount(box.getSelectedItem(), sPlayer.getName());
 		double balance = 0;
-		an.setText("Current Balance: " + ChatColor.GREEN + numForm.format(myAccount.getBalance()));	
+		an.setText("Current Balance: " + ChatColor.GREEN + numForm.format(myAccount.getBalance()));
 	}
 }

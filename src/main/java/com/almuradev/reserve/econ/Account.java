@@ -33,10 +33,19 @@ public class Account {
 		setDirty(true);
 	}
 
+	/**
+	 * Gets the account type of this account.
+	 * @return The account type
+	 */
 	public AccountType getType() {
 		return type;
 	}
 
+	/**
+	 * Sets the account type for this account.
+	 * @param type The new account type
+	 * @return This account
+	 */
 	public Account setType(AccountType type) {
 		this.type = type;
 		setDirty(true);
@@ -44,14 +53,17 @@ public class Account {
 	}
 
 	/**
-	 * @return
+	 * Gets the name of this account.
+	 * @return The name
 	 */
 	public String getName() {
 		return name;
 	}
 
 	/**
-	 * @param name
+	 * Sets the name of this account.
+	 * @param name The new name
+	 * @return This account
 	 */
 	public Account setName(String name) {
 		this.name = name;
@@ -60,14 +72,17 @@ public class Account {
 	}
 
 	/**
-	 * @return
+	 * Gets the holder of this account.
+	 * @return The holder
 	 */
 	public String getHolder() {
 		return holder;
 	}
 
 	/**
-	 * @param holder
+	 * Sets the holder of this account.
+	 * @param holder The new holder
+	 * @return This account
 	 */
 	public Account setHolder(String holder) {
 		this.holder = holder;
@@ -76,14 +91,17 @@ public class Account {
 	}
 
 	/**
-	 * @return
+	 * Gets the balance of this account.
+	 * @return The balance
 	 */
 	public double getBalance() {
 		return balance;
 	}
 
 	/**
-	 * @param balance
+	 * Sets the balance of this account.
+	 * @param balance The new balance
+	 * @return This account
 	 */
 	public Account setBalance(double balance) {
 		this.balance = balance;
@@ -92,7 +110,9 @@ public class Account {
 	}
 
 	/**
-	 * @param amount
+	 * Adds an amount to this account's balance.
+	 * @param amount Amount to add
+	 * @return This account
 	 */
 	public Account add(double amount) {
 		return setBalance(balance + amount);
@@ -100,20 +120,25 @@ public class Account {
 
 	/**
 	 * Wipes the balance on this account.
+	 * @return This account
 	 */
 	public Account wipe() {
 		return setBalance(0);
 	}
 
 	/**
-	 * @return
+	 * Returns if the account is dirty or not.
+	 * @return True if dirty, false if not
 	 */
 	public boolean isDirty() {
 		return dirty;
 	}
 
 	/**
-	 * @param dirty
+	 * Sets the account's dirty status. Great caution should be used as unintentionally setting a dirty account to false means
+	 * the storage system won't save it. On the flip side, setting an account to always dirty will kill SSD computers. In short,
+	 * if un-decided, leave it alone.
+	 * @param dirty Flag indicating true or false dirty status
 	 */
 	public void setDirty(boolean dirty) {
 		this.dirty = dirty;

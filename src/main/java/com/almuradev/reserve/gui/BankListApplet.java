@@ -27,22 +27,22 @@ import java.util.Map;
 import com.almuradev.reserve.ReservePlugin;
 import com.almuradev.reserve.econ.Bank;
 
-import org.bukkit.ChatColor;
 import org.getspout.spoutapi.gui.GenericListWidget;
 import org.getspout.spoutapi.gui.ListWidgetItem;
+
+import org.bukkit.ChatColor;
 
 public class BankListApplet extends GenericListWidget {
 	private static NumberFormat numForm;
 	private static Locale caLoc = new Locale("en", "US");
-	
+
 	public BankListApplet() {
 		Map<String, List<Bank>> allBanks = ReservePlugin.getReserve().retrieveBanks();
-		numForm = NumberFormat.getCurrencyInstance(caLoc);	
+		numForm = NumberFormat.getCurrencyInstance(caLoc);
 		for (String world : allBanks.keySet()) {
 			for (Bank bank : allBanks.get(world)) {
 				this.addItem(new ListWidgetItem(bank.getName() + " / " + ChatColor.AQUA + world, ChatColor.GOLD + numForm.format(bank.getTotalBalance())));
 			}
 		}
 	}
-	
 }

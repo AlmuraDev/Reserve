@@ -26,7 +26,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import com.almuradev.reserve.econ.Account;
 import com.almuradev.reserve.econ.Bank;
 
 public final class Reserve {
@@ -110,7 +109,7 @@ public final class Reserve {
 		final List<Bank> entry = BANKS.get(world);
 		if (entry != null) {
 			final Iterator<Bank> entryIterator = entry.iterator();
-			while(entryIterator.hasNext()) {
+			while (entryIterator.hasNext()) {
 				final Bank temp = entryIterator.next();
 				if (temp.getName().equalsIgnoreCase(name)) {
 					entryIterator.remove();

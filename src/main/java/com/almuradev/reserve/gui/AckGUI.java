@@ -69,27 +69,25 @@ public class AckGUI extends GenericPopup {
 		GenericTexture border = new GenericTexture("http://www.almuramc.com/images/playerplus.png");
 		border.setAnchor(WidgetAnchor.CENTER_CENTER);
 		border.setPriority(RenderPriority.High);
-		
-		if (an.getWidth()< gl.getWidth()) {
-			border.setWidth(gl.getWidth()+25).setHeight(90);
-			border.shiftXPos(0-(border.getWidth()/2)).shiftYPos(-80);
+
+		if (an.getWidth() < gl.getWidth()) {
+			border.setWidth(gl.getWidth() + 25).setHeight(90);
+			border.shiftXPos(0 - (border.getWidth() / 2)).shiftYPos(-80);
 		} else {
-			border.setWidth(an.getWidth()+25).setHeight(90);
-			border.shiftXPos(0-(border.getWidth()/2)).shiftYPos(-80);
+			border.setWidth(an.getWidth() + 25).setHeight(90);
+			border.shiftXPos(0 - (border.getWidth() / 2)).shiftYPos(-80);
 		}
-		
+
 		GenericGradient gg = new GenericGradient();
 		gg.setBottomColor(bottom).setTopColor(bottom);
 		gg.setAnchor(WidgetAnchor.CENTER_CENTER);
-		gg.setWidth(border.getWidth()-25).setHeight(1);
-		gg.shiftXPos(0-gg.getWidth()/2).shiftYPos(-55);		
+		gg.setWidth(border.getWidth() - 25).setHeight(1);
+		gg.shiftXPos(0 - gg.getWidth() / 2).shiftYPos(-55);
 		GenericButton close = new CommandButton(this, 1, "OK");
 
 		close.setAnchor(WidgetAnchor.CENTER_CENTER);
 
 		close.setHeight(16).setWidth(40).shiftXPos(-20).shiftYPos(-20);
-		
-		
 
 		attachWidgets(plugin, border, gl, gg, an, close);
 
@@ -110,8 +108,8 @@ public class AckGUI extends GenericPopup {
 					new ReserveMainGUI(plugin, sPlayer);
 				} else if (ackMessage.equalsIgnoreCase("Deposit amount has to be more than zero.") && previousWindow.equalsIgnoreCase("depositgui")) {
 					sPlayer.getMainScreen().closePopup();
-					new DepositGUI(plugin, sPlayer, selectedBank, null);		
-				} else if (ackMessage.equalsIgnoreCase("Insuffient funds available for deposit.") && previousWindow.equalsIgnoreCase("depositgui") ) {
+					new DepositGUI(plugin, sPlayer, selectedBank, null);
+				} else if (ackMessage.equalsIgnoreCase("Insuffient funds available for deposit.") && previousWindow.equalsIgnoreCase("depositgui")) {
 					sPlayer.getMainScreen().closePopup();
 					new DepositGUI(plugin, sPlayer, selectedBank, null);
 				} else if (ackMessage.equalsIgnoreCase("Withdraw amount cannot be greater than current balance.") && previousWindow.equalsIgnoreCase("withdrawgui")) {
@@ -131,13 +129,13 @@ public class AckGUI extends GenericPopup {
 					new DepositGUI(plugin, sPlayer, selectedBank, null);
 				} else if (ackMessage.equalsIgnoreCase("Bank Created Successfully.") && previousWindow.equalsIgnoreCase("createbankgui")) {
 					sPlayer.getMainScreen().closePopup();
-					new ReserveMainGUI(plugin, sPlayer);					
+					new ReserveMainGUI(plugin, sPlayer);
 				} else if (ackMessage.equalsIgnoreCase("Please specify name.") && previousWindow.equalsIgnoreCase("createbankgui")) {
 					sPlayer.getMainScreen().closePopup();
 					new CreateBankGUI(plugin, sPlayer);
 				} else if (ackMessage.equalsIgnoreCase("Bank already exists.") && previousWindow.equalsIgnoreCase("createbankgui")) {
 					sPlayer.getMainScreen().closePopup();
-					new CreateBankGUI(plugin, sPlayer);	
+					new CreateBankGUI(plugin, sPlayer);
 				} else if (ackMessage.equalsIgnoreCase("Bank Removed.") && previousWindow.equalsIgnoreCase("deletebankgui")) {
 					sPlayer.getMainScreen().closePopup();
 					new ReserveMainGUI(plugin, sPlayer);
