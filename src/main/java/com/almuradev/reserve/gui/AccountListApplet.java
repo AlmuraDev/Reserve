@@ -43,7 +43,7 @@ public class AccountListApplet extends GenericListWidget {
 		this.selectedBank = mySelectedBank;
 		this.sPlayer = player;
 		numForm = NumberFormat.getCurrencyInstance(caLoc);	
-		List<Account> accountNames = ReservePlugin.getReserve().getAccountsInBankFor(sPlayer.getName(), selectedBank);    	
+		List<Account> accountNames = selectedBank.getAccountsFor(sPlayer.getName());
 		for (Account account: accountNames) {
 			this.addItem(new ListWidgetItem(account.getName(), ChatColor.GREEN + numForm.format(account.getBalance())));
 		}

@@ -132,7 +132,7 @@ public class DeleteAccountGUI extends GenericPopup {
 			if (box.getSelectedItem() == null) {
 				new AckGUI(plugin, sPlayer, selectedBank, "Please specify account.", "deleteaccountgui");
 			} else {
-				Account myAccount = ReservePlugin.getReserve().getAccountFromNameIn(selectedBank, box.getSelectedItem(), sPlayer.getName());			
+				Account myAccount = selectedBank.getAccount(box.getSelectedItem(), sPlayer.getName());
 				if (myAccount.getBalance() != 0) {
 					sPlayer.getMainScreen().closePopup();					
 					new AckGUI(plugin, sPlayer, selectedBank, "Account balance is not zero.", "deleteaccountgui");
@@ -152,7 +152,7 @@ public class DeleteAccountGUI extends GenericPopup {
 	
 	private void populateList() {		
 		List<String> items = new ArrayList<String>();
-		List<Account> accountNames = ReservePlugin.getReserve().getAccountsInBankFor(sPlayer.getName(), selectedBank);    	
+		List<Account> accountNames = selectedBank.getAccountsFor(sPlayer.getName());
 		for (Account account: accountNames) {
 			items.add(account.getName());
 		}
@@ -165,7 +165,7 @@ public class DeleteAccountGUI extends GenericPopup {
 	}
 	
 	void onSelect(int i, String text) {
-		Account myAccount = ReservePlugin.getReserve().getAccountFromNameIn(selectedBank, box.getSelectedItem(), sPlayer.getName());
+		Account myAccount = selectedBank.getAccount(box.getSelectedItem(), sPlayer.getName());
 		double balance = 0;
 		an.setText("Current Balance: " + ChatColor.GREEN + numForm.format(myAccount.getBalance()));	
 	}

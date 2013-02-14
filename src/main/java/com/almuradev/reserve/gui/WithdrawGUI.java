@@ -180,7 +180,7 @@ public class WithdrawGUI extends GenericPopup {
 				new AckGUI(plugin, sPlayer, selectedBank, "Please specify account.", "depositgui");
 			} else {
 
-				Account myAccount = ReservePlugin.getReserve().getAccountFromNameIn(selectedBank, box.getSelectedItem(), sPlayer.getName());
+				Account myAccount = selectedBank.getAccount(box.getSelectedItem(), sPlayer.getName());
 				double withdraw = 0;
 				try {
 					withdraw = Math.abs(Double.parseDouble(depositAmountField.getText()));										
@@ -215,7 +215,7 @@ public class WithdrawGUI extends GenericPopup {
 
 	private void populateList() {	
 		List<String> items = new ArrayList<String>();
-		List<Account> accountNames = ReservePlugin.getReserve().getAccountsInBankFor(sPlayer.getName(), selectedBank);    	
+		List<Account> accountNames = selectedBank.getAccountsFor(sPlayer.getName());
 		int selectionID = 0;		
 		for (Account account: accountNames) {
 			items.add(account.getName());			

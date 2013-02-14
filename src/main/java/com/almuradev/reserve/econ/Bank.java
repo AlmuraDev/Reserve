@@ -46,14 +46,16 @@ public class Bank {
 	}
 
 	/**
-	 * @return
+	 * Returns the name of this bank.
+	 * @return The name
 	 */
 	public String getName() {
 		return name;
 	}
 
 	/**
-	 * @param name
+	 * Sets the name of this bank.
+	 * @param name The new name
 	 */
 	public Bank setName(String name) {
 		if (name == null || name.isEmpty()) {
@@ -65,17 +67,16 @@ public class Bank {
 	}
 
 	/**
-	 * Returns the holder of this bank. This String is unique, no two holders can have the exact same name.
-	 * <p/>
-	 * This should solve the offline/online player dilemma that has plagued many other plugins.
-	 * @return The name of the current holder.
+	 * Returns who holds this bank.
+	 * @return The holder
 	 */
 	public String getHolder() {
 		return holder;
 	}
 
 	/**
-	 * @param holder
+	 * Sets who holds this bank.
+	 * @param holder The new holder
 	 */
 	public Bank setHolder(String holder) {
 		if (holder == null || holder.isEmpty()) {
@@ -87,7 +88,9 @@ public class Bank {
 	}
 
 	/**
-	 * @param account
+	 * Adds a new account to this bank. If this account exists in the bank, it simply returns it.
+	 * @param account The new account
+	 * @return The added or existing account. Guaranteed to never be null.
 	 */
 	public Account addAccount(Account account) {
 		if (account == null) {
@@ -100,9 +103,14 @@ public class Bank {
 		return account;
 	}
 
+	/**
+	 * Adds a new account type to this bank. If the account type exists in the bank, it simply returns it.
+	 * @param type The new account type
+	 * @return The added or existing account type. Guaranteed to never be null.
+	 */
 	public AccountType addType(AccountType type) {
-		if (name == null || name.isEmpty()) {
-			throw new NullPointerException("Specified name is null!");
+		if (type == null) {
+			throw new NullPointerException("Specified type is null!");
 		}
 
 		if (!types.contains(type)) {
@@ -113,8 +121,10 @@ public class Bank {
 	}
 
 	/**
-	 * @param name
-	 * @return
+	 * Gets an account specified by the name and holder.
+	 * @param name The name of the account
+	 * @param holder Who holds the account
+	 * @return The account or null if not found
 	 */
 	public Account getAccount(String name, String holder) {
 		if (name == null || name.isEmpty() || holder == null || holder.isEmpty()) {
@@ -128,6 +138,11 @@ public class Bank {
 		return null;
 	}
 
+	/**
+	 * Gets an account type specified by the name.
+	 * @param name The name of the account type
+	 * @return The account type or null if not found
+	 */
 	public AccountType getType(String name) {
 		if (name == null || name.isEmpty()) {
 			throw new NullPointerException("Specified name is null!");
@@ -143,8 +158,10 @@ public class Bank {
 	}
 
 	/**
-	 * @param name
-	 * @return
+	 * Removes an account from this bank.
+	 * @param name The name of the account
+	 * @param holder Who holds the account
+	 * @return The account removed or null if not found
 	 */
 	public Account removeAccount(String name, String holder) {
 		if (name == null || name.isEmpty() || holder == null || holder.isEmpty()) {
@@ -161,6 +178,11 @@ public class Bank {
 		return null;
 	}
 
+	/**
+	 * Removes an account type from this bank.
+	 * @param name The name of the account type
+	 * @return The account type removed or null if not found
+	 */
 	public AccountType removeType(String name) {
 		if (name == null || name.isEmpty()) {
 			throw new NullPointerException("Specified name is null!");
@@ -177,29 +199,50 @@ public class Bank {
 	}
 
 	/**
-	 * @return
+	 * Retrieves all accounts in this bank.
+	 * @return List of accounts
 	 */
 	public List<Account> retrieveAccounts() {
 		return Collections.unmodifiableList(accounts);
 	}
 
+	/**
+	 * Retrieves all account types in this bank.
+	 * @return List of account types
+	 */
 	public List<AccountType> retrieveTypes() {
 		return Collections.unmodifiableList(types);
 	}
 
 	/**
-	 * @return
+	 * Returns if this bank has accounts or not.
+	 * @return True if amount of accounts is greater than 0, false if not
 	 */
 	public boolean hasAccounts() {
 		return accounts.size() > 0;
 	}
 
+	/**
+	 * Returns if this bank has account types or not.
+	 * @return True if amount of account types is greater than 0, false if not
+	 */
 	public boolean hasTypes() {
 		return types.size() > 0;
 	}
 
 	/**
-	 * @param erase
+	 * Wipes this bank, setting all account balances to 0.0.
+	 * @return This bank, wiped.
+	 */
+	public Bank wipe() {
+		return wipe(false);
+	}
+
+	/**
+	 * Wipes this bank, setting all account balances to 0.0. The optional parameter allows the option to delete
+	 * accounts as well.
+	 * @param erase If true, deletes accounts. False simply sets balances.
+	 * @return
 	 */
 	public Bank wipe(boolean erase) {
 		for (Account account : retrieveAccounts()) {
@@ -212,7 +255,8 @@ public class Bank {
 	}
 
 	/**
-	 * @return
+	 * Gets the total balance across all accounts.
+	 * @return The total of all account balances
 	 */
 	public double getTotalBalance() {
 		double total = 0;
@@ -222,6 +266,11 @@ public class Bank {
 		return total;
 	}
 
+	/**
+	 * Gets the total balance of all accounts the holder holds.
+	 * @param holder Who holds the accounts
+	 * @return The total of all held account balances
+	 */
 	public double getTotalBalanceFor(String holder) {
 		double total = 0;
 
@@ -234,10 +283,19 @@ public class Bank {
 		return total;
 	}
 
+	/**
+	 * Gets the amount of accounts in this bank.
+	 * @return The amount of accounts
+	 */
 	public int getAmountOfAccounts() {
 		return accounts.size();
 	}
 
+	/**
+	 * Gets the amount of accounts in this bank this holder holds.
+	 * @param holder Who holds the accounts
+	 * @return The amount of accounts the holder holds.
+	 */
 	public int getAmountOfAccountsFor(String holder) {
 		int amount = 0;
 
@@ -251,8 +309,28 @@ public class Bank {
 	}
 
 	/**
-	 * @param interestRate
-	 * @return
+	 * Gets all accounts for the specified holder.
+	 * @param holder Who holds the accounts
+	 * @return A list of all accounts
+	 */
+	public List<Account> getAccountsFor(String holder) {
+		if (holder == null || holder.isEmpty()) {
+			throw new NullPointerException("Specified holder is null!");
+		}
+		final ArrayList<Account> accounts = new ArrayList<>();
+		final List<Account> injected = retrieveAccounts();
+		for (Account account : injected) {
+			if (account.getHolder().equalsIgnoreCase(holder)) {
+				accounts.add(account);
+			}
+		}
+		return accounts;
+	}
+
+	/**
+	 * Sets an interest rate on all account types.
+	 * @param interestRate The interest rate
+	 * @return This bank
 	 */
 	public Bank setGlobalInterestRate(double interestRate) {
 		for (AccountType type : types)  {
@@ -263,7 +341,9 @@ public class Bank {
 	}
 
 	/**
-	 * @return
+	 * Determines if the bank is dirty. This means the bank has been modified since the last time it
+	 * was saved to file.
+	 * @return True if dirty, false if not
 	 */
 	public boolean isDirty() {
 		if (dirty) {
@@ -288,7 +368,9 @@ public class Bank {
 	}
 
 	/**
-	 * @param dirty
+	 * Sets the bank as dirty. Great caution should be used as unintentionally setting a dirty bank to false means
+	 * the storage system won't save it. On the flip side, setting a bank to always dirty will kill SSD computers. In short,
+	 * if un-decided, leave it alone.
 	 */
 	public void setDirty(boolean dirty) {
 		this.dirty = dirty;
