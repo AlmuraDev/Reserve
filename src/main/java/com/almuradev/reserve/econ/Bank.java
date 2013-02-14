@@ -24,6 +24,8 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
+import com.almuradev.reserve.econ.type.AccountType;
+
 /**
  * A wrapper class that keeps track of accounts
  */

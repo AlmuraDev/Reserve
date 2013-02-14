@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU General Public License. If not,
  * see <http://www.gnu.org/licenses/> for the GNU General Public License.
  */
-package com.almuradev.reserve.econ;
+package com.almuradev.reserve.econ.type;
 
 public class AccountType {
 	private String name;

@@ -19,6 +19,8 @@
  */
 package com.almuradev.reserve.econ;
 
+import com.almuradev.reserve.econ.type.AccountType;
+
 public class Account {
 	private AccountType type;
 	private String name;
