@@ -111,7 +111,7 @@ public class CreateAccountGUI extends GenericPopup {
 			} else {
 				if (selectedBank.getAccount(accountNameField.getText(), sPlayer.getName()) != null) {
 					new AckGUI(plugin, sPlayer, selectedBank, "Account already exists.", "createaccountgui");
-				} else {
+				} else {					
 					//selectedBank.addAccount(new Account(AccountType.CHECKING, accountNameField.getText(), sPlayer.getName())); //TODO Need a combobox for this!
 					sPlayer.getMainScreen().closePopup();
 					new AckGUI(plugin, sPlayer, selectedBank, "Account Created Successfully", "createaccountgui");

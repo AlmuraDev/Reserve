@@ -81,5 +81,10 @@ public class CommandButton extends GenericButton {
 		if (gui instanceof BankStatusGUI) {
 			((BankStatusGUI) gui).onClickCommand(commandGoal);
 		}
+		
+		if (gui instanceof AccountTypesGUI) {
+			((AccountTypesGUI) gui).onClickCommand(commandGoal);
+		}
+
 	}
 }

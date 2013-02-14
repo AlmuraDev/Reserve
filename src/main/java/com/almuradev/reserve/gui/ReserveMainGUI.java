@@ -88,14 +88,16 @@ public class ReserveMainGUI extends GenericPopup {
 		GenericButton deleteBank = new CommandButton(this, 3, "Delete");
 		GenericButton openBank = new CommandButton(this, 4, "Access Bank");
 		GenericButton bankStatus = new CommandButton(this, 5, "Bank Status");
-		GenericButton options = new CommandButton(this, 6, "Options");
-		GenericButton close = new CommandButton(this, 7, "Close");
+		GenericButton accountTypes = new CommandButton(this, 6, "Account Types");
+		GenericButton options = new CommandButton(this, 7, "Options");
+		GenericButton close = new CommandButton(this, 8, "Close");
 
 		createNewBank.setAnchor(WidgetAnchor.CENTER_CENTER);
 		renameBank.setAnchor(WidgetAnchor.CENTER_CENTER);
 		deleteBank.setAnchor(WidgetAnchor.CENTER_CENTER);
 		openBank.setAnchor(WidgetAnchor.CENTER_CENTER);
 		bankStatus.setAnchor(WidgetAnchor.CENTER_CENTER);
+		accountTypes.setAnchor(WidgetAnchor.CENTER_CENTER);
 		options.setAnchor(WidgetAnchor.CENTER_CENTER);
 		close.setAnchor(WidgetAnchor.CENTER_CENTER);
 
@@ -104,6 +106,7 @@ public class ReserveMainGUI extends GenericPopup {
 		deleteBank.setHeight(16).setWidth(40).shiftXPos(35).shiftYPos(0);
 		openBank.setHeight(16).setWidth(120).shiftXPos(-60).shiftYPos(20);
 		bankStatus.setHeight(16).setWidth(120).shiftXPos(-60).shiftYPos(40);
+		accountTypes.setHeight(16).setWidth(120).shiftXPos(-60).shiftYPos(60);
 		options.setHeight(16).setWidth(50).shiftXPos(-110).shiftYPos(95);
 		close.setHeight(16).setWidth(40).shiftXPos(70).shiftYPos(95);
 		
@@ -113,6 +116,7 @@ public class ReserveMainGUI extends GenericPopup {
 		options.setEnabled(sPlayer.hasPermission("reserve.admin"));			
 		openBank.setEnabled(sPlayer.hasPermission("reserve.viewbank"));			
 		bankStatus.setEnabled(sPlayer.hasPermission("reserve.viewbank"));
+		accountTypes.setEnabled(sPlayer.hasPermission("reserve.admin"));		
 		
 		if (list.getItems() == null) {
 			openBank.setEnabled(false);
@@ -146,8 +150,7 @@ public class ReserveMainGUI extends GenericPopup {
 					new AckGUI(plugin, sPlayer, null, "Please Select Bank.", "reservemaingui");
 				} else {
 					sPlayer.getMainScreen().closePopup();
-					String [] split = list.getSelectedItem().getTitle().split("\\/");
-					System.out.println("Line: " + list.getSelectedItem().getTitle());
+					String [] split = list.getSelectedItem().getTitle().split("\\/");					
 					new BankMainGUI(plugin, sPlayer, ReservePlugin.getReserve().get(split[0].trim(), ChatColor.stripColor(split[1].trim())));
 				}
 				break;
@@ -162,10 +165,19 @@ public class ReserveMainGUI extends GenericPopup {
 				}
 				break;
 			case 6:
+				if (list.getSelectedItem() == null) {
+					new AckGUI(plugin, sPlayer, null, "Please Select Bank.", "reservemaingui");
+				} else {
+				sPlayer.getMainScreen().closePopup();
+				String [] split = list.getSelectedItem().getTitle().split("\\/");
+				new AccountTypesGUI(plugin, sPlayer, ReservePlugin.getReserve().get(split[0].trim(), ChatColor.stripColor(split[1].trim())));
+				}
+				break;
+			case 7:
 				sPlayer.getMainScreen().closePopup();
 				new OptionsGUI(plugin, sPlayer);
 				break;
-			case 7:
+			case 8:
 				Screen screen = sPlayer.getMainScreen();
 				screen.removeWidget(this);
 				sPlayer.closeActiveWindow();

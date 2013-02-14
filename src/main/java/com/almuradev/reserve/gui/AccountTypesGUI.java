@@ -24,14 +24,19 @@
 package com.almuradev.reserve.gui;
 
 import java.text.NumberFormat;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Locale;
 
 import com.almuradev.reserve.ReservePlugin;
 import com.almuradev.reserve.econ.Account;
+import com.almuradev.reserve.econ.AccountType;
 import com.almuradev.reserve.econ.Bank;
 
 import org.bukkit.ChatColor;
 import org.getspout.spoutapi.gui.Color;
+import org.getspout.spoutapi.gui.ComboBox;
 import org.getspout.spoutapi.gui.GenericButton;
 import org.getspout.spoutapi.gui.GenericGradient;
 import org.getspout.spoutapi.gui.GenericLabel;
@@ -43,21 +48,19 @@ import org.getspout.spoutapi.gui.Screen;
 import org.getspout.spoutapi.gui.WidgetAnchor;
 import org.getspout.spoutapi.player.SpoutPlayer;
 
-public class BankStatusGUI extends GenericPopup {
+public class AccountTypesGUI extends GenericPopup {
 	private final ReservePlugin plugin;
 	private final SpoutPlayer sPlayer;
-	private final Bank selectedBank;
-	private final Account selectedAccount;
-	private ListWidget list;
+	private final Bank selectedBank;	
+	private final ComboBox box;
 	private static NumberFormat numForm;
 	private static Locale caLoc = new Locale("en", "US");
 	Color bottom = new Color(1.0F, 1.0F, 1.0F, 0.50F);	
 
-	public BankStatusGUI(ReservePlugin plugin, SpoutPlayer sPlayer, Bank bank) {
+	public AccountTypesGUI(ReservePlugin plugin, SpoutPlayer sPlayer, Bank bank) {
 		this.plugin = plugin;
 		this.sPlayer = sPlayer;
-		this.selectedBank = bank;
-		this.selectedAccount = null;
+		this.selectedBank = bank;		
 
 		GenericTexture border = new GenericTexture("http://www.almuramc.com/images/playerplus.png");
 		border.setAnchor(WidgetAnchor.CENTER_CENTER);
@@ -83,46 +86,22 @@ public class BankStatusGUI extends GenericPopup {
 		gb.setWidth(200).setHeight(1);
 		gb.shiftXPos(0-(gb.getWidth()/2)).shiftYPos(-65);
 
-		System.out.println("SelectedBank:" + selectedBank.getName());
-		list = new MasterAccountListApplet(selectedBank, sPlayer);
-		list.setAnchor(WidgetAnchor.CENTER_CENTER);
-		list.shiftXPos(-100).shiftYPos(-60);
-		list.setWidth(200).setHeight(70);
-		list.setPriority(RenderPriority.Lowest);
-		
-		GenericLabel bankAccountsLabel = new GenericLabel();				
-		bankAccountsLabel.setScale(1.0F);
-		bankAccountsLabel.setAnchor(WidgetAnchor.CENTER_CENTER);		
-		bankAccountsLabel.setText("Total Accounts: " + ChatColor.YELLOW + selectedBank.getAmountOfAccounts());
-		bankAccountsLabel.setHeight(15).setWidth(GenericLabel.getStringWidth(bankAccountsLabel.getText()));
-		bankAccountsLabel.shiftXPos((GenericLabel.getStringWidth(bankAccountsLabel.getText()) / 2) * -1).shiftYPos(-89);
-		
-		GenericLabel bankNameLabel = new GenericLabel();
-		numForm = NumberFormat.getCurrencyInstance(caLoc);		
-		bankNameLabel.setScale(1.0F);
-		bankNameLabel.setAnchor(WidgetAnchor.CENTER_CENTER);
-		bankNameLabel.setText("Total Balance: " + ChatColor.GOLD + numForm.format(selectedBank.getTotalBalance()));
-		bankNameLabel.setHeight(15).setWidth(GenericLabel.getStringWidth(bankNameLabel.getText()));
-		bankNameLabel.shiftXPos((GenericLabel.getStringWidth(bankNameLabel.getText()) / 2) * -1).shiftYPos(-79);
-
-		GenericButton accountTypes = new CommandButton(this, 1, "Account Types");
-		
-		
-		
+		box = new AccountTypesEditCombo(this);
+		box.setText("Accounts");
+		box.setAnchor(WidgetAnchor.CENTER_CENTER);
+		box.setWidth(GenericLabel.getStringWidth("12345678901234567890123459"));
+		box.setHeight(18);
+		box.shiftXPos(-35).shiftYPos(-47);
+		box.setAuto(true);
+		box.setPriority(RenderPriority.Low);
 		
 		GenericButton close = new CommandButton(this, 6, "Close");
-
-		accountTypes.setAnchor(WidgetAnchor.CENTER_CENTER);
 		
 		close.setAnchor(WidgetAnchor.CENTER_CENTER);
 
-		accountTypes.setHeight(16).setWidth(120).shiftXPos(-60).shiftYPos(15);
-		
 		close.setHeight(16).setWidth(40).shiftXPos(70).shiftYPos(95);
 
-		accountTypes.setEnabled(sPlayer.hasPermission("reserve.admin"));
-		
-		attachWidgets(plugin, border, gl, bankNameLabel, gg, gb, accountTypes, list, bankAccountsLabel, close);
+		attachWidgets(plugin, border, gl, gg, box, gb, close);
 
 		sPlayer.getMainScreen().closePopup();
 		sPlayer.getMainScreen().attachPopupScreen(this);
@@ -131,8 +110,7 @@ public class BankStatusGUI extends GenericPopup {
 	public void onClickCommand(int commandGoal) {
 		switch (commandGoal) {
 			case 1:
-				sPlayer.getMainScreen().closePopup();
-				new AccountTypesGUI(plugin, sPlayer, selectedBank);
+				
 				break;
 			case 2:
 								
@@ -148,8 +126,29 @@ public class BankStatusGUI extends GenericPopup {
 				break;
 			case 6:
 				sPlayer.getMainScreen().closePopup();
-				new ReserveMainGUI(plugin, sPlayer);
+				new BankStatusGUI(plugin, sPlayer, selectedBank);
 				break;
 		}
+	}
+	
+	/*
+	private void populateList() {
+		List<String> items = new ArrayList<String>();
+		List<AccountType> accountTypes = ReservePlugin.getReserve().getAccountsTypesInBank(selectedBank);    	
+		
+		for (AccountType allAccountTypes: accountTypes) {
+			items.add(allAccountTypes.getName());			
+		}
+	
+		if (items != null) {	
+			Collections.sort(items, String.CASE_INSENSITIVE_ORDER);
+			box.setItems(items);			
+		}
+				
+				
+	}*/
+	
+	void onSelect(int i, String text) {
+				
 	}
 }
