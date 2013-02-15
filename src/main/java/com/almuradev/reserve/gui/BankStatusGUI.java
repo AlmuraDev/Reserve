@@ -131,12 +131,8 @@ public class BankStatusGUI extends GenericPopup {
 	public void onClickCommand(int commandGoal) {
 		switch (commandGoal) {
 			case 1:
-<<<<<<< HEAD
 				sPlayer.getMainScreen().closePopup();
 				new AccountTypesGUI(plugin, sPlayer, selectedBank);
-=======
-
->>>>>>> 9b1eeb594deeda0c3662cbb483e60aecf9cbeaf2
 				break;
 			case 2:
 

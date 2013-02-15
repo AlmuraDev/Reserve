@@ -31,7 +31,6 @@ import java.util.Locale;
 
 import com.almuradev.reserve.ReservePlugin;
 import com.almuradev.reserve.econ.Account;
-import com.almuradev.reserve.econ.AccountType;
 import com.almuradev.reserve.econ.Bank;
 
 import org.bukkit.ChatColor;
