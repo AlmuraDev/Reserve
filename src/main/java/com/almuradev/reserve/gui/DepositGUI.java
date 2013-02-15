@@ -34,7 +34,6 @@ import com.almuradev.reserve.econ.Account;
 import com.almuradev.reserve.econ.Bank;
 import com.almuradev.reserve.econ.VaultUtil;
 
-import org.bukkit.ChatColor;
 import org.getspout.spoutapi.gui.Color;
 import org.getspout.spoutapi.gui.ComboBox;
 import org.getspout.spoutapi.gui.GenericButton;
@@ -46,6 +45,8 @@ import org.getspout.spoutapi.gui.GenericTexture;
 import org.getspout.spoutapi.gui.RenderPriority;
 import org.getspout.spoutapi.gui.WidgetAnchor;
 import org.getspout.spoutapi.player.SpoutPlayer;
+
+import org.bukkit.ChatColor;
 
 public class DepositGUI extends GenericPopup {
 	private final ReservePlugin plugin;
@@ -69,10 +70,10 @@ public class DepositGUI extends GenericPopup {
 		border.setAnchor(WidgetAnchor.CENTER_CENTER);
 		border.setPriority(RenderPriority.High);
 		border.setWidth(255).setHeight(150);
-		border.shiftXPos(0-(border.getWidth()/2)).shiftYPos(-80);
+		border.shiftXPos(0 - (border.getWidth() / 2)).shiftYPos(-80);
 
 		GenericLabel gl = new GenericLabel();
-		gl.setScale(1.4F).setText(selectedBank.getName());		
+		gl.setScale(1.4F).setText(selectedBank.getName());
 		gl.setAnchor(WidgetAnchor.CENTER_CENTER);
 		gl.setHeight(15).setWidth(GenericLabel.getStringWidth(gl.getText(), gl.getScale()));
 		gl.shiftXPos((GenericLabel.getStringWidth(gl.getText(), gl.getScale()) / 2) * -1).shiftYPos(-70);
@@ -81,19 +82,18 @@ public class DepositGUI extends GenericPopup {
 		gg.setBottomColor(bottom).setTopColor(bottom);
 		gg.setAnchor(WidgetAnchor.CENTER_CENTER);
 		gg.setWidth(200).setHeight(1);
-		gg.shiftXPos(0-(gg.getWidth()/2)).shiftYPos(-55);
-		
+		gg.shiftXPos(0 - (gg.getWidth() / 2)).shiftYPos(-55);
 
-		GenericLabel cl = new GenericLabel("Select Account: ");		
+		GenericLabel cl = new GenericLabel("Select Account: ");
 		cl.setAnchor(WidgetAnchor.CENTER_CENTER);
 		cl.setHeight(15).setWidth(GenericLabel.getStringWidth(cl.getText()));
 		cl.shiftXPos(-115).shiftYPos(-42);
-		
+
 		GenericGradient gm = new GenericGradient();
 		gm.setBottomColor(bottom).setTopColor(bottom);
 		gm.setAnchor(WidgetAnchor.CENTER_CENTER);
 		gm.setWidth(200).setHeight(1);
-		gm.shiftXPos(0-(gm.getWidth()/2)).shiftYPos(-25);
+		gm.shiftXPos(0 - (gm.getWidth() / 2)).shiftYPos(-25);
 
 		box = new AccountDepositCombo(this);
 		box.setText("Accounts");
@@ -103,27 +103,26 @@ public class DepositGUI extends GenericPopup {
 		box.shiftXPos(-35).shiftYPos(-47);
 		box.setAuto(true);
 		box.setPriority(RenderPriority.Low);
-		
 
 		at = new GenericLabel("Account Balance: ");
 		at.setScale(1.0F).setVisible(false);
 		at.setAnchor(WidgetAnchor.CENTER_CENTER);
 		at.setHeight(15).setWidth(GenericLabel.getStringWidth(at.getText()));
 		at.shiftXPos(-95).shiftYPos(-10);
-		
+
 		att = new GenericLabel();
 		att.setText(ChatColor.GREEN + "0.00").setVisible(false);
 		att.setScale(1.0F);
 		att.setAnchor(WidgetAnchor.CENTER_CENTER);
 		att.setHeight(15).setWidth(GenericLabel.getStringWidth(att.getText()));
 		att.shiftXPos(0).shiftYPos(-10);
-		
+
 		GenericLabel ag = new GenericLabel("Carrying Balance: ");
 		ag.setScale(1.0F);
 		ag.setAnchor(WidgetAnchor.CENTER_CENTER);
 		ag.setHeight(15).setWidth(GenericLabel.getStringWidth(ag.getText()));
 		ag.shiftXPos(-95).shiftYPos(10);
-		
+
 		GenericLabel ab = new GenericLabel();
 		numForm = NumberFormat.getCurrencyInstance(caLoc);
 		ab.setText(ChatColor.YELLOW + numForm.format(VaultUtil.getBalance(sPlayer.getName())));
@@ -131,7 +130,7 @@ public class DepositGUI extends GenericPopup {
 		ab.setAnchor(WidgetAnchor.CENTER_CENTER);
 		ab.setHeight(15).setWidth(GenericLabel.getStringWidth(ab.getText()));
 		ab.shiftXPos(0).shiftYPos(10);
-		
+
 		GenericLabel an = new GenericLabel("Deposit Amount: ");
 		an.setScale(1.0F);
 		an.setAnchor(WidgetAnchor.CENTER_CENTER);
@@ -156,50 +155,50 @@ public class DepositGUI extends GenericPopup {
 		close.setHeight(16).setWidth(40).shiftXPos(75).shiftYPos(50);
 
 		populateList();
-		
+
 		attachWidgets(plugin, border, gl, gg, ag, ab, at, att, gm, box, cl, depositAmountField, an, depositButton, close);
 
 		sPlayer.getMainScreen().closePopup();
 		sPlayer.getMainScreen().attachPopupScreen(this);
-		
-		plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable () {
+
+		plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
 			@Override
-			public void run() {				
+			public void run() {
 				setDirty(true);
-			}			 
-		} ,5L);
+			}
+		}, 5L);
 	}
 
 	public void onClickCommand(int commandGoal) {
 		switch (commandGoal) {
-		case 1: // Ok
-			if (box.getSelectedItem() == null) {
-				new AckGUI(plugin, sPlayer, selectedBank, "Please specify account.", "depositgui");
-			} else {
-
-				Account myAccount = ReservePlugin.getReserve().getAccountFromNameIn(selectedBank, box.getSelectedItem(), sPlayer.getName());
-				double deposit = 0;
-				try {
-					deposit = Math.abs(Double.parseDouble(depositAmountField.getText()));												
-				} catch (Exception e) {
-					//do nothing
-				}
-				if (deposit == 0) {
-					sPlayer.getMainScreen().closePopup();					
-					new AckGUI(plugin, sPlayer, selectedBank, "Deposit amount has to be more than zero.", "depositgui");
+			case 1: // Ok
+				if (box.getSelectedItem() == null) {
+					new AckGUI(plugin, sPlayer, selectedBank, "Please specify account.", "depositgui");
 				} else {
-				// Remove from Users Economy
-					if (VaultUtil.getBalance(sPlayer.getName()) < deposit) {
-						sPlayer.getMainScreen().closePopup();					
-						new AckGUI(plugin, sPlayer, selectedBank, "Insuffient funds available for deposit.", "depositgui");
-					} else {
-						myAccount.add(deposit);
-						VaultUtil.add(sPlayer.getName(), 0-deposit);
+
+					Account myAccount = selectedBank.getAccount(box.getSelectedItem(), sPlayer.getName());
+					double deposit = 0;
+					try {
+						deposit = Math.abs(Double.parseDouble(depositAmountField.getText()));
+					} catch (Exception e) {
+						//do nothing
+					}
+					if (deposit == 0) {
 						sPlayer.getMainScreen().closePopup();
-						new AckGUI(plugin, sPlayer, selectedBank, "Funds Deposited Successfully", "depositgui");
+						new AckGUI(plugin, sPlayer, selectedBank, "Deposit amount has to be more than zero.", "depositgui");
+					} else {
+						// Remove from Users Economy
+						if (VaultUtil.getBalance(sPlayer.getName()) < deposit) {
+							sPlayer.getMainScreen().closePopup();
+							new AckGUI(plugin, sPlayer, selectedBank, "Insuffient funds available for deposit.", "depositgui");
+						} else {
+							myAccount.add(deposit);
+							VaultUtil.add(sPlayer.getName(), 0 - deposit);
+							sPlayer.getMainScreen().closePopup();
+							new AckGUI(plugin, sPlayer, selectedBank, "Funds Deposited Successfully", "depositgui");
+						}
 					}
 				}
-			}
 				break;
 			case 2: // Close
 				sPlayer.getMainScreen().closePopup();
@@ -210,31 +209,31 @@ public class DepositGUI extends GenericPopup {
 
 	private void populateList() {
 		List<String> items = new ArrayList<String>();
-		List<Account> accountNames = ReservePlugin.getReserve().getAccountsInBankFor(sPlayer.getName(), selectedBank);    	
-		int selectionID = 0;		
-		for (Account account: accountNames) {
-			items.add(account.getName());			
+		List<Account> accountNames = selectedBank.getAccountsFor(sPlayer.getName());
+		int selectionID = 0;
+		for (Account account : accountNames) {
+			items.add(account.getName());
 		}
-	
-		if (items != null) {	
+
+		if (items != null) {
 			Collections.sort(items, String.CASE_INSENSITIVE_ORDER);
-			box.setItems(items);			
+			box.setItems(items);
 		}
-		
+
 		if (items != null && selectedAccount != null) {
-			for (int i=0; i<items.size(); i++) {
+			for (int i = 0; i < items.size(); i++) {
 				if (items.get(i).equalsIgnoreCase(selectedAccount.getName())) {
 					selectionID = i;
 					break;
 				}
-			}	
+			}
 		}
-		if (selectedAccount	!= null) {
-			box.setSelection(selectionID);			
+		if (selectedAccount != null) {
+			box.setSelection(selectionID);
 			box.setText(null);
-		}		
+		}
 	}
-	
+
 	void onSelect(int i, String text) {
 		if (box.getSelectedItem() != null) {
 			numForm = NumberFormat.getCurrencyInstance(caLoc);

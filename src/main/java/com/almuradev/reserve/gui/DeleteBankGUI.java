@@ -24,36 +24,27 @@
 package com.almuradev.reserve.gui;
 
 import java.text.NumberFormat;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 
 import com.almuradev.reserve.ReservePlugin;
-import com.almuradev.reserve.econ.Account;
-import com.almuradev.reserve.econ.Bank;
-import com.almuradev.reserve.econ.VaultUtil;
 
-import org.bukkit.ChatColor;
 import org.getspout.spoutapi.gui.Color;
-import org.getspout.spoutapi.gui.ComboBox;
 import org.getspout.spoutapi.gui.GenericButton;
 import org.getspout.spoutapi.gui.GenericGradient;
 import org.getspout.spoutapi.gui.GenericLabel;
 import org.getspout.spoutapi.gui.GenericPopup;
-import org.getspout.spoutapi.gui.GenericTextField;
 import org.getspout.spoutapi.gui.GenericTexture;
 import org.getspout.spoutapi.gui.ListWidget;
-import org.getspout.spoutapi.gui.ListWidgetItem;
 import org.getspout.spoutapi.gui.RenderPriority;
 import org.getspout.spoutapi.gui.WidgetAnchor;
 import org.getspout.spoutapi.player.SpoutPlayer;
 
+import org.bukkit.ChatColor;
+
 public class DeleteBankGUI extends GenericPopup {
 	private final ReservePlugin plugin;
-	private final SpoutPlayer sPlayer;	
-	private final GenericLabel an;	
+	private final SpoutPlayer sPlayer;
+	private final GenericLabel an;
 	private ListWidget list;
 	private static NumberFormat numForm;
 	private static Locale caLoc = new Locale("en", "US");
@@ -61,16 +52,16 @@ public class DeleteBankGUI extends GenericPopup {
 
 	public DeleteBankGUI(ReservePlugin plugin, SpoutPlayer sPlayer) {
 		this.plugin = plugin;
-		this.sPlayer = sPlayer;		
+		this.sPlayer = sPlayer;
 
 		GenericTexture border = new GenericTexture("http://www.almuramc.com/images/playerplus.png");
 		border.setAnchor(WidgetAnchor.CENTER_CENTER);
 		border.setPriority(RenderPriority.High);
 		border.setWidth(255).setHeight(150);
-		border.shiftXPos(0-(border.getWidth()/2)).shiftYPos(-80);
+		border.shiftXPos(0 - (border.getWidth() / 2)).shiftYPos(-80);
 
 		GenericLabel gl = new GenericLabel();
-		gl.setScale(1.4F).setText("Reserve");		
+		gl.setScale(1.4F).setText("Reserve");
 		gl.setAnchor(WidgetAnchor.CENTER_CENTER);
 		gl.setHeight(15).setWidth(GenericLabel.getStringWidth(gl.getText(), gl.getScale()));
 		gl.shiftXPos((GenericLabel.getStringWidth(gl.getText(), gl.getScale()) / 2) * -1).shiftYPos(-70);
@@ -86,13 +77,13 @@ public class DeleteBankGUI extends GenericPopup {
 		windowLabel.setAnchor(WidgetAnchor.CENTER_CENTER);
 		windowLabel.setHeight(15).setWidth(GenericLabel.getStringWidth(windowLabel.getText()));
 		windowLabel.shiftXPos(((GenericLabel.getStringWidth(windowLabel.getText()) / 2) * -1)).shiftYPos(-52);
-		
+
 		GenericLabel cl = new GenericLabel("Bank: ");
 		cl.setScale(1.0F);
 		cl.setAnchor(WidgetAnchor.CENTER_CENTER);
 		cl.setHeight(15).setWidth(GenericLabel.getStringWidth(cl.getText()));
 		cl.shiftXPos(-110).shiftYPos(-32);
-		
+
 		list = new BankListApplet();
 		list.setAnchor(WidgetAnchor.CENTER_CENTER);
 		list.shiftXPos(-80).shiftYPos(-35);
@@ -106,7 +97,7 @@ public class DeleteBankGUI extends GenericPopup {
 		an.setAnchor(WidgetAnchor.CENTER_CENTER);
 		an.setHeight(15).setWidth(GenericLabel.getStringWidth(an.getText()));
 		an.shiftXPos(-110).shiftYPos(30);
-				
+
 		GenericButton depositButton = new CommandButton(this, 1, "Remove Bank");
 		GenericButton close = new CommandButton(this, 2, "Close");
 
@@ -124,19 +115,19 @@ public class DeleteBankGUI extends GenericPopup {
 
 	public void onClickCommand(int commandGoal) {
 		switch (commandGoal) {
-		case 1: // Ok
-			if (list.getSelectedItem() == null) {
-				new AckGUI(plugin, sPlayer, null, "Please Select Bank.", "deletebankgui");
-			} else {
-				String [] split = list.getSelectedItem().getTitle().split("\\/");
-				ReservePlugin.getReserve().remove(split[0].trim(), ChatColor.stripColor(split[1].trim()));
-				new AckGUI(plugin, sPlayer, null, "Bank Removed.", "deletebankgui");
-			}
-			break;
-		case 2: // Close
-			sPlayer.getMainScreen().closePopup();
-			new ReserveMainGUI(plugin, sPlayer);
-			break;
+			case 1: // Ok
+				if (list.getSelectedItem() == null) {
+					new AckGUI(plugin, sPlayer, null, "Please Select Bank.", "deletebankgui");
+				} else {
+					String[] split = list.getSelectedItem().getTitle().split("\\/");
+					ReservePlugin.getReserve().remove(split[0].trim(), ChatColor.stripColor(split[1].trim()));
+					new AckGUI(plugin, sPlayer, null, "Bank Removed.", "deletebankgui");
+				}
+				break;
+			case 2: // Close
+				sPlayer.getMainScreen().closePopup();
+				new ReserveMainGUI(plugin, sPlayer);
+				break;
 		}
 	}
 }

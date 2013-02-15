@@ -31,11 +31,10 @@ import java.util.Set;
 
 import com.almuradev.reserve.ReservePlugin;
 import com.almuradev.reserve.econ.Account;
-import com.almuradev.reserve.econ.AccountType;
+import com.almuradev.reserve.econ.type.AccountType;
 import com.almuradev.reserve.econ.Bank;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.WordUtils;
 
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;

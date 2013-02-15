@@ -39,7 +39,6 @@ public class SaveTask implements Runnable {
 	@Override
 	public void run() {
 		final Map<String, List<Bank>> BANKS = reserve.retrieveBanks();
-		plugin.getLogger().info("Saving all banks to file. Please wait...");
 		//Step 1, save all to files
 		for (String world : BANKS.keySet()) {
 			for (Bank bank : BANKS.get(world)) {
@@ -53,6 +52,5 @@ public class SaveTask implements Runnable {
 		}
 		//Step 2, cleanup
 		storage.cleanup();
-		plugin.getLogger().info("Saving complete.");
 	}
 }

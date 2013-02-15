@@ -26,7 +26,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import com.almuradev.reserve.econ.Account;
 import com.almuradev.reserve.econ.Bank;
 
 public final class Reserve {
@@ -49,6 +48,13 @@ public final class Reserve {
 		}
 	}
 
+	/**
+	 * Adds a new bank to the reserve. If the specified name exists in this world, return the existing bank.
+	 * @param name The name of the bank
+	 * @param holder Who holds the bank
+	 * @param world The world the bank is in
+	 * @return The added bank or the existing one. Will never be null
+	 */
 	public Bank add(String name, String holder, String world) {
 		if (name == null || name.isEmpty() || holder == null || holder.isEmpty() || world == null || world.isEmpty()) {
 			throw new NullPointerException("Specified name, holder, or world is null!");
@@ -69,6 +75,12 @@ public final class Reserve {
 		return toReturn;
 	}
 
+	/**
+	 * Gets a bank from the reserve based upon name and world.
+	 * @param name The name of the bank
+	 * @param world The world the bank is in
+	 * @return The bank or null if not found
+	 */
 	public Bank get(String name, String world) {
 		if (name == null || name.isEmpty() || world == null || world.isEmpty()) {
 			throw new NullPointerException("Specified name or world is null!");
@@ -84,14 +96,20 @@ public final class Reserve {
 		return null;
 	}
 
+	/**
+	 * Removes a bank from the reserve.
+	 * @param name The name of the bank
+	 * @param world The world the bank is in
+	 * @return The removed bank or null if not found
+	 */
 	public Bank remove(String name, String world) {
 		if (name == null || name.isEmpty() || world == null || world.isEmpty()) {
-			throw new NullPointerException("Specified holder or world is null!");
+			throw new NullPointerException("Specified name or world is null!");
 		}
 		final List<Bank> entry = BANKS.get(world);
 		if (entry != null) {
 			final Iterator<Bank> entryIterator = entry.iterator();
-			while(entryIterator.hasNext()) {
+			while (entryIterator.hasNext()) {
 				final Bank temp = entryIterator.next();
 				if (temp.getName().equalsIgnoreCase(name)) {
 					entryIterator.remove();
@@ -102,42 +120,19 @@ public final class Reserve {
 		return null;
 	}
 
+	/**
+	 * Returns an unmodifiable map of the reserve tied to: World, List<Bank>.
+	 * @return A map of all banks
+	 */
 	public Map<String, List<Bank>> retrieveBanks() {
 		return Collections.unmodifiableMap(BANKS);
 	}
 
-	public List<Account> getAccountsInBankFor(String holder, Bank bank) {
-		if (holder == null || holder.isEmpty() || bank == null) {
-			throw new NullPointerException("Specified holder or bank is null!");
-		}
-		final ArrayList<Account> accounts = new ArrayList<>();
-		final List<Account> injected = bank.retrieveAccounts();
-		if (injected != null) {
-			for (Account account : injected) {
-				if (account.getHolder().equalsIgnoreCase(holder)) {
-					accounts.add(account);
-				}
-			}
-		}
-		return accounts;
-	}
-
-	public Account getAccountFromNameIn(Bank bank, String name, String holder) {
-		if (holder == null || holder.isEmpty() || bank == null || name == null || name.isEmpty()) {
-			throw new NullPointerException("Specified holder, bank, or name is null!");
-		}
-
-		final List<Account> injected = bank.retrieveAccounts();
-		if (injected != null) {
-			for (Account account : bank.retrieveAccounts()) {
-				if (account.getName().equalsIgnoreCase(name) && account.getHolder().equalsIgnoreCase(holder)) {
-					return account;
-				}
-			}
-		}
-		return null;
-	}
-
+	/**
+	 * INTERNAL USE ONLY
+	 * @param world
+	 * @param injectBank
+	 */
 	protected void add(String world, Bank injectBank) {
 		if (world == null || world.isEmpty()) {
 			throw new NullPointerException("Specified world or holder is null!");

@@ -25,8 +25,8 @@ package com.almuradev.reserve.gui;
 
 import com.almuradev.reserve.ReservePlugin;
 import com.almuradev.reserve.econ.Account;
-import com.almuradev.reserve.econ.AccountType;
 import com.almuradev.reserve.econ.Bank;
+import com.almuradev.reserve.econ.type.AccountType;
 
 import org.getspout.spoutapi.gui.Color;
 import org.getspout.spoutapi.gui.GenericButton;
@@ -58,14 +58,14 @@ public class CreateAccountGUI extends GenericPopup {
 		border.shiftXPos(-105).shiftYPos(-80);
 
 		GenericLabel gl = new GenericLabel();
-		gl.setScale(1.4F).setText(selectedBank.getName());		
+		gl.setScale(1.4F).setText(selectedBank.getName());
 		gl.setAnchor(WidgetAnchor.CENTER_CENTER);
 		gl.setHeight(15).setWidth(GenericLabel.getStringWidth(gl.getText(), gl.getScale()));
 		gl.shiftXPos((GenericLabel.getStringWidth(gl.getText(), gl.getScale()) / 2) * -1).shiftYPos(-70);
 
 		GenericGradient gg = new GenericGradient();
 		gg.setBottomColor(bottom).setTopColor(bottom);
-		gg.setAnchor(WidgetAnchor.CENTER_CENTER);		
+		gg.setAnchor(WidgetAnchor.CENTER_CENTER);
 		gg.setWidth(200).setHeight(1);
 		gg.shiftXPos(-100).shiftYPos(-55);
 
@@ -105,23 +105,27 @@ public class CreateAccountGUI extends GenericPopup {
 
 	public void onClickCommand(int commandGoal) {
 		switch (commandGoal) {
-		case 1: //Create
-			if (accountNameField.getText().isEmpty()) {
-				new AckGUI(plugin, sPlayer, selectedBank, "Please specify name.", "createaccountgui");
-			} else {
-				if (selectedBank.getAccount(accountNameField.getText(), sPlayer.getName()) != null) {
-					new AckGUI(plugin, sPlayer, selectedBank, "Account already exists.", "createaccountgui");
-				} else {					
-					//selectedBank.addAccount(new Account(AccountType.CHECKING, accountNameField.getText(), sPlayer.getName())); //TODO Need a combobox for this!
-					sPlayer.getMainScreen().closePopup();
-					new AckGUI(plugin, sPlayer, selectedBank, "Account Created Successfully", "createaccountgui");
+			case 1: //Create
+				if (accountNameField.getText().isEmpty()) {
+					new AckGUI(plugin, sPlayer, selectedBank, "Please specify name.", "createaccountgui");
+				} else {
+					if (selectedBank.getAccount(accountNameField.getText(), sPlayer.getName()) != null) {
+						new AckGUI(plugin, sPlayer, selectedBank, "Account already exists.", "createaccountgui");
+					} else {
+						//TODO TESTING CODE - REMOVE DOCKTER
+						selectedBank.addType(new AccountType("checking"));
+						//TODO NEED PROPER GUI
+						selectedBank.addAccount(new Account(selectedBank.getType("checking"), accountNameField.getText(), sPlayer.getName()));
+						//TODO END OF TESTING CODE
+						sPlayer.getMainScreen().closePopup();
+						new AckGUI(plugin, sPlayer, selectedBank, "Account Created Successfully", "createaccountgui");
+					}
 				}
-			}
-			break;
-		case 2:
-			sPlayer.getMainScreen().closePopup();
-			new BankMainGUI(plugin, sPlayer, selectedBank);
-			break;
+				break;
+			case 2:
+				sPlayer.getMainScreen().closePopup();
+				new BankMainGUI(plugin, sPlayer, selectedBank);
+				break;
 		}
 	}
 }

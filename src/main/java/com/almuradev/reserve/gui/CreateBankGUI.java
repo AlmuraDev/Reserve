@@ -24,8 +24,6 @@
 package com.almuradev.reserve.gui;
 
 import com.almuradev.reserve.ReservePlugin;
-import com.almuradev.reserve.econ.Account;
-import com.almuradev.reserve.econ.Bank;
 
 import org.getspout.spoutapi.gui.Color;
 import org.getspout.spoutapi.gui.GenericButton;
@@ -40,13 +38,13 @@ import org.getspout.spoutapi.player.SpoutPlayer;
 
 public class CreateBankGUI extends GenericPopup {
 	private final ReservePlugin plugin;
-	private final SpoutPlayer sPlayer;	
+	private final SpoutPlayer sPlayer;
 	private GenericTextField bankNameField;
 	Color bottom = new Color(1.0F, 1.0F, 1.0F, 0.50F);
 
 	public CreateBankGUI(ReservePlugin plugin, SpoutPlayer sPlayer) {
 		this.plugin = plugin;
-		this.sPlayer = sPlayer;		
+		this.sPlayer = sPlayer;
 
 		GenericTexture border = new GenericTexture("http://www.almuramc.com/images/playerplus.png");
 		border.setAnchor(WidgetAnchor.CENTER_CENTER);
@@ -55,7 +53,7 @@ public class CreateBankGUI extends GenericPopup {
 		border.shiftXPos(-105).shiftYPos(-80);
 
 		GenericLabel gl = new GenericLabel();
-		gl.setScale(1.4F).setText("Create Account");		
+		gl.setScale(1.4F).setText("Create Account");
 		gl.setAnchor(WidgetAnchor.CENTER_CENTER);
 		gl.setHeight(15).setWidth(GenericLabel.getStringWidth(gl.getText()));
 		gl.shiftXPos(0).shiftYPos(-70);
@@ -102,23 +100,23 @@ public class CreateBankGUI extends GenericPopup {
 
 	public void onClickCommand(int commandGoal) {
 		switch (commandGoal) {
-		case 1: //Create
-			if (bankNameField.getText().isEmpty()) {
-				new AckGUI(plugin, sPlayer, null, "Please specify name.", "createbankgui");
-			} else {
-				if (ReservePlugin.getReserve().get(bankNameField.getText(), sPlayer.getWorld().getName()) != null) {
-					new AckGUI(plugin, sPlayer, null, "Bank name already exists.", "createbankgui");
+			case 1: //Create
+				if (bankNameField.getText().isEmpty()) {
+					new AckGUI(plugin, sPlayer, null, "Please specify name.", "createbankgui");
 				} else {
-					ReservePlugin.getReserve().add(bankNameField.getText(), sPlayer.getName(), sPlayer.getWorld().getName());
-					sPlayer.getMainScreen().closePopup();
-					new AckGUI(plugin, sPlayer, null, "Bank Created Successfully.", "createbankgui");
+					if (ReservePlugin.getReserve().get(bankNameField.getText(), sPlayer.getWorld().getName()) != null) {
+						new AckGUI(plugin, sPlayer, null, "Bank name already exists.", "createbankgui");
+					} else {
+						ReservePlugin.getReserve().add(bankNameField.getText(), sPlayer.getName(), sPlayer.getWorld().getName());
+						sPlayer.getMainScreen().closePopup();
+						new AckGUI(plugin, sPlayer, null, "Bank Created Successfully.", "createbankgui");
+					}
 				}
-			}
-			break;
-		case 2:
-			sPlayer.getMainScreen().closePopup();
-			new ReserveMainGUI(plugin, sPlayer);
-			break;
+				break;
+			case 2:
+				sPlayer.getMainScreen().closePopup();
+				new ReserveMainGUI(plugin, sPlayer);
+				break;
 		}
 	}
 }

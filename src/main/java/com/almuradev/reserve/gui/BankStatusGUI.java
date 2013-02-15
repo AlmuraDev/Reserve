@@ -30,7 +30,6 @@ import com.almuradev.reserve.ReservePlugin;
 import com.almuradev.reserve.econ.Account;
 import com.almuradev.reserve.econ.Bank;
 
-import org.bukkit.ChatColor;
 import org.getspout.spoutapi.gui.Color;
 import org.getspout.spoutapi.gui.GenericButton;
 import org.getspout.spoutapi.gui.GenericGradient;
@@ -39,9 +38,10 @@ import org.getspout.spoutapi.gui.GenericPopup;
 import org.getspout.spoutapi.gui.GenericTexture;
 import org.getspout.spoutapi.gui.ListWidget;
 import org.getspout.spoutapi.gui.RenderPriority;
-import org.getspout.spoutapi.gui.Screen;
 import org.getspout.spoutapi.gui.WidgetAnchor;
 import org.getspout.spoutapi.player.SpoutPlayer;
+
+import org.bukkit.ChatColor;
 
 public class BankStatusGUI extends GenericPopup {
 	private final ReservePlugin plugin;
@@ -51,7 +51,7 @@ public class BankStatusGUI extends GenericPopup {
 	private ListWidget list;
 	private static NumberFormat numForm;
 	private static Locale caLoc = new Locale("en", "US");
-	Color bottom = new Color(1.0F, 1.0F, 1.0F, 0.50F);	
+	Color bottom = new Color(1.0F, 1.0F, 1.0F, 0.50F);
 
 	public BankStatusGUI(ReservePlugin plugin, SpoutPlayer sPlayer, Bank bank) {
 		this.plugin = plugin;
@@ -63,25 +63,25 @@ public class BankStatusGUI extends GenericPopup {
 		border.setAnchor(WidgetAnchor.CENTER_CENTER);
 		border.setPriority(RenderPriority.High);
 		border.setWidth(250).setHeight(250);
-		border.shiftXPos(0-(border.getWidth()/2)).shiftYPos(-120);
+		border.shiftXPos(0 - (border.getWidth() / 2)).shiftYPos(-120);
 
 		GenericLabel gl = new GenericLabel();
-		gl.setScale(1.4F).setText(selectedBank.getName());		
+		gl.setScale(1.4F).setText(selectedBank.getName());
 		gl.setAnchor(WidgetAnchor.CENTER_CENTER);
 		gl.setHeight(15).setWidth(GenericLabel.getStringWidth(gl.getText(), gl.getScale()));
 		gl.shiftXPos((GenericLabel.getStringWidth(gl.getText(), gl.getScale()) / 2) * -1).shiftYPos(-110);
 
 		GenericGradient gg = new GenericGradient();
 		gg.setBottomColor(bottom).setTopColor(bottom);
-		gg.setAnchor(WidgetAnchor.CENTER_CENTER);		
+		gg.setAnchor(WidgetAnchor.CENTER_CENTER);
 		gg.setWidth(200).setHeight(1);
-		gg.shiftXPos(0-(gg.getWidth()/2)).shiftYPos(-95);
+		gg.shiftXPos(0 - (gg.getWidth() / 2)).shiftYPos(-95);
 
 		GenericGradient gb = new GenericGradient();
 		gb.setBottomColor(bottom).setTopColor(bottom);
-		gb.setAnchor(WidgetAnchor.CENTER_CENTER);		
+		gb.setAnchor(WidgetAnchor.CENTER_CENTER);
 		gb.setWidth(200).setHeight(1);
-		gb.shiftXPos(0-(gb.getWidth()/2)).shiftYPos(-65);
+		gb.shiftXPos(0 - (gb.getWidth() / 2)).shiftYPos(-65);
 
 		System.out.println("SelectedBank:" + selectedBank.getName());
 		list = new MasterAccountListApplet(selectedBank, sPlayer);
@@ -89,16 +89,16 @@ public class BankStatusGUI extends GenericPopup {
 		list.shiftXPos(-100).shiftYPos(-60);
 		list.setWidth(200).setHeight(70);
 		list.setPriority(RenderPriority.Lowest);
-		
-		GenericLabel bankAccountsLabel = new GenericLabel();				
+
+		GenericLabel bankAccountsLabel = new GenericLabel();
 		bankAccountsLabel.setScale(1.0F);
-		bankAccountsLabel.setAnchor(WidgetAnchor.CENTER_CENTER);		
+		bankAccountsLabel.setAnchor(WidgetAnchor.CENTER_CENTER);
 		bankAccountsLabel.setText("Total Accounts: " + ChatColor.YELLOW + selectedBank.getAmountOfAccounts());
 		bankAccountsLabel.setHeight(15).setWidth(GenericLabel.getStringWidth(bankAccountsLabel.getText()));
 		bankAccountsLabel.shiftXPos((GenericLabel.getStringWidth(bankAccountsLabel.getText()) / 2) * -1).shiftYPos(-89);
-		
+
 		GenericLabel bankNameLabel = new GenericLabel();
-		numForm = NumberFormat.getCurrencyInstance(caLoc);		
+		numForm = NumberFormat.getCurrencyInstance(caLoc);
 		bankNameLabel.setScale(1.0F);
 		bankNameLabel.setAnchor(WidgetAnchor.CENTER_CENTER);
 		bankNameLabel.setText("Total Balance: " + ChatColor.GOLD + numForm.format(selectedBank.getTotalBalance()));
@@ -131,20 +131,24 @@ public class BankStatusGUI extends GenericPopup {
 	public void onClickCommand(int commandGoal) {
 		switch (commandGoal) {
 			case 1:
+<<<<<<< HEAD
 				sPlayer.getMainScreen().closePopup();
 				new AccountTypesGUI(plugin, sPlayer, selectedBank);
+=======
+
+>>>>>>> 9b1eeb594deeda0c3662cbb483e60aecf9cbeaf2
 				break;
 			case 2:
-								
+
 				break;
-			case 3:				
-				
+			case 3:
+
 				break;
 			case 4:
-				
+
 				break;
 			case 5:
-				
+
 				break;
 			case 6:
 				sPlayer.getMainScreen().closePopup();

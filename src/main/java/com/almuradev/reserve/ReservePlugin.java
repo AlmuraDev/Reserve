@@ -70,10 +70,6 @@ public class ReservePlugin extends JavaPlugin {
 		return reserve;
 	}
 
-	public static Storage getStorage() {
-		return storage;
-	}
-
 	public static ReserveConfiguration getConfiguration() {
 		return config;
 	}
