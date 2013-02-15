@@ -32,6 +32,7 @@ import com.almuradev.reserve.econ.type.AccountType;
 public class Bank {
 	private String name;
 	private String holder;
+	private double balance = 0;
 	private List<Account> accounts;
 	private List<AccountType> types;
 	private boolean dirty = false;
@@ -87,6 +88,22 @@ public class Bank {
 		this.holder = holder;
 		setDirty(true);
 		return this;
+	}
+
+	/**
+	 * Gets the real balance of the bank.
+	 * @return The balance
+	 */
+	public double getBalance() {
+		return balance;
+	}
+
+	/**
+	 * Sets the real balance of the bank.
+	 * @param balance The new balance
+	 */
+	public void setBalance(double balance) {
+		this.balance = balance;
 	}
 
 	/**
@@ -260,7 +277,7 @@ public class Bank {
 	 * Gets the total balance across all accounts.
 	 * @return The total of all account balances
 	 */
-	public double getTotalBalance() {
+	public double getAccountsBalance() {
 		double total = 0;
 		for (Account account : accounts) {
 			total += account.getBalance();
@@ -273,7 +290,7 @@ public class Bank {
 	 * @param holder Who holds the accounts
 	 * @return The total of all held account balances
 	 */
-	public double getTotalBalanceFor(String holder) {
+	public double getAccountsBalanceFor(String holder) {
 		double total = 0;
 
 		for (Account account : accounts) {
@@ -392,11 +409,11 @@ public class Bank {
 		}
 
 		final Bank bank = (Bank) other;
-		return bank.getName().equalsIgnoreCase(name) && bank.getHolder().equalsIgnoreCase(holder) && bank.retrieveAccounts().equals(accounts);
+		return bank.getName().equalsIgnoreCase(name) && bank.getHolder().equalsIgnoreCase(holder) && bank.getBalance() == balance && bank.retrieveAccounts().equals(accounts);
 	}
 
 	@Override
 	public String toString() {
-		return "Bank{name= " + name + ", holder= " + holder + ", accounts= {" + accounts.toString() + "}, dirty= " + dirty + "} ";
+		return "Bank{name= " + name + ", holder= " + holder + ", balance= " + balance + ", accounts= {" + accounts.toString() + "}, dirty= " + dirty + "} ";
 	}
 }

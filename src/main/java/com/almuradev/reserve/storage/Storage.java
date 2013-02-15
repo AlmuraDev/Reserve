@@ -88,6 +88,7 @@ public class Storage implements Listener {
 		final YamlConfiguration reader = new YamlConfiguration();
 		//Start writing!
 		reader.set("holder", bank.getHolder());
+		reader.set("balance", bank.getBalance());
 		final ConfigurationSection accounts = reader.createSection("accounts");
 		for (Account account : bank.retrieveAccounts()) {
 			ConfigurationSection accountTypeSection = accounts.getConfigurationSection(account.getType().getName().toLowerCase());
@@ -196,8 +197,11 @@ class BankFileSaveVisitor extends SimpleFileVisitor<Path> {
 		if (holder == null || holder.isEmpty()) {
 			return null;
 		}
+		final double balance = reader.getDouble("balance", 0.0);
+
 		//Create the empty bank.
 		final Bank bankToInject = new Bank(name, holder);
+		bankToInject.setBalance(balance);
 
 		final ConfigurationSection types = reader.getConfigurationSection("types");
 		if (types == null) {
@@ -239,10 +243,10 @@ class BankFileSaveVisitor extends SimpleFileVisitor<Path> {
 				//Grab the account name (nickname).
 				final String accountName = accountHolderSection.getString("name", "My " + StringUtils.capitalize(type.getName().toLowerCase()));
 				//Grab the account holder's balance.
-				final double balance = accountHolderSection.getDouble("balance", 0.0);
+				final double accountBalance = accountHolderSection.getDouble("balance", 0.0);
 				//Create the account.
 				final Account accountToInject = new Account(type, accountName, accountHolderName);
-				accountToInject.setBalance(balance);
+				accountToInject.setBalance(accountBalance);
 				//Finally add it.
 				bankToInject.addAccount(accountToInject);
 			}

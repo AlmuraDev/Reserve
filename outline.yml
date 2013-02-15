@@ -7,6 +7,7 @@
 # - The construct of the yaml file is as follows:
 
 holder: ninjazidane
+balance: 0.0
 accounts:
     checking:
         ninjazidane:
