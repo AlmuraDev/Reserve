@@ -91,10 +91,11 @@ public class ReservePlugin extends JavaPlugin implements Listener {
 		final double carrying = VaultUtil.getBalance(died.getName());
 		final double taxed = carrying - (carrying * deathTax);
 		VaultUtil.add(died.getName(), -(taxed));
-		if (died.hasPermission("reserve.tax.death.notification")) {
+		died.sendMessage(getPrefix() + "You lost: " + taxed + "!");
+		if (died.hasPermission("reserve.tax.death.broadcast")) {
 			for (Player player : Bukkit.getOnlinePlayers()) {
 				if (player.getName().equalsIgnoreCase(event.getEntity().getName())) {
-					died.sendMessage(getPrefix() + "You lost: " + taxed + "!");
+					continue;
 				}
 				player.sendMessage(getPrefix() + died.getDisplayName() + " died and lost: " + taxed + "!");
 			}
