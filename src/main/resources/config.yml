@@ -5,8 +5,11 @@
 #   - Be EXTREMELY CAUTIOUS about adjusting the save interval. Too low and you could potentially lock your server up. Too high
 #     and your server suffers a crash, the persistence could be very out of date. For this reason, I feel 2 minutes as a default is
 #     a good medium.
-schedule:
-    interest: true
+modifier:
+  interest: true
+  tax-death: true
 interval:
-    interest: 1728000
-    save: 2400
+  interest: 1728000
+  save: 2400
+tax:
+  death-range: 25-75

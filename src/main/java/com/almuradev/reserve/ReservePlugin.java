@@ -20,6 +20,7 @@
 package com.almuradev.reserve;
 
 import com.almuradev.reserve.config.ReserveConfiguration;
+import com.almuradev.reserve.econ.VaultUtil;
 import com.almuradev.reserve.gui.ReserveMainGUI;
 import com.almuradev.reserve.storage.Reserve;
 import com.almuradev.reserve.storage.Storage;
@@ -31,10 +32,13 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitScheduler;
 
-public class ReservePlugin extends JavaPlugin {
+public class ReservePlugin extends JavaPlugin implements Listener {
 	private static Reserve reserve;
 	private static Storage storage;
 	private static ReserveConfiguration config;
@@ -58,11 +62,13 @@ public class ReservePlugin extends JavaPlugin {
 		reserve = new Reserve(storage);
 		reserve.onEnable();
 		//Schedule tasks
-		scheduler = Bukkit.getServer().getScheduler();
+		scheduler = getServer().getScheduler();
 		if (config.shouldInterest()) {
 			scheduler.scheduleSyncRepeatingTask(this, new InterestTask(this, reserve), 0, config.getInterestInterval());
 		}
 		scheduler.scheduleSyncRepeatingTask(this, reserve, 0, config.getSaveInterval());
+		//Register listeners
+		getServer().getPluginManager().registerEvents(this, this);
 	}
 
 	public static Reserve getReserve() {
@@ -71,6 +77,31 @@ public class ReservePlugin extends JavaPlugin {
 
 	public static ReserveConfiguration getConfiguration() {
 		return config;
+	}
+
+	public static String getPrefix() {
+		return "[Reserve] ";
+	}
+
+	@EventHandler
+	public void onPlayerDeath(PlayerDeathEvent event) {
+		if (!config.shouldTaxDeath() || !event.getEntity().hasPermission("reserve.tax.death")) {
+			return;
+		}
+		final Player died = event.getEntity();
+		final double deathTax = config.getDeathTax();
+		final double carrying = VaultUtil.getBalance(died.getName());
+		final double taxed = carrying - (carrying * deathTax);
+		VaultUtil.add(died.getName(), -(taxed));
+		died.sendMessage(getPrefix() + "You lost: " + taxed + "!");
+		if (died.hasPermission("reserve.tax.death.broadcast")) {
+			for (Player player : Bukkit.getOnlinePlayers()) {
+				if (player.getName().equalsIgnoreCase(event.getEntity().getName())) {
+					continue;
+				}
+				player.sendMessage(getPrefix() + died.getDisplayName() + " died and lost: " + taxed + "!");
+			}
+		}
 	}
 
 	//TESTING

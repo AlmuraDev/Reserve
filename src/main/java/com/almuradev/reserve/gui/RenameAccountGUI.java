@@ -57,19 +57,19 @@ public class RenameAccountGUI extends GenericPopup {
 		gl.setAnchor(WidgetAnchor.CENTER_CENTER);
 		gl.setHeight(15).setWidth(GenericLabel.getStringWidth(gl.getText(), gl.getScale()));
 		gl.shiftXPos((GenericLabel.getStringWidth(gl.getText(), gl.getScale()) / 2) * -1).shiftYPos(-70);
-		
+
 		GenericTexture border = new GenericTexture("http://www.almuramc.com/images/playerplus.png");
 		border.setAnchor(WidgetAnchor.CENTER_CENTER);
 		border.setPriority(RenderPriority.High);
 		border.setWidth(gl.getWidth() + 50).setHeight(90);
 		border.shiftXPos(0 - (border.getWidth() / 2)).shiftYPos(-80);
-		
+
 		GenericGradient gg = new GenericGradient();
 		gg.setBottomColor(bottom).setTopColor(bottom);
 		gg.setAnchor(WidgetAnchor.CENTER_CENTER);
 		gg.setWidth(border.getWidth() - 25).setHeight(1);
 		gg.shiftXPos(0 - gg.getWidth() / 2).shiftYPos(-55);
-		
+
 		accountNameField = new GenericTextField();
 		accountNameField.setText(myAccount.getName().trim());
 		accountNameField.setWidth(110).setHeight(16);
@@ -77,15 +77,15 @@ public class RenameAccountGUI extends GenericPopup {
 		accountNameField.shiftXPos(-55).shiftYPos(-45);
 		accountNameField.setMaximumCharacters(30);
 		accountNameField.setMaximumLines(1);
-		
+
 		GenericButton close = new CommandButton(this, 1, "Close");
 		GenericButton save = new CommandButton(this, 2, "Save");
-		
+
 		save.setAnchor(WidgetAnchor.CENTER_CENTER);
 		close.setAnchor(WidgetAnchor.CENTER_CENTER);
-		
+
 		save.setHeight(16).setWidth(40).shiftXPos(-30).shiftYPos(-10);
-		close.setHeight(16).setWidth(40).shiftXPos(20).shiftYPos(-10);		
+		close.setHeight(16).setWidth(40).shiftXPos(20).shiftYPos(-10);
 
 		attachWidgets(plugin, border, gl, gg, accountNameField, save, close);
 
@@ -95,22 +95,22 @@ public class RenameAccountGUI extends GenericPopup {
 
 	public void onClickCommand(int commandGoal) {
 		switch (commandGoal) {
-		case 1:	
-			sPlayer.getMainScreen().closePopup();								
-			new ReserveMainGUI(plugin, sPlayer);			
-			break;
-		case 2:
-			if (accountNameField.getText().isEmpty()) {
-				new AckGUI(plugin, sPlayer, selectedBank, "Please specify a new name.", "renameaccountgui");
-			} else if (accountNameField.getText().trim().equalsIgnoreCase("Bank Vault")) {
+			case 1:
 				sPlayer.getMainScreen().closePopup();
-				new AckGUI(plugin, sPlayer, selectedBank, "You cannot rename Bank Vault.", "renameaccountgui");
-			} else {
-				myAccount.setName(accountNameField.getText().trim());
-				sPlayer.getMainScreen().closePopup();
-				new AckGUI(plugin, sPlayer, selectedBank, "Changes Saved.", "renameaccountgui");
-			}
-			break;
+				new ReserveMainGUI(plugin, sPlayer);
+				break;
+			case 2:
+				if (accountNameField.getText().isEmpty()) {
+					new AckGUI(plugin, sPlayer, selectedBank, "Please specify a new name.", "renameaccountgui");
+				} else if (accountNameField.getText().trim().equalsIgnoreCase("Bank Vault")) {
+					sPlayer.getMainScreen().closePopup();
+					new AckGUI(plugin, sPlayer, selectedBank, "You cannot rename Bank Vault.", "renameaccountgui");
+				} else {
+					myAccount.setName(accountNameField.getText().trim());
+					sPlayer.getMainScreen().closePopup();
+					new AckGUI(plugin, sPlayer, selectedBank, "Changes Saved.", "renameaccountgui");
+				}
+				break;
 		}
 	}
 }

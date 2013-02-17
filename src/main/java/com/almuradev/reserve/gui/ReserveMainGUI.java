@@ -111,7 +111,7 @@ public class ReserveMainGUI extends GenericPopup {
 		accountTypes.setHeight(16).setWidth(120).shiftXPos(-60).shiftYPos(60);
 		options.setHeight(16).setWidth(50).shiftXPos(-110).shiftYPos(95);
 		close.setHeight(16).setWidth(40).shiftXPos(70).shiftYPos(95);
-		
+
 		createNewBank.setTooltip("Creates New Bank in your current world.");
 		renameBank.setTooltip("Renames the specified bank.");
 		deleteBank.setTooltip("Deletes the specified bank and all accounts.");
@@ -126,6 +126,7 @@ public class ReserveMainGUI extends GenericPopup {
 		options.setEnabled(sPlayer.hasPermission("reserve.admin"));
 		openBank.setEnabled(sPlayer.hasPermission("reserve.viewbank"));
 		bankStatus.setEnabled(sPlayer.hasPermission("reserve.viewbank"));
+
 		accountTypes.setEnabled(sPlayer.hasPermission("reserve.admin"));		
 
 		if (list.getSelectedItem() == null) {
@@ -191,9 +192,9 @@ public class ReserveMainGUI extends GenericPopup {
 				if (list.getSelectedItem() == null) {
 					new AckGUI(plugin, sPlayer, null, "Please Select Bank.", "reservemaingui");
 				} else {
-				sPlayer.getMainScreen().closePopup();
-				String [] split = list.getSelectedItem().getTitle().split("\\/");
-				new AccountTypesGUI(plugin, sPlayer, ReservePlugin.getReserve().get(split[0].trim(), ChatColor.stripColor(split[1].trim())));
+					sPlayer.getMainScreen().closePopup();
+					String[] split = list.getSelectedItem().getTitle().split("\\/");
+					new AccountTypesGUI(plugin, sPlayer, ReservePlugin.getReserve().get(split[0].trim(), ChatColor.stripColor(split[1].trim())));
 				}
 				break;
 			case 7:

@@ -31,8 +31,8 @@ import java.util.Set;
 
 import com.almuradev.reserve.ReservePlugin;
 import com.almuradev.reserve.econ.Account;
-import com.almuradev.reserve.econ.type.AccountType;
 import com.almuradev.reserve.econ.Bank;
+import com.almuradev.reserve.econ.type.AccountType;
 
 import org.apache.commons.lang.StringUtils;
 

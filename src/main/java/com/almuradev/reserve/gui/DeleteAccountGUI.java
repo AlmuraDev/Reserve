@@ -100,7 +100,7 @@ public class DeleteAccountGUI extends GenericPopup {
 		box.shiftXPos(-58).shiftYPos(-37);
 		box.setAuto(true);
 		box.setPriority(RenderPriority.Low);
-		
+
 		an = new GenericLabel();
 		numForm = NumberFormat.getCurrencyInstance(caLoc);
 		an.setText("Current Balance: ");
@@ -123,7 +123,7 @@ public class DeleteAccountGUI extends GenericPopup {
 
 		sPlayer.getMainScreen().closePopup();
 		sPlayer.getMainScreen().attachPopupScreen(this);
-		
+
 		plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
 			@Override
 			public void run() {
@@ -169,7 +169,7 @@ public class DeleteAccountGUI extends GenericPopup {
 			box.setSelection(0);
 			if (box.getSelectedItem().equalsIgnoreCase("Bank Vault")) {
 				deleteButton.setEnabled(false);
-				deleteButton.setTooltip("Cannot Remove Bank Vault.");				
+				deleteButton.setTooltip("Cannot Remove Bank Vault.");
 			} else {
 				deleteButton.setEnabled(true);
 				deleteButton.setTooltip("");
@@ -179,18 +179,18 @@ public class DeleteAccountGUI extends GenericPopup {
 
 	void onSelect(int i, String text) {
 		Account myAccount = selectedBank.getAccount(box.getSelectedItem(), sPlayer.getName());
-		double balance = 0;		
+		double balance = 0;
 		if (box.getSelectedItem().equalsIgnoreCase("Bank Vault")) {
 			deleteButton.setEnabled(false);
-			deleteButton.setTooltip("Cannot Remove Bank Vault.");				
-		} else if (myAccount.getBalance()>0) {
+			deleteButton.setTooltip("Cannot Remove Bank Vault.");
+		} else if (myAccount.getBalance() > 0) {
 			an.setText("Current Balance: " + ChatColor.RED + numForm.format(myAccount.getBalance()));
 			deleteButton.setEnabled(false);
 			deleteButton.setTooltip("Cannot Remove accounts that have a positive balance.");
 		} else {
 			an.setText("Current Balance: " + ChatColor.GREEN + numForm.format(myAccount.getBalance()));
 			deleteButton.setEnabled(true);
-			deleteButton.setTooltip("");		
+			deleteButton.setTooltip("");
 		}
 	}
 }

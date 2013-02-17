@@ -88,7 +88,7 @@ public class OptionsGUI extends GenericPopup {
 	public void onClickCommand(int commandGoal) {
 		switch (commandGoal) {
 			case 1:
-				sPlayer.getMainScreen().closePopup();				
+				sPlayer.getMainScreen().closePopup();
 				new ReserveConfigGUI(plugin, sPlayer, null);
 				break;
 			case 2:

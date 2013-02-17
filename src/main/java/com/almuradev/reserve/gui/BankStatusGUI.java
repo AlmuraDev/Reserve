@@ -82,7 +82,7 @@ public class BankStatusGUI extends GenericPopup {
 		gb.setAnchor(WidgetAnchor.CENTER_CENTER);
 		gb.setWidth(200).setHeight(1);
 		gb.shiftXPos(0 - (gb.getWidth() / 2)).shiftYPos(-65);
-		
+
 		list = new MasterAccountListApplet(selectedBank, sPlayer);
 		list.setAnchor(WidgetAnchor.CENTER_CENTER);
 		list.shiftXPos(-100).shiftYPos(-60);
@@ -108,7 +108,7 @@ public class BankStatusGUI extends GenericPopup {
 		GenericButton close = new CommandButton(this, 2, "Close");			
 		close.setAnchor(WidgetAnchor.CENTER_CENTER);			
 		close.setHeight(16).setWidth(40).shiftXPos(70).shiftYPos(95);
-				
+
 		attachWidgets(plugin, border, gl, bankNameLabel, gg, gb, list, bankAccountsLabel, close);
 
 		sPlayer.getMainScreen().closePopup();
@@ -118,8 +118,9 @@ public class BankStatusGUI extends GenericPopup {
 	public void onClickCommand(int commandGoal) {
 		switch (commandGoal) {
 			case 1:
-				
-				break;		
+				sPlayer.getMainScreen().closePopup();
+				new AccountTypesGUI(plugin, sPlayer, selectedBank);
+				break;
 			case 2:
 				sPlayer.getMainScreen().closePopup();
 				new ReserveMainGUI(plugin, sPlayer);

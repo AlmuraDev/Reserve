@@ -43,7 +43,7 @@ import org.bukkit.ChatColor;
 
 public class DeleteBankGUI extends GenericPopup {
 	private final ReservePlugin plugin;
-	private final SpoutPlayer sPlayer;	
+	private final SpoutPlayer sPlayer;
 	private ListWidget list;
 	private static NumberFormat numForm;
 	private static Locale caLoc = new Locale("en", "US");
