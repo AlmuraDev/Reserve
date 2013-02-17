@@ -86,8 +86,8 @@ public class BankMainGUI extends GenericPopup {
 
 		list = new AccountListApplet(selectedBank, sPlayer);
 		list.setAnchor(WidgetAnchor.CENTER_CENTER);
-		list.shiftXPos(-80).shiftYPos(-60);
-		list.setWidth(155).setHeight(70);
+		list.shiftXPos(-100).shiftYPos(-60);
+		list.setWidth(195).setHeight(70);
 		list.setPriority(RenderPriority.Lowest);
 
 		GenericLabel bankAccountsLabel = new GenericLabel();
@@ -148,6 +148,7 @@ public class BankMainGUI extends GenericPopup {
 	}
 
 	public void onClickCommand(int commandGoal) {
+		String[] split = list.getSelectedItem().getTitle().split("\\/");
 		switch (commandGoal) {
 			case 1:
 				sPlayer.getMainScreen().closePopup();
@@ -158,7 +159,7 @@ public class BankMainGUI extends GenericPopup {
 				if (list.getSelectedItem() == null) {
 					new DepositGUI(plugin, sPlayer, selectedBank, selectedAccount);
 				} else {
-					Account myAccount = selectedBank.getAccount(list.getSelectedItem().getTitle(), sPlayer.getName());
+					Account myAccount = selectedBank.getAccount(split[0].trim(), sPlayer.getName());
 					new DepositGUI(plugin, sPlayer, selectedBank, myAccount);
 				}
 				break;
@@ -167,7 +168,7 @@ public class BankMainGUI extends GenericPopup {
 				if (list.getSelectedItem() == null) {
 					new WithdrawGUI(plugin, sPlayer, selectedBank, selectedAccount);
 				} else {
-					Account myAccount = selectedBank.getAccount(list.getSelectedItem().getTitle(), sPlayer.getName());
+					Account myAccount = selectedBank.getAccount(split[0].trim(), sPlayer.getName());
 					new WithdrawGUI(plugin, sPlayer, selectedBank, myAccount);
 				}
 

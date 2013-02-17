@@ -61,6 +61,7 @@ public class AccountTypesGUI extends GenericPopup {
 	private final GenericTextField accountTypeName, intCycleField, imageField;
 	private static NumberFormat numForm;
 	private static Locale caLoc = new Locale("en", "US");
+	private boolean shown = false;
 	Color bottom = new Color(1.0F, 1.0F, 1.0F, 0.50F);	
 
 	public AccountTypesGUI(ReservePlugin plugin, SpoutPlayer sPlayer, Bank bank) {
@@ -159,9 +160,8 @@ public class AccountTypesGUI extends GenericPopup {
 		if (selectedAccountType.getImagePath().isEmpty()) {
 			myImage = new GenericTexture("http://www.almuramc.com/images/almuralogo.png");
 		} else {
-			myImage = new GenericTexture(selectedBank.getType(box.getSelectedItem()).getImagePath());
+			myImage = new GenericTexture(selectedAccountType.getImagePath());
 		}
-		
 		myImage.setAnchor(WidgetAnchor.CENTER_CENTER);
 		myImage.setPriority(RenderPriority.Low);
 		myImage.setWidth(20).setHeight(20);
@@ -183,6 +183,14 @@ public class AccountTypesGUI extends GenericPopup {
 
 		sPlayer.getMainScreen().closePopup();
 		sPlayer.getMainScreen().attachPopupScreen(this);
+		
+		plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
+			@Override
+			public void run() {
+				shown = true;
+				setDirty(true);
+			}
+		}, 5L);
 	}
 
 	public void onClickCommand(int commandGoal) {
@@ -193,6 +201,7 @@ public class AccountTypesGUI extends GenericPopup {
 					selectedAccountType.setName(accountTypeName.getText().trim());
 					selectedAccountType.setInterestRate(Double.parseDouble((intCycleField.getText().trim())));
 					selectedAccountType.setImagePath(imageField.getText().trim());
+					selectedAccountType.shouldReceiveInterest(intsetting.isChecked());
 					sPlayer.getMainScreen().closePopup();
 					new AckGUI(plugin, sPlayer, selectedBank, "Changes Saved.", "accounttypesgui");
 				}
@@ -230,13 +239,24 @@ public class AccountTypesGUI extends GenericPopup {
 	
 		if (items != null) {	
 			Collections.sort(items, String.CASE_INSENSITIVE_ORDER);
-			box.setItems(items);			
-		}
-				
-				
+			box.setItems(items);
+			box.setSelection(0);
+			box.setText(null);			
+		}				
 	}
 	
 	void onSelect(int i, String text) {
-				
+		if (box.getSelectedItem() != null && shown) {
+			AccountType selectedAccountType = selectedBank.getType(box.getSelectedItem());			
+			if (selectedAccountType != null) {
+				if (selectedAccountType.getImagePath() != null) {
+					myImage.setUrl(selectedAccountType.getImagePath());
+				}
+				imageField.setText(selectedAccountType.getImagePath());
+				intsetting.setChecked(selectedAccountType.receivesInterest());
+				intCycleField.setText(Double.toString(selectedAccountType.getInterestRate()));
+				accountTypeName.setText(selectedAccountType.getName());
+			}
+		}
 	}
 }
