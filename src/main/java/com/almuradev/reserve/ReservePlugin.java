@@ -115,7 +115,7 @@ public class ReservePlugin extends JavaPlugin implements Listener {
 		}
 		final Sign sign = (Sign) interacted.getState();
 		//Not a reserve sign
-		if (!sign.getLine(0).trim().toLowerCase().contains("[Reserve")) {
+		if (!sign.getLine(0).trim().toLowerCase().contains("[reserve]")) {
 			return;
 		}
 		//At this point [Mybank]...or should be
