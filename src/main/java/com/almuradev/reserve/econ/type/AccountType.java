@@ -20,7 +20,7 @@
 package com.almuradev.reserve.econ.type;
 
 public class AccountType {
-	private String name, imagePath;
+	private String name, imagePath = "";
 	private boolean hasInterest = false;
 	private double interestRate = 0.0;
 	private boolean dirty = false;
@@ -52,7 +52,7 @@ public class AccountType {
 
 	/**
 	 * Gets the path to image file.
-	 * @return The name
+	 * @return The path
 	 */
 	public String getImagePath() {
 		return imagePath;
@@ -60,11 +60,12 @@ public class AccountType {
 	
 	/**
 	 * Sets the image path of this account type.
-	 * @param image path The new image path
+	 * @param path The new image path
 	 * @return This account type
 	 */
 	public AccountType setImagePath(String path) {
-		this.imagePath = path;		
+		this.imagePath = path;
+		setDirty(true);
 		return this;
 	}
 	

@@ -104,7 +104,7 @@ public class Storage implements Listener {
 			final ConfigurationSection typeNameSection = types.createSection(type.getName());
 			typeNameSection.set("interest", type.receivesInterest());
 			typeNameSection.set("interest-rate", type.getInterestRate());
-			typeNameSection.set("imagepath", type.getImagePath());
+			typeNameSection.set("image-path", type.getImagePath());
 		}
 		try {
 			reader.save(bankPath.toFile());
@@ -215,11 +215,12 @@ class BankFileSaveVisitor extends SimpleFileVisitor<Path> {
 			final ConfigurationSection typeSection = types.getConfigurationSection(typeName);
 			final boolean hasInterest = typeSection.getBoolean("interest", false);
 			final double interestRate = typeSection.getDouble("interest-rate", 0.0);
-			final String imagePath = typeSection.getString("imagepath", "");
+			final String imagePath = typeSection.getString("image-path", "");
 			final AccountType type = new AccountType(typeName);
 			type
 					.shouldReceiveInterest(hasInterest)
-					.setInterestRate(interestRate);					
+					.setInterestRate(interestRate)
+					.setImagePath(imagePath);
 			bankToInject.addType(type);
 		}
 
