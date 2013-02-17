@@ -127,9 +127,9 @@ public class AckGUI extends GenericPopup {
 			} else if (ackMessage.equalsIgnoreCase("Please Select Bank.") && previousWindow.equalsIgnoreCase("deletebankgui")) {					
 				new DeleteBankGUI(plugin, sPlayer);
 			} else if (ackMessage.equalsIgnoreCase("Changes Saved.") && previousWindow.equalsIgnoreCase("accounttypesgui")) {					
-				new BankStatusGUI(plugin, sPlayer, selectedBank);
+				new ReserveMainGUI(plugin, sPlayer);
 			} else if (ackMessage.equalsIgnoreCase("Account Type Added.") && previousWindow.equalsIgnoreCase("accounttypesgui")) {					
-				new BankStatusGUI(plugin, sPlayer, selectedBank);
+				new ReserveMainGUI(plugin, sPlayer);
 			} else if (ackMessage.equalsIgnoreCase("Specify Name.") && previousWindow.equalsIgnoreCase("accounttypesgui")) {					
 				new AccountTypesGUI(plugin, sPlayer, selectedBank);
 			} else if (ackMessage.equalsIgnoreCase("That name already exists.") && previousWindow.equalsIgnoreCase("accounttypesgui")) {					

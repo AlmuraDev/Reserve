@@ -117,6 +117,7 @@ public class ReserveMainGUI extends GenericPopup {
 		deleteBank.setTooltip("Deletes the specified bank and all accounts.");
 		options.setTooltip("Displays Configuration options for Reserve.");
 		openBank.setTooltip("Opens and Accesses selected bank.");
+		accountTypes.setTooltip("Account Types Configuration per Bank");
 		bankStatus.setTooltip("Displays selected bank status.");
 
 		createNewBank.setEnabled(sPlayer.hasPermission("reserve.addbank"));
@@ -125,7 +126,6 @@ public class ReserveMainGUI extends GenericPopup {
 		options.setEnabled(sPlayer.hasPermission("reserve.admin"));
 		openBank.setEnabled(sPlayer.hasPermission("reserve.viewbank"));
 		bankStatus.setEnabled(sPlayer.hasPermission("reserve.viewbank"));
-
 		accountTypes.setEnabled(sPlayer.hasPermission("reserve.admin"));		
 
 		if (list.getSelectedItem() == null) {
@@ -133,14 +133,16 @@ public class ReserveMainGUI extends GenericPopup {
 			deleteBank.setEnabled(false);
 			bankStatus.setEnabled(false);
 			renameBank.setEnabled(false);
+			accountTypes.setEnabled(false);			
 		} else {			
 			openBank.setEnabled(true);
 			deleteBank.setEnabled(true);
 			bankStatus.setEnabled(true);
 			renameBank.setEnabled(true);
+			accountTypes.setEnabled(true);
 		}
 
-		attachWidgets(plugin, border, gl, gg, gb, createNewBank, list, renameBank, deleteBank, openBank, bankStatus, options, close);
+		attachWidgets(plugin, border, gl, gg, gb, createNewBank, list, renameBank, deleteBank, openBank, accountTypes, bankStatus, options, close);
 
 		sPlayer.getMainScreen().closePopup();
 		sPlayer.getMainScreen().attachPopupScreen(this);
@@ -182,7 +184,7 @@ public class ReserveMainGUI extends GenericPopup {
 				} else {
 					sPlayer.getMainScreen().closePopup();
 					String[] split = list.getSelectedItem().getTitle().split("\\/");
-					new BankStatusGUI(plugin, sPlayer, ReservePlugin.getReserve().get(split[0].trim(), ChatColor.stripColor(split[1].trim())));
+					new BankStatusGUI(plugin, sPlayer, ReservePlugin.getReserve().get(split[0].trim(), ChatColor.stripColor(split[1].trim())));					
 				}
 				break;
 			case 6:

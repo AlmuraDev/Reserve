@@ -86,7 +86,7 @@ public class DeleteBankGUI extends GenericPopup {
 		list = new BankListApplet();
 		list.setAnchor(WidgetAnchor.CENTER_CENTER);
 		list.shiftXPos(-80).shiftYPos(-35);
-		list.setWidth(155).setHeight(60);
+		list.setWidth(185).setHeight(60);
 		list.setPriority(RenderPriority.Lowest);
 
 		GenericButton depositButton = new CommandButton(this, 1, "Remove Bank");

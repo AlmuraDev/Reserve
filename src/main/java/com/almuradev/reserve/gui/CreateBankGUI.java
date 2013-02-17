@@ -83,7 +83,7 @@ public class CreateBankGUI extends GenericPopup {
 		bankNameField.setWidth(150).setHeight(16);
 		bankNameField.setAnchor(WidgetAnchor.CENTER_CENTER);
 		bankNameField.shiftXPos(-50).shiftYPos(-28);
-		bankNameField.setMaximumCharacters(50);
+		bankNameField.setMaximumCharacters(25);
 		bankNameField.setMaximumLines(1);
 
 		GenericButton createAccount = new CommandButton(this, 1, "Create");

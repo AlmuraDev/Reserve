@@ -103,10 +103,7 @@ public class AccountTypesGUI extends GenericPopup {
 		box.setHeight(18);
 		box.shiftXPos(0-(box.getWidth()/2)-30).shiftYPos(-90);
 		box.setAuto(true);
-		box.setPriority(RenderPriority.Low);
-		populateList();		
-		box.setSelection(0);
-		AccountType selectedAccountType = selectedBank.getType(box.getSelectedItem());		
+		box.setPriority(RenderPriority.Low);		
 		
 		GenericLabel nameLabel = new GenericLabel();
 		nameLabel.setScale(1.0F).setText("Type Name:");		
@@ -115,13 +112,17 @@ public class AccountTypesGUI extends GenericPopup {
 		nameLabel.shiftXPos(-100).shiftYPos(-50);
 		
 		accountTypeName = new GenericTextField();
-		accountTypeName.setText(selectedBank.getType(box.getSelectedItem()).getName());
+		accountTypeName.setText("");
 		accountTypeName.setWidth(110).setHeight(16);
 		accountTypeName.setAnchor(WidgetAnchor.CENTER_CENTER);
 		accountTypeName.shiftXPos(-39).shiftYPos(-53);
 		accountTypeName.setMaximumCharacters(30);
 		accountTypeName.setTooltip("Account Name - no more than 30 characters.");		
 		accountTypeName.setMaximumLines(1);
+		
+		populateList();		
+		box.setSelection(0);
+		AccountType selectedAccountType = selectedBank.getType(box.getSelectedItem());
 		
 		GenericLabel intNameLabel = new GenericLabel();
 		intNameLabel.setScale(1.0F).setText("Interest per Cycle:");		
@@ -133,7 +134,7 @@ public class AccountTypesGUI extends GenericPopup {
 		intCycleField.setText(Double.toString(selectedBank.getType(box.getSelectedItem()).getInterestRate()));
 		intCycleField.setWidth(40).setHeight(16);
 		intCycleField.setAnchor(WidgetAnchor.CENTER_CENTER);
-		intCycleField.shiftXPos(0).shiftYPos(-30);
+		intCycleField.shiftXPos(0).shiftYPos(-32);
 		intCycleField.setMaximumCharacters(6);
 		intCycleField.setTooltip("Specified Interest Rate for this account type.");
 		intCycleField.setMaximumLines(1);
@@ -247,7 +248,7 @@ public class AccountTypesGUI extends GenericPopup {
 				break;		
 			case 4:
 				sPlayer.getMainScreen().closePopup();
-				new BankStatusGUI(plugin, sPlayer, selectedBank);
+				new ReserveMainGUI(plugin, sPlayer);
 				break;
 		}
 	}
@@ -264,7 +265,8 @@ public class AccountTypesGUI extends GenericPopup {
 			Collections.sort(items, String.CASE_INSENSITIVE_ORDER);
 			box.setItems(items);
 			box.setSelection(0);
-			box.setText(null);			
+			box.setText(null);
+			accountTypeName.setText(selectedBank.getType(box.getSelectedItem()).getName());			
 		}				
 	}
 	
@@ -279,6 +281,13 @@ public class AccountTypesGUI extends GenericPopup {
 				intsetting.setChecked(selectedAccountType.receivesInterest());
 				intCycleField.setText(Double.toString(selectedAccountType.getInterestRate()));
 				accountTypeName.setText(selectedAccountType.getName());
+				if (box.getSelectedItem().equalsIgnoreCase("Vault")) {
+					accountTypeName.setEnabled(false);	
+					intCycleField.setEnabled(false);
+				} else {
+					accountTypeName.setEnabled(true);
+					intCycleField.setEnabled(false);
+				}				
 			}
 		}
 	}

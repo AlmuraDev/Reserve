@@ -58,7 +58,7 @@ public class RenameBankGUI extends GenericPopup {
 		GenericTexture border = new GenericTexture("http://www.almuramc.com/images/playerplus.png");
 		border.setAnchor(WidgetAnchor.CENTER_CENTER);
 		border.setPriority(RenderPriority.High);
-		border.setWidth(gl.getWidth() + 50).setHeight(90);
+		border.setWidth(gl.getWidth() + 80).setHeight(90);
 		border.shiftXPos(0 - (border.getWidth() / 2)).shiftYPos(-80);
 		
 		GenericGradient gg = new GenericGradient();
@@ -69,10 +69,10 @@ public class RenameBankGUI extends GenericPopup {
 		
 		bankNameField = new GenericTextField();
 		bankNameField.setText(selectedBank.getName().trim());
-		bankNameField.setWidth(110).setHeight(16);
+		bankNameField.setWidth(140).setHeight(16);
 		bankNameField.setAnchor(WidgetAnchor.CENTER_CENTER);
-		bankNameField.shiftXPos(-55).shiftYPos(-45);
-		bankNameField.setMaximumCharacters(30);
+		bankNameField.shiftXPos(-70).shiftYPos(-45);
+		bankNameField.setMaximumCharacters(25);
 		bankNameField.setMaximumLines(1);
 		
 		GenericButton close = new CommandButton(this, 1, "Close");

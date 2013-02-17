@@ -52,7 +52,7 @@ public class OptionsGUI extends GenericPopup {
 		GenericTexture border = new GenericTexture("http://www.almuramc.com/images/playerplus.png");
 		border.setAnchor(WidgetAnchor.CENTER_CENTER);
 		border.setPriority(RenderPriority.High);
-		border.setWidth(170).setHeight(170);
+		border.setWidth(170).setHeight(130);
 		border.shiftXPos(-85).shiftYPos(-80);
 
 		GenericLabel gl = new GenericLabel("Options");
@@ -67,12 +67,6 @@ public class OptionsGUI extends GenericPopup {
 		gg.shiftXPos(-65).shiftYPos(-55).setMaxWidth(130);
 		gg.setWidth(130).setHeight(1);
 
-		GenericGradient gb = new GenericGradient();
-		gb.setBottomColor(bottom).setTopColor(bottom);
-		gb.setAnchor(WidgetAnchor.CENTER_CENTER);
-		gb.shiftXPos(-65).shiftYPos(-25).setMaxWidth(130);
-		gb.setWidth(130).setHeight(1);
-
 		GenericButton reserveConfig = new CommandButton(this, 1, "Reserve Configuration");
 		GenericButton bankConfig = new CommandButton(this, 2, "Bank Configuration");
 		GenericButton close = new CommandButton(this, 3, "Close");
@@ -81,16 +75,11 @@ public class OptionsGUI extends GenericPopup {
 		bankConfig.setAnchor(WidgetAnchor.CENTER_CENTER);
 		close.setAnchor(WidgetAnchor.CENTER_CENTER);
 
-		reserveConfig.setHeight(16).setWidth(120).shiftXPos(-60).shiftYPos(-20);
-		bankConfig.setHeight(16).setWidth(120).shiftXPos(-60).shiftYPos(0);
-		close.setHeight(16).setWidth(40).shiftXPos(20).shiftYPos(68);
+		reserveConfig.setHeight(16).setWidth(120).shiftXPos(-60).shiftYPos(-50);
+		bankConfig.setHeight(16).setWidth(120).shiftXPos(-60).shiftYPos(-30);
+		close.setHeight(16).setWidth(40).shiftXPos(20).shiftYPos(28);
 
-		//createAccount.setEnabled(sPlayer.hasPermission("reserve.createaccount") && playerBank == null);
-		//makeDeposit.setEnabled(sPlayer.hasPermission("reserve.deposit") && playerBank != null);
-		//makeWithdraw.setEnabled(sPlayer.hasPermission("reserve.withdraw") && playerBank != null);
-		//closeAccount.setEnabled(sPlayer.hasPermission("reserve.closeaccount") && playerBank != null) ;
-
-		attachWidgets(plugin, border, gl, gg, gb, reserveConfig, bankConfig, close);
+		attachWidgets(plugin, border, gl, gg, reserveConfig, bankConfig, close);
 
 		sPlayer.getMainScreen().closePopup();
 		sPlayer.getMainScreen().attachPopupScreen(this);
@@ -108,7 +97,7 @@ public class OptionsGUI extends GenericPopup {
 				break;
 			case 3:
 				sPlayer.getMainScreen().closePopup();
-				new BankMainGUI(plugin, sPlayer, null);
+				new ReserveMainGUI(plugin, sPlayer);
 				break;
 		}
 	}
