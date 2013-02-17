@@ -29,12 +29,15 @@ import com.almuradev.reserve.task.InterestTask;
 import org.getspout.spoutapi.player.SpoutPlayer;
 
 import org.bukkit.Bukkit;
+import org.bukkit.block.Block;
+import org.bukkit.block.Sign;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitScheduler;
 
@@ -102,6 +105,41 @@ public class ReservePlugin extends JavaPlugin implements Listener {
 				player.sendMessage(getPrefix() + died.getDisplayName() + " died and lost: " + taxed + "!");
 			}
 		}
+	}
+
+	@EventHandler
+	public void onPlayerInteract(PlayerInteractEvent event) {
+		final Block interacted = event.getClickedBlock();
+		if (!(interacted.getState() instanceof Sign)) {
+			return;
+		}
+		final Sign sign = (Sign) interacted.getState();
+		//Not a reserve sign
+		if (!sign.getLine(0).trim().toLowerCase().contains("[Reserve")) {
+			return;
+		}
+		//At this point [Mybank]...or should be
+		final String bankNameRaw = sign.getLine(1).trim().toLowerCase();
+		//Doesn't start with [ so abort
+		if (!bankNameRaw.startsWith("[")) {
+			return;
+		}
+		//At this point Array is {"[", "MyBank]"}
+		String[] splitLeft = bankNameRaw.split("[");
+		if (splitLeft.length != 2) {
+			return;
+		}
+		//Doesn't end with ] so abort.
+		if (!splitLeft[1].endsWith("]")) {
+			return;
+		}
+		//At this point Array is {"MyBank", "]"}
+		String[] splitRight = splitLeft[1].split("]");
+		if (splitRight.length != 2) {
+			return;
+		}
+		final String bankName = splitRight[0];
+		//TODO Dockter, open the GUI here as you have the bank's name.
 	}
 
 	//TESTING
