@@ -21,6 +21,7 @@ package com.almuradev.reserve;
 
 import com.almuradev.reserve.config.ReserveConfiguration;
 import com.almuradev.reserve.econ.VaultUtil;
+import com.almuradev.reserve.gui.popup.BankPopup;
 import com.almuradev.reserve.gui.popup.ReservePopup;
 import com.almuradev.reserve.storage.Reserve;
 import com.almuradev.reserve.storage.Storage;
@@ -29,6 +30,7 @@ import com.almuradev.reserve.task.InterestTask;
 import org.getspout.spoutapi.player.SpoutPlayer;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
 import org.bukkit.command.Command;
@@ -110,6 +112,8 @@ public class ReservePlugin extends JavaPlugin implements Listener {
 	@EventHandler
 	public void onPlayerInteract(PlayerInteractEvent event) {
 		final Block interacted = event.getClickedBlock();
+		final SpoutPlayer sPlayer = (SpoutPlayer) event.getPlayer();
+		
 		if (!(interacted.getState() instanceof Sign)) {
 			return;
 		}
@@ -139,7 +143,7 @@ public class ReservePlugin extends JavaPlugin implements Listener {
 			return;
 		}
 		final String bankName = splitRight[0];
-		//TODO Dockter, open the GUI here as you have the bank's name.
+		new BankPopup(this, sPlayer, ReservePlugin.getReserve().get(bankName.trim(), sPlayer.getWorld().getName()));
 	}
 
 	//TESTING
