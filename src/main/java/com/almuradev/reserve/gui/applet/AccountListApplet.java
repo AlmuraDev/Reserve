@@ -17,32 +17,34 @@
  * You should have received a copy of the GNU General Public License. If not,
  * see <http://www.gnu.org/licenses/> for the GNU General Public License.
  */
-package com.almuradev.reserve.gui;
+package com.almuradev.reserve.gui.applet;
 
 import java.text.NumberFormat;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 
-import com.almuradev.reserve.ReservePlugin;
+import com.almuradev.reserve.econ.Account;
 import com.almuradev.reserve.econ.Bank;
 
 import org.getspout.spoutapi.gui.GenericListWidget;
 import org.getspout.spoutapi.gui.ListWidgetItem;
+import org.getspout.spoutapi.player.SpoutPlayer;
 
 import org.bukkit.ChatColor;
 
-public class BankListApplet extends GenericListWidget {
+public class AccountListApplet extends GenericListWidget {
+	private final SpoutPlayer sPlayer;
+	private final Bank selectedBank;
 	private static NumberFormat numForm;
 	private static Locale caLoc = new Locale("en", "US");
 
-	public BankListApplet() {
-		Map<String, List<Bank>> allBanks = ReservePlugin.getReserve().retrieveBanks();
+	public AccountListApplet(Bank mySelectedBank, SpoutPlayer player) {
+		this.selectedBank = mySelectedBank;
+		this.sPlayer = player;
 		numForm = NumberFormat.getCurrencyInstance(caLoc);
-		for (String world : allBanks.keySet()) {
-			for (Bank bank : allBanks.get(world)) {
-				this.addItem(new ListWidgetItem(bank.getName() + " / " + ChatColor.AQUA + world, ChatColor.GOLD + numForm.format(bank.getAccountsBalance())));
-			}
+		List<Account> accountNames = selectedBank.getAccountsFor(sPlayer.getName());
+		for (Account account : accountNames) {
+			this.addItem(new ListWidgetItem(account.getName() + " / " + ChatColor.AQUA + account.getType().getName(), ChatColor.GREEN + numForm.format(account.getBalance()), account.getType().getImagePath().trim()));
 		}
 	}
 }

@@ -21,12 +21,11 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.almuradev.reserve.gui;
-
-import java.text.NumberFormat;
-import java.util.Locale;
+package com.almuradev.reserve.gui.popup;
 
 import com.almuradev.reserve.ReservePlugin;
+import com.almuradev.reserve.gui.applet.BankListApplet;
+import com.almuradev.reserve.gui.button.CommandButton;
 
 import org.getspout.spoutapi.gui.Color;
 import org.getspout.spoutapi.gui.GenericButton;
@@ -42,15 +41,13 @@ import org.getspout.spoutapi.player.SpoutPlayer;
 
 import org.bukkit.ChatColor;
 
-public class ReserveMainGUI extends GenericPopup {
+public class ReservePopup extends GenericPopup {
 	private final ReservePlugin plugin;
 	private final SpoutPlayer sPlayer;
-	private static NumberFormat numForm;
-	private static Locale caLoc = new Locale("en", "US");
 	private ListWidget list;
-	Color bottom = new Color(1.0F, 1.0F, 1.0F, 0.50F);
+	private final Color bottom = new Color(1.0F, 1.0F, 1.0F, 0.50F);
 
-	public ReserveMainGUI(ReservePlugin plugin, SpoutPlayer sPlayer) {
+	public ReservePopup(ReservePlugin plugin, SpoutPlayer sPlayer) {
 		this.plugin = plugin;
 		this.sPlayer = sPlayer;
 
@@ -153,53 +150,53 @@ public class ReserveMainGUI extends GenericPopup {
 		switch (commandGoal) {
 			case 1:
 				sPlayer.getMainScreen().closePopup();
-				new CreateBankGUI(plugin, sPlayer);
+				new CreateBankPopup(plugin, sPlayer);
 				break;
 			case 2:
 				if (list.getSelectedItem() == null) {
-					new AckGUI(plugin, sPlayer, null, "Please Select Bank.", "reservemaingui");
+					new AckPopup(plugin, sPlayer, null, "Please Select Bank.", "reservemaingui");
 				} else {
 					String[] split = list.getSelectedItem().getTitle().split("\\/");
 					sPlayer.getMainScreen().closePopup();
-					new RenameBankGUI(plugin, sPlayer, ReservePlugin.getReserve().get(split[0].trim(), ChatColor.stripColor(split[1].trim())));
+					new RenameBankPopup(plugin, sPlayer, ReservePlugin.getReserve().get(split[0].trim(), ChatColor.stripColor(split[1].trim())));
 				}
 				break;
 			case 3:
 				sPlayer.getMainScreen().closePopup();
-				new DeleteBankGUI(plugin, sPlayer);
+				new DeleteBankPopup(plugin, sPlayer);
 				break;
 			case 4:
 				sPlayer.getMainScreen().closePopup();
 				if (list.getSelectedItem() == null) {
-					new AckGUI(plugin, sPlayer, null, "Please Select Bank.", "reservemaingui");
+					new AckPopup(plugin, sPlayer, null, "Please Select Bank.", "reservemaingui");
 				} else {
 					sPlayer.getMainScreen().closePopup();
 					String[] split = list.getSelectedItem().getTitle().split("\\/");
-					new BankMainGUI(plugin, sPlayer, ReservePlugin.getReserve().get(split[0].trim(), ChatColor.stripColor(split[1].trim())));
+					new BankPopup(plugin, sPlayer, ReservePlugin.getReserve().get(split[0].trim(), ChatColor.stripColor(split[1].trim())));
 				}
 				break;
 			case 5:
 				sPlayer.getMainScreen().closePopup();
 				if (list.getSelectedItem() == null) {
-					new AckGUI(plugin, sPlayer, null, "Please Select Bank.", "reservemaingui");
+					new AckPopup(plugin, sPlayer, null, "Please Select Bank.", "reservemaingui");
 				} else {
 					sPlayer.getMainScreen().closePopup();
 					String[] split = list.getSelectedItem().getTitle().split("\\/");
-					new BankStatusGUI(plugin, sPlayer, ReservePlugin.getReserve().get(split[0].trim(), ChatColor.stripColor(split[1].trim())));
+					new BankStatusPopup(plugin, sPlayer, ReservePlugin.getReserve().get(split[0].trim(), ChatColor.stripColor(split[1].trim())));
 				}
 				break;
 			case 6:
 				if (list.getSelectedItem() == null) {
-					new AckGUI(plugin, sPlayer, null, "Please Select Bank.", "reservemaingui");
+					new AckPopup(plugin, sPlayer, null, "Please Select Bank.", "reservemaingui");
 				} else {
 					sPlayer.getMainScreen().closePopup();
 					String[] split = list.getSelectedItem().getTitle().split("\\/");
-					new AccountTypesGUI(plugin, sPlayer, ReservePlugin.getReserve().get(split[0].trim(), ChatColor.stripColor(split[1].trim())));
+					new AccountTypesPopup(plugin, sPlayer, ReservePlugin.getReserve().get(split[0].trim(), ChatColor.stripColor(split[1].trim())));
 				}
 				break;
 			case 7:
 				sPlayer.getMainScreen().closePopup();
-				new OptionsGUI(plugin, sPlayer);
+				new OptionsPopup(plugin, sPlayer);
 				break;
 			case 8:
 				Screen screen = sPlayer.getMainScreen();

@@ -21,65 +21,71 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.almuradev.reserve.gui;
-
-import java.text.NumberFormat;
-import java.util.Locale;
+package com.almuradev.reserve.gui.popup;
 
 import com.almuradev.reserve.ReservePlugin;
+import com.almuradev.reserve.econ.Bank;
+import com.almuradev.reserve.gui.button.CommandButton;
 
 import org.getspout.spoutapi.gui.Color;
 import org.getspout.spoutapi.gui.GenericButton;
 import org.getspout.spoutapi.gui.GenericGradient;
 import org.getspout.spoutapi.gui.GenericLabel;
 import org.getspout.spoutapi.gui.GenericPopup;
+import org.getspout.spoutapi.gui.GenericTextField;
 import org.getspout.spoutapi.gui.GenericTexture;
 import org.getspout.spoutapi.gui.RenderPriority;
 import org.getspout.spoutapi.gui.WidgetAnchor;
 import org.getspout.spoutapi.player.SpoutPlayer;
 
-public class OptionsGUI extends GenericPopup {
+public class RenameBankPopup extends GenericPopup {
 	private final ReservePlugin plugin;
 	private final SpoutPlayer sPlayer;
-	private static NumberFormat numForm;
-	private static Locale caLoc = new Locale("en", "US");
-	Color bottom = new Color(1.0F, 1.0F, 1.0F, 0.50F);
+	private final Bank selectedBank;
+	private final GenericTextField bankNameField;
+	private final Color bottom = new Color(1.0F, 1.0F, 1.0F, 0.50F);
 
-	public OptionsGUI(ReservePlugin plugin, SpoutPlayer sPlayer) {
+	public RenameBankPopup(ReservePlugin plugin, SpoutPlayer sPlayer, Bank bank) {
 		this.plugin = plugin;
 		this.sPlayer = sPlayer;
+		this.selectedBank = bank;
+
+		GenericLabel gl = new GenericLabel();
+		gl.setScale(1.4F).setText("Rename Bank");
+		gl.setAnchor(WidgetAnchor.CENTER_CENTER);
+		gl.setHeight(15).setWidth(GenericLabel.getStringWidth(gl.getText(), gl.getScale()));
+		gl.shiftXPos((GenericLabel.getStringWidth(gl.getText(), gl.getScale()) / 2) * -1).shiftYPos(-70);
 
 		GenericTexture border = new GenericTexture("http://www.almuramc.com/images/playerplus.png");
 		border.setAnchor(WidgetAnchor.CENTER_CENTER);
 		border.setPriority(RenderPriority.High);
-		border.setWidth(170).setHeight(130);
-		border.shiftXPos(-85).shiftYPos(-80);
-
-		GenericLabel gl = new GenericLabel("Options");
-		gl.setScale(1.2F);
-		gl.setAnchor(WidgetAnchor.CENTER_CENTER);
-		gl.setHeight(15).setWidth(GenericLabel.getStringWidth(gl.getText()));
-		gl.shiftXPos(-20).shiftYPos(-70);
+		border.setWidth(gl.getWidth() + 80).setHeight(90);
+		border.shiftXPos(0 - (border.getWidth() / 2)).shiftYPos(-80);
 
 		GenericGradient gg = new GenericGradient();
 		gg.setBottomColor(bottom).setTopColor(bottom);
 		gg.setAnchor(WidgetAnchor.CENTER_CENTER);
-		gg.shiftXPos(-65).shiftYPos(-55).setMaxWidth(130);
-		gg.setWidth(130).setHeight(1);
+		gg.setWidth(border.getWidth() - 25).setHeight(1);
+		gg.shiftXPos(0 - gg.getWidth() / 2).shiftYPos(-55);
 
-		GenericButton reserveConfig = new CommandButton(this, 1, "Reserve Configuration");
-		GenericButton bankConfig = new CommandButton(this, 2, "Bank Configuration");
-		GenericButton close = new CommandButton(this, 3, "Close");
+		bankNameField = new GenericTextField();
+		bankNameField.setText(selectedBank.getName().trim());
+		bankNameField.setWidth(140).setHeight(16);
+		bankNameField.setAnchor(WidgetAnchor.CENTER_CENTER);
+		bankNameField.shiftXPos(-70).shiftYPos(-45);
+		bankNameField.setMaximumCharacters(25);
+		bankNameField.setMaximumLines(1);
 
-		reserveConfig.setAnchor(WidgetAnchor.CENTER_CENTER);
-		bankConfig.setAnchor(WidgetAnchor.CENTER_CENTER);
+		GenericButton close = new CommandButton(this, 1, "Close");
+		GenericButton save = new CommandButton(this, 2, "Save");
+
+		save.setAnchor(WidgetAnchor.CENTER_CENTER);
 		close.setAnchor(WidgetAnchor.CENTER_CENTER);
 
-		reserveConfig.setHeight(16).setWidth(120).shiftXPos(-60).shiftYPos(-50);
-		bankConfig.setHeight(16).setWidth(120).shiftXPos(-60).shiftYPos(-30);
-		close.setHeight(16).setWidth(40).shiftXPos(20).shiftYPos(28);
+		save.setHeight(16).setWidth(40).shiftXPos(-30).shiftYPos(-10);
+		close.setHeight(16).setWidth(40).shiftXPos(20).shiftYPos(-10);
 
-		attachWidgets(plugin, border, gl, gg, reserveConfig, bankConfig, close);
+		attachWidgets(plugin, border, gl, gg, bankNameField, save, close);
 
 		sPlayer.getMainScreen().closePopup();
 		sPlayer.getMainScreen().attachPopupScreen(this);
@@ -89,15 +95,17 @@ public class OptionsGUI extends GenericPopup {
 		switch (commandGoal) {
 			case 1:
 				sPlayer.getMainScreen().closePopup();
-				new ReserveConfigGUI(plugin, sPlayer, null);
+				new ReservePopup(plugin, sPlayer);
 				break;
 			case 2:
-				sPlayer.getMainScreen().closePopup();
-				new BankConfigGUI(plugin, sPlayer, null);
-				break;
-			case 3:
-				sPlayer.getMainScreen().closePopup();
-				new ReserveMainGUI(plugin, sPlayer);
+				if (bankNameField.getText().isEmpty()) {
+					sPlayer.getMainScreen().closePopup();
+					new AckPopup(plugin, sPlayer, null, "Please specify new name.", "renamebankgui");
+				} else {
+					selectedBank.setName(bankNameField.getText().trim());
+					sPlayer.getMainScreen().closePopup();
+					new AckPopup(plugin, sPlayer, null, "Changes Saved.", "renamebankgui");
+				}
 				break;
 		}
 	}

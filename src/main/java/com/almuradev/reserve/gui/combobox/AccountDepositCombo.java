@@ -17,21 +17,23 @@
  * You should have received a copy of the GNU General Public License. If not,
  * see <http://www.gnu.org/licenses/> for the GNU General Public License.
  */
-package com.almuradev.reserve.gui;
+package com.almuradev.reserve.gui.combobox;
+
+import com.almuradev.reserve.gui.popup.DepositPopup;
 
 import org.getspout.spoutapi.gui.GenericComboBox;
 
 public class AccountDepositCombo extends GenericComboBox {
-	private DepositGUI plugin;
+	private final DepositPopup parent;
+
+	public AccountDepositCombo(DepositPopup parent) {
+		super();
+		this.parent = parent;
+	}
 
 	@Override
 	public void onSelectionChanged(int i, String text) {
 		super.onSelectionChanged(i, text);
-		plugin.onSelect(i, text);
-	}
-
-	public AccountDepositCombo(DepositGUI plugin) {
-		super();
-		this.plugin = plugin;
+		parent.onSelect();
 	}
 }

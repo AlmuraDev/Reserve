@@ -21,14 +21,15 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.almuradev.reserve.gui;
+package com.almuradev.reserve.gui.popup;
 
 import java.text.NumberFormat;
 import java.util.Locale;
 
 import com.almuradev.reserve.ReservePlugin;
-import com.almuradev.reserve.econ.Account;
 import com.almuradev.reserve.econ.Bank;
+import com.almuradev.reserve.gui.applet.MasterAccountListApplet;
+import com.almuradev.reserve.gui.button.CommandButton;
 
 import org.getspout.spoutapi.gui.Color;
 import org.getspout.spoutapi.gui.GenericButton;
@@ -43,21 +44,19 @@ import org.getspout.spoutapi.player.SpoutPlayer;
 
 import org.bukkit.ChatColor;
 
-public class BankStatusGUI extends GenericPopup {
+public class BankStatusPopup extends GenericPopup {
 	private final ReservePlugin plugin;
 	private final SpoutPlayer sPlayer;
 	private final Bank selectedBank;
-	private final Account selectedAccount;
 	private ListWidget list;
 	private static NumberFormat numForm;
 	private static Locale caLoc = new Locale("en", "US");
-	Color bottom = new Color(1.0F, 1.0F, 1.0F, 0.50F);
+	private final Color bottom = new Color(1.0F, 1.0F, 1.0F, 0.50F);
 
-	public BankStatusGUI(ReservePlugin plugin, SpoutPlayer sPlayer, Bank bank) {
+	public BankStatusPopup(ReservePlugin plugin, SpoutPlayer sPlayer, Bank bank) {
 		this.plugin = plugin;
 		this.sPlayer = sPlayer;
 		this.selectedBank = bank;
-		this.selectedAccount = null;
 
 		GenericTexture border = new GenericTexture("http://www.almuramc.com/images/playerplus.png");
 		border.setAnchor(WidgetAnchor.CENTER_CENTER);
@@ -83,7 +82,7 @@ public class BankStatusGUI extends GenericPopup {
 		gb.setWidth(200).setHeight(1);
 		gb.shiftXPos(0 - (gb.getWidth() / 2)).shiftYPos(-65);
 
-		list = new MasterAccountListApplet(selectedBank, sPlayer);
+		list = new MasterAccountListApplet(selectedBank);
 		list.setAnchor(WidgetAnchor.CENTER_CENTER);
 		list.shiftXPos(-100).shiftYPos(-60);
 		list.setWidth(200).setHeight(140);
@@ -119,11 +118,11 @@ public class BankStatusGUI extends GenericPopup {
 		switch (commandGoal) {
 			case 1:
 				sPlayer.getMainScreen().closePopup();
-				new AccountTypesGUI(plugin, sPlayer, selectedBank);
+				new AccountTypesPopup(plugin, sPlayer, selectedBank);
 				break;
 			case 2:
 				sPlayer.getMainScreen().closePopup();
-				new ReserveMainGUI(plugin, sPlayer);
+				new ReservePopup(plugin, sPlayer);
 				break;
 		}
 	}

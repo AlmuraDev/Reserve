@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU General Public License. If not,
  * see <http://www.gnu.org/licenses/> for the GNU General Public License.
  */
-package com.almuradev.reserve.gui;
+package com.almuradev.reserve.gui.applet;
 
 import java.text.NumberFormat;
 import java.util.List;
@@ -28,23 +28,24 @@ import com.almuradev.reserve.econ.Bank;
 
 import org.getspout.spoutapi.gui.GenericListWidget;
 import org.getspout.spoutapi.gui.ListWidgetItem;
-import org.getspout.spoutapi.player.SpoutPlayer;
 
 import org.bukkit.ChatColor;
 
-public class AccountListApplet extends GenericListWidget {
-	private final SpoutPlayer sPlayer;
+public class MasterAccountListApplet extends GenericListWidget {
 	private final Bank selectedBank;
 	private static NumberFormat numForm;
 	private static Locale caLoc = new Locale("en", "US");
 
-	public AccountListApplet(Bank mySelectedBank, SpoutPlayer player) {
+	public MasterAccountListApplet(Bank mySelectedBank) {
 		this.selectedBank = mySelectedBank;
-		this.sPlayer = player;
 		numForm = NumberFormat.getCurrencyInstance(caLoc);
-		List<Account> accountNames = selectedBank.getAccountsFor(sPlayer.getName());
-		for (Account account : accountNames) {
-			this.addItem(new ListWidgetItem(account.getName() + " / " + ChatColor.AQUA + account.getType().getName(), ChatColor.GREEN + numForm.format(account.getBalance()), account.getType().getImagePath().trim()));
+		List<Account> accountNames = selectedBank.retrieveAccounts();
+		if (accountNames != null) {
+			for (Account account : accountNames) {
+				if (account != null) {
+					this.addItem(new ListWidgetItem(ChatColor.AQUA + account.getHolder() + ChatColor.RESET + " / " + account.getName(), ChatColor.GREEN + numForm.format(account.getBalance()) + ChatColor.RESET + " - " + account.getType().getName(), account.getType().getImagePath().trim()));
+				}
+			}
 		}
 	}
 }

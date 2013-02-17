@@ -21,7 +21,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.almuradev.reserve.gui;
+package com.almuradev.reserve.gui.popup;
 
 import java.text.NumberFormat;
 import java.util.ArrayList;
@@ -33,6 +33,8 @@ import com.almuradev.reserve.ReservePlugin;
 import com.almuradev.reserve.econ.Account;
 import com.almuradev.reserve.econ.Bank;
 import com.almuradev.reserve.econ.VaultUtil;
+import com.almuradev.reserve.gui.button.CommandButton;
+import com.almuradev.reserve.gui.combobox.AccountDepositCombo;
 
 import org.getspout.spoutapi.gui.Color;
 import org.getspout.spoutapi.gui.ComboBox;
@@ -48,19 +50,19 @@ import org.getspout.spoutapi.player.SpoutPlayer;
 
 import org.bukkit.ChatColor;
 
-public class WithdrawGUI extends GenericPopup {
+public class DepositPopup extends GenericPopup {
 	private final ReservePlugin plugin;
 	private final SpoutPlayer sPlayer;
 	private final Bank selectedBank;
 	private final Account selectedAccount;
-	private final ComboBox box;
-	private final GenericLabel at, att;
 	private final GenericTextField depositAmountField;
+	private final GenericLabel att, at;
+	private final ComboBox box;
 	private static NumberFormat numForm;
 	private static Locale caLoc = new Locale("en", "US");
-	Color bottom = new Color(1.0F, 1.0F, 1.0F, 0.50F);
+	private final Color bottom = new Color(1.0F, 1.0F, 1.0F, 0.50F);
 
-	public WithdrawGUI(ReservePlugin plugin, SpoutPlayer sPlayer, Bank bank, Account account) {
+	public DepositPopup(ReservePlugin plugin, SpoutPlayer sPlayer, Bank bank, Account account) {
 		this.plugin = plugin;
 		this.sPlayer = sPlayer;
 		this.selectedBank = bank;
@@ -95,8 +97,8 @@ public class WithdrawGUI extends GenericPopup {
 		gm.setWidth(200).setHeight(1);
 		gm.shiftXPos(0 - (gm.getWidth() / 2)).shiftYPos(-25);
 
-		box = new AccountWithdrawCombo(this);
-		box.setText("Account");
+		box = new AccountDepositCombo(this);
+		box.setText("Accounts");
 		box.setAnchor(WidgetAnchor.CENTER_CENTER);
 		box.setWidth(GenericLabel.getStringWidth("12345678901234567890123459"));
 		box.setHeight(18);
@@ -112,6 +114,7 @@ public class WithdrawGUI extends GenericPopup {
 
 		att = new GenericLabel();
 		att.setText(ChatColor.GREEN + "0.00").setVisible(false);
+		att.setScale(1.0F);
 		att.setAnchor(WidgetAnchor.CENTER_CENTER);
 		att.setHeight(15).setWidth(GenericLabel.getStringWidth(att.getText()));
 		att.shiftXPos(0).shiftYPos(-10);
@@ -130,7 +133,7 @@ public class WithdrawGUI extends GenericPopup {
 		ab.setHeight(15).setWidth(GenericLabel.getStringWidth(ab.getText()));
 		ab.shiftXPos(0).shiftYPos(10);
 
-		GenericLabel an = new GenericLabel("Withdraw Amount: ");
+		GenericLabel an = new GenericLabel("Deposit Amount: ");
 		an.setScale(1.0F);
 		an.setAnchor(WidgetAnchor.CENTER_CENTER);
 		an.setHeight(15).setWidth(GenericLabel.getStringWidth(an.getText()));
@@ -144,7 +147,7 @@ public class WithdrawGUI extends GenericPopup {
 		depositAmountField.setMaximumCharacters(15);
 		depositAmountField.setMaximumLines(1);
 
-		GenericButton depositButton = new CommandButton(this, 1, "Withdraw");
+		GenericButton depositButton = new CommandButton(this, 1, "Deposit");
 		GenericButton close = new CommandButton(this, 2, "Close");
 
 		depositButton.setAnchor(WidgetAnchor.CENTER_CENTER);
@@ -170,41 +173,38 @@ public class WithdrawGUI extends GenericPopup {
 
 	public void onClickCommand(int commandGoal) {
 		switch (commandGoal) {
-			case 1: // Ok
+			case 1:
 				if (box.getSelectedItem() == null) {
-					new AckGUI(plugin, sPlayer, selectedBank, "Please specify account.", "depositgui");
+					new AckPopup(plugin, sPlayer, selectedBank, "Please specify account.", "depositgui");
 				} else {
 
 					Account myAccount = selectedBank.getAccount(box.getSelectedItem(), sPlayer.getName());
-					double withdraw = 0;
+					double deposit = 0;
 					try {
-						withdraw = Math.abs(Double.parseDouble(depositAmountField.getText()));
+						deposit = Math.abs(Double.parseDouble(depositAmountField.getText()));
 					} catch (Exception e) {
 						//do nothing
 					}
-					if (withdraw == 0) {
+					if (deposit == 0) {
 						sPlayer.getMainScreen().closePopup();
-						new AckGUI(plugin, sPlayer, selectedBank, "Deposit amount has to be more than zero.", "withdrawgui");
+						new AckPopup(plugin, sPlayer, selectedBank, "Deposit amount has to be more than zero.", "depositgui");
 					} else {
-						if (myAccount.getBalance() < withdraw) {
-							new AckGUI(plugin, sPlayer, selectedBank, "Withdraw amount cannot be greater than current balance.", "withdrawgui");
-						} else {
-							myAccount.add(0 - withdraw);
-							VaultUtil.add(sPlayer.getName(), withdraw);
+						if (VaultUtil.getBalance(sPlayer.getName()) < deposit) {
 							sPlayer.getMainScreen().closePopup();
-							new AckGUI(plugin, sPlayer, selectedBank, "Funds Withdrawn Successfully.", "withdrawgui");
+							new AckPopup(plugin, sPlayer, selectedBank, "Insuffient funds available for deposit.", "depositgui");
+						} else {
+							myAccount.add(deposit);
+							VaultUtil.add(sPlayer.getName(), 0 - deposit);
+							sPlayer.getMainScreen().closePopup();
+							new AckPopup(plugin, sPlayer, selectedBank, "Funds Deposited Successfully", "depositgui");
 						}
 					}
 				}
 				break;
 			case 2: // Close
 				sPlayer.getMainScreen().closePopup();
-				new BankMainGUI(plugin, sPlayer, selectedBank);
+				new BankPopup(plugin, sPlayer, selectedBank);
 				break;
-
-			case 3:
-				//box.setText(box.getSelectedItem());
-				box.setDirty(true);
 		}
 	}
 
@@ -235,7 +235,7 @@ public class WithdrawGUI extends GenericPopup {
 		}
 	}
 
-	void onSelect(int i, String text) {
+	public void onSelect() {
 		if (box.getSelectedItem() != null) {
 			numForm = NumberFormat.getCurrencyInstance(caLoc);
 			Account myAccount = selectedBank.getAccount(box.getSelectedItem(), sPlayer.getName());

@@ -21,14 +21,18 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.almuradev.reserve.gui;
+package com.almuradev.reserve.gui.popup;
 
 import com.almuradev.reserve.ReservePlugin;
 import com.almuradev.reserve.econ.Bank;
+import com.almuradev.reserve.gui.button.CommandButton;
+import com.almuradev.reserve.gui.checkbox.ConfigMultipleCheckBox;
+import com.almuradev.reserve.gui.checkbox.ConfigShareCheckBox;
 
 import org.getspout.spoutapi.gui.CheckBox;
 import org.getspout.spoutapi.gui.Color;
 import org.getspout.spoutapi.gui.GenericButton;
+import org.getspout.spoutapi.gui.GenericCheckBox;
 import org.getspout.spoutapi.gui.GenericGradient;
 import org.getspout.spoutapi.gui.GenericLabel;
 import org.getspout.spoutapi.gui.GenericPopup;
@@ -38,13 +42,15 @@ import org.getspout.spoutapi.gui.RenderPriority;
 import org.getspout.spoutapi.gui.WidgetAnchor;
 import org.getspout.spoutapi.player.SpoutPlayer;
 
-public class BankConfigGUI extends GenericPopup {
+public class ReserveConfigPopup extends GenericPopup {
 	private final ReservePlugin plugin;
 	private final SpoutPlayer sPlayer;
 	private final Bank selectedBank;
-	Color bottom = new Color(1.0F, 1.0F, 1.0F, 0.50F);
+	private final GenericTextField saveTime, intTime;
+	private final GenericCheckBox deathCheckBox, gainInterest;
+	private final Color bottom = new Color(1.0F, 1.0F, 1.0F, 0.50F);
 
-	public BankConfigGUI(ReservePlugin plugin, SpoutPlayer sPlayer, Bank bank) {
+	public ReserveConfigPopup(ReservePlugin plugin, SpoutPlayer sPlayer, Bank bank) {
 		this.plugin = plugin;
 		this.sPlayer = sPlayer;
 		this.selectedBank = bank;
@@ -55,7 +61,7 @@ public class BankConfigGUI extends GenericPopup {
 		border.setWidth(255).setHeight(150);
 		border.shiftXPos(-105).shiftYPos(-80);
 
-		GenericLabel gl = new GenericLabel("Bank Configuration");
+		GenericLabel gl = new GenericLabel("Reserve Configuration");
 		gl.setScale(1.2F);
 		gl.setAnchor(WidgetAnchor.CENTER_CENTER);
 		gl.setHeight(15).setWidth(GenericLabel.getStringWidth(gl.getText()));
@@ -67,31 +73,41 @@ public class BankConfigGUI extends GenericPopup {
 		gg.shiftXPos(-45).shiftYPos(-55).setMaxWidth(130);
 		gg.setWidth(130).setHeight(1);
 
-		CheckBox multipleCheckbox = new ConfigMultipleCheckBox(sPlayer, plugin);
-		multipleCheckbox.setText("Allow Multiple Accounts");
-		multipleCheckbox.setAnchor(WidgetAnchor.CENTER_CENTER);
-		multipleCheckbox.setHeight(20).setWidth(19);
-		multipleCheckbox.shiftXPos(-45).shiftYPos(-42);
+		deathCheckBox = new ConfigMultipleCheckBox(sPlayer, plugin);
+		deathCheckBox.setText("Player Death Penalty");		
+		deathCheckBox.setEnabled(ReservePlugin.getConfiguration().shouldTaxDeath());
+		deathCheckBox.setAnchor(WidgetAnchor.CENTER_CENTER);
+		deathCheckBox.setHeight(20).setWidth(19);
+		deathCheckBox.shiftXPos(-45).shiftYPos(-42);
 
-		CheckBox shareCheckbox = new ConfigShareCheckBox(sPlayer, plugin);
-		shareCheckbox.setText("Allow Multiple Accounts");
-		shareCheckbox.setAnchor(WidgetAnchor.CENTER_CENTER);
-		shareCheckbox.setHeight(20).setWidth(19);
-		shareCheckbox.shiftXPos(-45).shiftYPos(-17);
+		gainInterest = new ConfigShareCheckBox(sPlayer, plugin);
+		gainInterest.setText("Account Gain Interest");
+		gainInterest.setEnabled(ReservePlugin.getConfiguration().shouldInterest());
+		gainInterest.setAnchor(WidgetAnchor.CENTER_CENTER);
+		gainInterest.setHeight(20).setWidth(19);
+		gainInterest.shiftXPos(-45).shiftYPos(-17);
 
-		GenericLabel an = new GenericLabel("Interest Calc: ");
+		GenericLabel an = new GenericLabel("Interest Time Interval: ");
 		an.setScale(1.0F);
 		an.setAnchor(WidgetAnchor.CENTER_CENTER);
 		an.setHeight(15).setWidth(GenericLabel.getStringWidth(an.getText()));
-		an.shiftXPos(-45).shiftYPos(16);
+		an.shiftXPos(-65).shiftYPos(16);
 
-		GenericTextField interestAmountField = new GenericTextField();
-		interestAmountField.setWidth(50).setHeight(16);
-		interestAmountField.setAnchor(WidgetAnchor.CENTER_CENTER);
-		interestAmountField.shiftXPos(30).shiftYPos(13);
-		interestAmountField.setText("0.00");
-		interestAmountField.setMaximumCharacters(5);
-		interestAmountField.setMaximumLines(1);
+		saveTime = new GenericTextField();
+		saveTime.setWidth(50).setHeight(16);
+		saveTime.setText(Double.toString(ReservePlugin.getConfiguration().getSaveInterval()));
+		saveTime.setAnchor(WidgetAnchor.CENTER_CENTER);
+		saveTime.shiftXPos(30).shiftYPos(13);		
+		saveTime.setMaximumCharacters(5);
+		saveTime.setMaximumLines(1);
+		
+		intTime = new GenericTextField();
+		intTime.setWidth(50).setHeight(16);
+		intTime.setText(Double.toString(ReservePlugin.getConfiguration().getInterestInterval()));
+		intTime.setAnchor(WidgetAnchor.CENTER_CENTER);
+		intTime.shiftXPos(30).shiftYPos(33);		
+		intTime.setMaximumCharacters(5);
+		intTime.setMaximumLines(1);
 
 		GenericButton depositButton = new CommandButton(this, 1, "Save");
 		GenericButton close = new CommandButton(this, 2, "Close");
@@ -102,7 +118,7 @@ public class BankConfigGUI extends GenericPopup {
 		depositButton.setHeight(16).setWidth(50).shiftXPos(30).shiftYPos(47);
 		close.setHeight(16).setWidth(40).shiftXPos(85).shiftYPos(47);
 
-		attachWidgets(plugin, border, gl, gg, shareCheckbox, multipleCheckbox, interestAmountField, an, depositButton, close);
+		attachWidgets(plugin, border, gl, gg, deathCheckBox, gainInterest, saveTime, intTime, an, depositButton, close);
 
 		sPlayer.getMainScreen().closePopup();
 		sPlayer.getMainScreen().attachPopupScreen(this);
@@ -110,18 +126,17 @@ public class BankConfigGUI extends GenericPopup {
 
 	public void onClickCommand(int commandGoal) {
 		switch (commandGoal) {
-			case 1:
+			case 1: //Create
 				sPlayer.getMainScreen().closePopup();
-				new AckGUI(plugin, sPlayer, selectedBank, "Bank Configuration Saved", "bankconfiggui");
+				new AckPopup(plugin, sPlayer, selectedBank, "Reserve Configuration Saved", "reserveconfiggui");
 				break;
 			case 2:
 				sPlayer.getMainScreen().closePopup();
-				new OptionsGUI(plugin, sPlayer);
+				new OptionsPopup(plugin, sPlayer);
 				break;
 		}
 	}
 
-	void onSelect(int i, String text) {
-		// set Current loaded econ
+	public void onSelect() {
 	}
 }

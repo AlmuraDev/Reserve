@@ -21,7 +21,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.almuradev.reserve.gui;
+package com.almuradev.reserve.gui.popup;
 
 import java.text.NumberFormat;
 import java.util.ArrayList;
@@ -32,6 +32,8 @@ import java.util.Locale;
 import com.almuradev.reserve.ReservePlugin;
 import com.almuradev.reserve.econ.Account;
 import com.almuradev.reserve.econ.Bank;
+import com.almuradev.reserve.gui.button.CommandButton;
+import com.almuradev.reserve.gui.combobox.AccountDeleteCombo;
 
 import org.getspout.spoutapi.gui.Color;
 import org.getspout.spoutapi.gui.ComboBox;
@@ -46,7 +48,7 @@ import org.getspout.spoutapi.player.SpoutPlayer;
 
 import org.bukkit.ChatColor;
 
-public class DeleteAccountGUI extends GenericPopup {
+public class DeleteAccountPopup extends GenericPopup {
 	private final ReservePlugin plugin;
 	private final SpoutPlayer sPlayer;
 	private final Bank selectedBank;
@@ -55,9 +57,9 @@ public class DeleteAccountGUI extends GenericPopup {
 	private final ComboBox box;
 	private static NumberFormat numForm;
 	private static Locale caLoc = new Locale("en", "US");
-	Color bottom = new Color(1.0F, 1.0F, 1.0F, 0.50F);
+	private final Color bottom = new Color(1.0F, 1.0F, 1.0F, 0.50F);
 
-	public DeleteAccountGUI(ReservePlugin plugin, SpoutPlayer sPlayer, Bank bank) {
+	public DeleteAccountPopup(ReservePlugin plugin, SpoutPlayer sPlayer, Bank bank) {
 		this.plugin = plugin;
 		this.sPlayer = sPlayer;
 		this.selectedBank = bank;
@@ -136,22 +138,22 @@ public class DeleteAccountGUI extends GenericPopup {
 		switch (commandGoal) {
 			case 1:
 				if (box.getSelectedItem() == null) {
-					new AckGUI(plugin, sPlayer, selectedBank, "Please specify account.", "deleteaccountgui");
+					new AckPopup(plugin, sPlayer, selectedBank, "Please specify account.", "deleteaccountgui");
 				} else {
 					Account myAccount = selectedBank.getAccount(box.getSelectedItem(), sPlayer.getName());
 					if (myAccount.getBalance() != 0) {
 						sPlayer.getMainScreen().closePopup();
-						new AckGUI(plugin, sPlayer, selectedBank, "Account balance is not zero.", "deleteaccountgui");
+						new AckPopup(plugin, sPlayer, selectedBank, "Account balance is not zero.", "deleteaccountgui");
 					} else {
 						selectedBank.removeAccount(box.getSelectedItem(), sPlayer.getName());
 						sPlayer.getMainScreen().closePopup();
-						new AckGUI(plugin, sPlayer, selectedBank, "Account Removed", "deleteaccountgui");
+						new AckPopup(plugin, sPlayer, selectedBank, "Account Removed", "deleteaccountgui");
 					}
 				}
 				break;
 			case 2:
 				sPlayer.getMainScreen().closePopup();
-				new BankMainGUI(plugin, sPlayer, selectedBank);
+				new BankPopup(plugin, sPlayer, selectedBank);
 				break;
 		}
 	}
@@ -177,7 +179,7 @@ public class DeleteAccountGUI extends GenericPopup {
 		}
 	}
 
-	void onSelect(int i, String text) {
+	public void onSelect() {
 		Account myAccount = selectedBank.getAccount(box.getSelectedItem(), sPlayer.getName());
 		double balance = 0;
 		if (box.getSelectedItem().equalsIgnoreCase("Bank Vault")) {

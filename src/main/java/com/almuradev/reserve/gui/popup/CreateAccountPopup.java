@@ -21,7 +21,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.almuradev.reserve.gui;
+package com.almuradev.reserve.gui.popup;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -31,6 +31,8 @@ import com.almuradev.reserve.ReservePlugin;
 import com.almuradev.reserve.econ.Account;
 import com.almuradev.reserve.econ.Bank;
 import com.almuradev.reserve.econ.type.AccountType;
+import com.almuradev.reserve.gui.button.CommandButton;
+import com.almuradev.reserve.gui.combobox.AccountTypesCombo;
 
 import org.getspout.spoutapi.gui.Color;
 import org.getspout.spoutapi.gui.GenericButton;
@@ -44,16 +46,16 @@ import org.getspout.spoutapi.gui.RenderPriority;
 import org.getspout.spoutapi.gui.WidgetAnchor;
 import org.getspout.spoutapi.player.SpoutPlayer;
 
-public class CreateAccountGUI extends GenericPopup {
+public class CreateAccountPopup extends GenericPopup {
 	private final ReservePlugin plugin;
 	private final SpoutPlayer sPlayer;
 	private Bank selectedBank;
 	private GenericButton createAccount;
 	private GenericComboBox box;
 	private GenericTextField accountNameField;
-	Color bottom = new Color(1.0F, 1.0F, 1.0F, 0.50F);
+	private final Color bottom = new Color(1.0F, 1.0F, 1.0F, 0.50F);
 
-	public CreateAccountGUI(ReservePlugin plugin, SpoutPlayer sPlayer, Bank bank) {
+	public CreateAccountPopup(ReservePlugin plugin, SpoutPlayer sPlayer, Bank bank) {
 		this.plugin = plugin;
 		this.sPlayer = sPlayer;
 		this.selectedBank = bank;
@@ -132,22 +134,22 @@ public class CreateAccountGUI extends GenericPopup {
 		switch (commandGoal) {
 			case 1:
 				if (accountNameField.getText().isEmpty()) {
-					new AckGUI(plugin, sPlayer, selectedBank, "Please specify name.", "createaccountgui");
+					new AckPopup(plugin, sPlayer, selectedBank, "Please specify name.", "createaccountgui");
 				} else {
 					if (selectedBank.getAccount(accountNameField.getText().trim(), sPlayer.getName()) != null) {
-						new AckGUI(plugin, sPlayer, selectedBank, "Account with that name already exists.", "createaccountgui");
+						new AckPopup(plugin, sPlayer, selectedBank, "Account with that name already exists.", "createaccountgui");
 					} else if (selectedBank.typeExistsFor(sPlayer.getName(), box.getSelectedItem())) {
-						new AckGUI(plugin, sPlayer, selectedBank, "You already have an account of that type.", "createaccountgui");
+						new AckPopup(plugin, sPlayer, selectedBank, "You already have an account of that type.", "createaccountgui");
 					} else {
 						selectedBank.addAccount(new Account(selectedBank.getType(box.getSelectedItem()), accountNameField.getText(), sPlayer.getName()));
 						sPlayer.getMainScreen().closePopup();
-						new AckGUI(plugin, sPlayer, selectedBank, "Account Created Successfully", "createaccountgui");
+						new AckPopup(plugin, sPlayer, selectedBank, "Account Created Successfully", "createaccountgui");
 					}
 				}
 				break;
 			case 2:
 				sPlayer.getMainScreen().closePopup();
-				new BankMainGUI(plugin, sPlayer, selectedBank);
+				new BankPopup(plugin, sPlayer, selectedBank);
 				break;
 		}
 	}
@@ -175,7 +177,7 @@ public class CreateAccountGUI extends GenericPopup {
 		}
 	}
 
-	void onSelect(int i, String text) {
+	public void onSelect() {
 		if (box.getSelectedItem() != null) {
 			AccountType selectedAccountType = selectedBank.getType(box.getSelectedItem());
 			if (selectedAccountType != null) {

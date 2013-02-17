@@ -17,26 +17,23 @@
  * You should have received a copy of the GNU General Public License. If not,
  * see <http://www.gnu.org/licenses/> for the GNU General Public License.
  */
-package com.almuradev.reserve.gui;
+package com.almuradev.reserve.gui.combobox;
 
-import org.getspout.spoutapi.event.screen.ButtonClickEvent;
-import org.getspout.spoutapi.gui.GenericCheckBox;
-import org.getspout.spoutapi.player.SpoutPlayer;
+import com.almuradev.reserve.gui.popup.WithdrawPopup;
 
-import org.bukkit.plugin.Plugin;
+import org.getspout.spoutapi.gui.GenericComboBox;
 
-public class ConfigMultipleCheckBox extends GenericCheckBox {
-	private Plugin plugin;
-	private SpoutPlayer sPlayer;
+public class AccountWithdrawCombo extends GenericComboBox {
+	private final WithdrawPopup parent;
 
-	public ConfigMultipleCheckBox(SpoutPlayer player, Plugin plugin) {
+	public AccountWithdrawCombo(WithdrawPopup parent) {
 		super();
-		setTooltip("Click this to enabled / disable Multiple Accounts");
-		this.plugin = plugin;
+		this.parent = parent;
 	}
 
 	@Override
-	public void onButtonClick(ButtonClickEvent event) {
-		setDirty(true);
+	public void onSelectionChanged(int i, String text) {
+		super.onSelectionChanged(i, text);
+		parent.onSelect();
 	}
 }

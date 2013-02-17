@@ -21,12 +21,11 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.almuradev.reserve.gui;
-
-import java.text.NumberFormat;
-import java.util.Locale;
+package com.almuradev.reserve.gui.popup;
 
 import com.almuradev.reserve.ReservePlugin;
+import com.almuradev.reserve.gui.applet.BankListApplet;
+import com.almuradev.reserve.gui.button.CommandButton;
 
 import org.getspout.spoutapi.gui.Color;
 import org.getspout.spoutapi.gui.GenericButton;
@@ -41,15 +40,13 @@ import org.getspout.spoutapi.player.SpoutPlayer;
 
 import org.bukkit.ChatColor;
 
-public class DeleteBankGUI extends GenericPopup {
+public class DeleteBankPopup extends GenericPopup {
 	private final ReservePlugin plugin;
 	private final SpoutPlayer sPlayer;
 	private ListWidget list;
-	private static NumberFormat numForm;
-	private static Locale caLoc = new Locale("en", "US");
-	Color bottom = new Color(1.0F, 1.0F, 1.0F, 0.50F);
+	private final Color bottom = new Color(1.0F, 1.0F, 1.0F, 0.50F);
 
-	public DeleteBankGUI(ReservePlugin plugin, SpoutPlayer sPlayer) {
+	public DeleteBankPopup(ReservePlugin plugin, SpoutPlayer sPlayer) {
 		this.plugin = plugin;
 		this.sPlayer = sPlayer;
 
@@ -108,16 +105,16 @@ public class DeleteBankGUI extends GenericPopup {
 		switch (commandGoal) {
 			case 1:
 				if (list.getSelectedItem() == null) {
-					new AckGUI(plugin, sPlayer, null, "Please Select Bank.", "deletebankgui");
+					new AckPopup(plugin, sPlayer, null, "Please Select Bank.", "deletebankgui");
 				} else {
 					String[] split = list.getSelectedItem().getTitle().split("\\/");
 					ReservePlugin.getReserve().remove(split[0].trim(), ChatColor.stripColor(split[1].trim()));
-					new AckGUI(plugin, sPlayer, null, "Bank Removed.", "deletebankgui");
+					new AckPopup(plugin, sPlayer, null, "Bank Removed.", "deletebankgui");
 				}
 				break;
 			case 2:
 				sPlayer.getMainScreen().closePopup();
-				new ReserveMainGUI(plugin, sPlayer);
+				new ReservePopup(plugin, sPlayer);
 				break;
 		}
 	}

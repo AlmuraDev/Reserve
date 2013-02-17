@@ -21,12 +21,13 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.almuradev.reserve.gui;
+package com.almuradev.reserve.gui.popup;
 
 import com.almuradev.reserve.ReservePlugin;
 import com.almuradev.reserve.econ.Account;
 import com.almuradev.reserve.econ.Bank;
 import com.almuradev.reserve.econ.type.AccountType;
+import com.almuradev.reserve.gui.button.CommandButton;
 
 import org.getspout.spoutapi.gui.Color;
 import org.getspout.spoutapi.gui.GenericButton;
@@ -39,13 +40,13 @@ import org.getspout.spoutapi.gui.RenderPriority;
 import org.getspout.spoutapi.gui.WidgetAnchor;
 import org.getspout.spoutapi.player.SpoutPlayer;
 
-public class CreateBankGUI extends GenericPopup {
+public class CreateBankPopup extends GenericPopup {
 	private final ReservePlugin plugin;
 	private final SpoutPlayer sPlayer;
 	private GenericTextField bankNameField;
-	Color bottom = new Color(1.0F, 1.0F, 1.0F, 0.50F);
+	private final Color bottom = new Color(1.0F, 1.0F, 1.0F, 0.50F);
 
-	public CreateBankGUI(ReservePlugin plugin, SpoutPlayer sPlayer) {
+	public CreateBankPopup(ReservePlugin plugin, SpoutPlayer sPlayer) {
 		this.plugin = plugin;
 		this.sPlayer = sPlayer;
 
@@ -107,10 +108,10 @@ public class CreateBankGUI extends GenericPopup {
 		switch (commandGoal) {
 			case 1:
 				if (bankNameField.getText().isEmpty()) {
-					new AckGUI(plugin, sPlayer, null, "Please specify name.", "createbankgui");
+					new AckPopup(plugin, sPlayer, null, "Please specify name.", "createbankgui");
 				} else {
 					if (ReservePlugin.getReserve().get(bankNameField.getText(), sPlayer.getWorld().getName()) != null) {
-						new AckGUI(plugin, sPlayer, null, "Bank name already exists.", "createbankgui");
+						new AckPopup(plugin, sPlayer, null, "Bank name already exists.", "createbankgui");
 					} else {
 						Bank selectedBank = ReservePlugin.getReserve().add(bankNameField.getText().trim(), sPlayer.getName(), sPlayer.getWorld().getName());
 						selectedBank.setBalance(Double.parseDouble("0.0"));
@@ -134,13 +135,13 @@ public class CreateBankGUI extends GenericPopup {
 						selectedBank.addAccount(new Account(selectedBank.getType("Vault"), "Bank Vault", sPlayer.getName()));
 
 						sPlayer.getMainScreen().closePopup();
-						new AckGUI(plugin, sPlayer, null, "Bank Created Successfully.", "createbankgui");
+						new AckPopup(plugin, sPlayer, null, "Bank Created Successfully.", "createbankgui");
 					}
 				}
 				break;
 			case 2:
 				sPlayer.getMainScreen().closePopup();
-				new ReserveMainGUI(plugin, sPlayer);
+				new ReservePopup(plugin, sPlayer);
 				break;
 		}
 	}

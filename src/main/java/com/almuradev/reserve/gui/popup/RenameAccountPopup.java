@@ -21,11 +21,12 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.almuradev.reserve.gui;
+package com.almuradev.reserve.gui.popup;
 
 import com.almuradev.reserve.ReservePlugin;
 import com.almuradev.reserve.econ.Account;
 import com.almuradev.reserve.econ.Bank;
+import com.almuradev.reserve.gui.button.CommandButton;
 
 import org.getspout.spoutapi.gui.Color;
 import org.getspout.spoutapi.gui.GenericButton;
@@ -38,15 +39,15 @@ import org.getspout.spoutapi.gui.RenderPriority;
 import org.getspout.spoutapi.gui.WidgetAnchor;
 import org.getspout.spoutapi.player.SpoutPlayer;
 
-public class RenameAccountGUI extends GenericPopup {
+public class RenameAccountPopup extends GenericPopup {
 	private final ReservePlugin plugin;
 	private final SpoutPlayer sPlayer;
 	private final Bank selectedBank;
 	private final Account myAccount;
 	private final GenericTextField accountNameField;
-	Color bottom = new Color(1.0F, 1.0F, 1.0F, 0.50F);
+	private final Color bottom = new Color(1.0F, 1.0F, 1.0F, 0.50F);
 
-	public RenameAccountGUI(ReservePlugin plugin, SpoutPlayer sPlayer, Bank bank, Account account) {
+	public RenameAccountPopup(ReservePlugin plugin, SpoutPlayer sPlayer, Bank bank, Account account) {
 		this.plugin = plugin;
 		this.sPlayer = sPlayer;
 		this.selectedBank = bank;
@@ -97,18 +98,18 @@ public class RenameAccountGUI extends GenericPopup {
 		switch (commandGoal) {
 			case 1:
 				sPlayer.getMainScreen().closePopup();
-				new ReserveMainGUI(plugin, sPlayer);
+				new ReservePopup(plugin, sPlayer);
 				break;
 			case 2:
 				if (accountNameField.getText().isEmpty()) {
-					new AckGUI(plugin, sPlayer, selectedBank, "Please specify a new name.", "renameaccountgui");
+					new AckPopup(plugin, sPlayer, selectedBank, "Please specify a new name.", "renameaccountgui");
 				} else if (accountNameField.getText().trim().equalsIgnoreCase("Bank Vault")) {
 					sPlayer.getMainScreen().closePopup();
-					new AckGUI(plugin, sPlayer, selectedBank, "You cannot rename Bank Vault.", "renameaccountgui");
+					new AckPopup(plugin, sPlayer, selectedBank, "You cannot rename Bank Vault.", "renameaccountgui");
 				} else {
 					myAccount.setName(accountNameField.getText().trim());
 					sPlayer.getMainScreen().closePopup();
-					new AckGUI(plugin, sPlayer, selectedBank, "Changes Saved.", "renameaccountgui");
+					new AckPopup(plugin, sPlayer, selectedBank, "Changes Saved.", "renameaccountgui");
 				}
 				break;
 		}

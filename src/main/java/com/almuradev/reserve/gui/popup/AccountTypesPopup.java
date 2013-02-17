@@ -21,17 +21,17 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.almuradev.reserve.gui;
+package com.almuradev.reserve.gui.popup;
 
-import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Locale;
 
 import com.almuradev.reserve.ReservePlugin;
 import com.almuradev.reserve.econ.Bank;
 import com.almuradev.reserve.econ.type.AccountType;
+import com.almuradev.reserve.gui.button.CommandButton;
+import com.almuradev.reserve.gui.combobox.AccountTypesEditCombo;
 
 import org.getspout.spoutapi.gui.Color;
 import org.getspout.spoutapi.gui.ComboBox;
@@ -46,7 +46,7 @@ import org.getspout.spoutapi.gui.RenderPriority;
 import org.getspout.spoutapi.gui.WidgetAnchor;
 import org.getspout.spoutapi.player.SpoutPlayer;
 
-public class AccountTypesGUI extends GenericPopup {
+public class AccountTypesPopup extends GenericPopup {
 	private final ReservePlugin plugin;
 	private final SpoutPlayer sPlayer;
 	private final Bank selectedBank;
@@ -54,12 +54,10 @@ public class AccountTypesGUI extends GenericPopup {
 	private final GenericTexture myImage;
 	private final ComboBox box;
 	private final GenericTextField accountTypeName, intCycleField, imageField;
-	private static NumberFormat numForm;
-	private static Locale caLoc = new Locale("en", "US");
 	private boolean shown, newType;
 	Color bottom = new Color(1.0F, 1.0F, 1.0F, 0.50F);
 
-	public AccountTypesGUI(ReservePlugin plugin, SpoutPlayer sPlayer, Bank bank) {
+	public AccountTypesPopup(ReservePlugin plugin, SpoutPlayer sPlayer, Bank bank) {
 		this.plugin = plugin;
 		this.sPlayer = sPlayer;
 		this.selectedBank = bank;
@@ -205,14 +203,14 @@ public class AccountTypesGUI extends GenericPopup {
 					selectedAccountType.setImagePath(imageField.getText().trim());
 					selectedAccountType.shouldReceiveInterest(intsetting.isChecked());
 					sPlayer.getMainScreen().closePopup();
-					new AckGUI(plugin, sPlayer, selectedBank, "Changes Saved.", "accounttypesgui");
+					new AckPopup(plugin, sPlayer, selectedBank, "Changes Saved.", "accounttypesgui");
 				} else if (selectedAccountType != null && newType) {
 					if (accountTypeName.getText().isEmpty()) {
 						newType = false;
-						new AckGUI(plugin, sPlayer, selectedBank, "Specify name.", "accounttypesgui");
+						new AckPopup(plugin, sPlayer, selectedBank, "Specify name.", "accounttypesgui");
 					} else if (selectedBank.getType(accountTypeName.getText().trim()) != null) {
 						newType = false;
-						new AckGUI(plugin, sPlayer, selectedBank, "That name already exists.", "accounttypesgui");
+						new AckPopup(plugin, sPlayer, selectedBank, "That name already exists.", "accounttypesgui");
 					} else {
 						AccountType newAccountType = selectedBank.addType(new AccountType(accountTypeName.getText()));
 						newAccountType.setInterestRate(Double.parseDouble((intCycleField.getText().trim())));
@@ -220,7 +218,7 @@ public class AccountTypesGUI extends GenericPopup {
 						newAccountType.shouldReceiveInterest(intsetting.isChecked());
 						newType = false;
 						sPlayer.getMainScreen().closePopup();
-						new AckGUI(plugin, sPlayer, selectedBank, "Account Type Added.", "accounttypesgui");
+						new AckPopup(plugin, sPlayer, selectedBank, "Account Type Added.", "accounttypesgui");
 					}
 				}
 
@@ -243,7 +241,7 @@ public class AccountTypesGUI extends GenericPopup {
 				break;
 			case 4:
 				sPlayer.getMainScreen().closePopup();
-				new ReserveMainGUI(plugin, sPlayer);
+				new ReservePopup(plugin, sPlayer);
 				break;
 		}
 	}
@@ -265,7 +263,7 @@ public class AccountTypesGUI extends GenericPopup {
 		}
 	}
 
-	void onSelect(int i, String text) {
+	public void onSelect() {
 		if (box.getSelectedItem() != null && shown) {
 			AccountType selectedAccountType = selectedBank.getType(box.getSelectedItem());
 			if (selectedAccountType != null) {

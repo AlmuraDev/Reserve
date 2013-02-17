@@ -21,7 +21,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.almuradev.reserve.gui;
+package com.almuradev.reserve.gui.popup;
 
 import java.text.NumberFormat;
 import java.util.Locale;
@@ -29,6 +29,8 @@ import java.util.Locale;
 import com.almuradev.reserve.ReservePlugin;
 import com.almuradev.reserve.econ.Account;
 import com.almuradev.reserve.econ.Bank;
+import com.almuradev.reserve.gui.applet.AccountListApplet;
+import com.almuradev.reserve.gui.button.CommandButton;
 
 import org.getspout.spoutapi.gui.Color;
 import org.getspout.spoutapi.gui.GenericButton;
@@ -44,7 +46,7 @@ import org.getspout.spoutapi.player.SpoutPlayer;
 
 import org.bukkit.ChatColor;
 
-public class BankMainGUI extends GenericPopup {
+public class BankPopup extends GenericPopup {
 	private final ReservePlugin plugin;
 	private final SpoutPlayer sPlayer;
 	private final Bank selectedBank;
@@ -52,9 +54,9 @@ public class BankMainGUI extends GenericPopup {
 	private ListWidget list;
 	private static NumberFormat numForm;
 	private static Locale caLoc = new Locale("en", "US");
-	Color bottom = new Color(1.0F, 1.0F, 1.0F, 0.50F);
+	private final Color bottom = new Color(1.0F, 1.0F, 1.0F, 0.50F);
 
-	public BankMainGUI(ReservePlugin plugin, SpoutPlayer sPlayer, Bank bank) {
+	public BankPopup(ReservePlugin plugin, SpoutPlayer sPlayer, Bank bank) {
 		this.plugin = plugin;
 		this.sPlayer = sPlayer;
 		this.selectedBank = bank;
@@ -152,43 +154,43 @@ public class BankMainGUI extends GenericPopup {
 		switch (commandGoal) {
 			case 1:
 				sPlayer.getMainScreen().closePopup();
-				new CreateAccountGUI(plugin, sPlayer, selectedBank);
+				new CreateAccountPopup(plugin, sPlayer, selectedBank);
 				break;
 			case 2:
 				sPlayer.getMainScreen().closePopup();
 				if (list.getSelectedItem() == null) {
-					new DepositGUI(plugin, sPlayer, selectedBank, selectedAccount);
+					new DepositPopup(plugin, sPlayer, selectedBank, selectedAccount);
 				} else {
 					String[] split = list.getSelectedItem().getTitle().split("\\/");
 					Account myAccount = selectedBank.getAccount(split[0].trim(), sPlayer.getName());
-					new DepositGUI(plugin, sPlayer, selectedBank, myAccount);
+					new DepositPopup(plugin, sPlayer, selectedBank, myAccount);
 				}
 				break;
 			case 3:
 				sPlayer.getMainScreen().closePopup();
 				if (list.getSelectedItem() == null) {
-					new WithdrawGUI(plugin, sPlayer, selectedBank, selectedAccount);
+					new WithdrawPopup(plugin, sPlayer, selectedBank, selectedAccount);
 				} else {
 					String[] split = list.getSelectedItem().getTitle().split("\\/");
 					Account myAccount = selectedBank.getAccount(split[0].trim(), sPlayer.getName());
-					new WithdrawGUI(plugin, sPlayer, selectedBank, myAccount);
+					new WithdrawPopup(plugin, sPlayer, selectedBank, myAccount);
 				}
 				break;
 			case 4:
 				sPlayer.getMainScreen().closePopup();
-				new DeleteAccountGUI(plugin, sPlayer, selectedBank);
+				new DeleteAccountPopup(plugin, sPlayer, selectedBank);
 				break;
 			case 5:
 				sPlayer.getMainScreen().closePopup();
 				if (list.getSelectedItem() == null) {
-					new WithdrawGUI(plugin, sPlayer, selectedBank, selectedAccount);
+					new WithdrawPopup(plugin, sPlayer, selectedBank, selectedAccount);
 				} else {
 					String[] split = list.getSelectedItem().getTitle().split("\\/");
 					Account myAccount = selectedBank.getAccount(split[0].trim(), sPlayer.getName());
 					if (myAccount.getName().equalsIgnoreCase("Bank Vault")) {
-						new AckGUI(plugin, sPlayer, selectedBank, "You cannot rename Bank Vault.", "bankmaingui");
+						new AckPopup(plugin, sPlayer, selectedBank, "You cannot rename Bank Vault.", "bankmaingui");
 					} else {
-						new RenameAccountGUI(plugin, sPlayer, selectedBank, myAccount);
+						new RenameAccountPopup(plugin, sPlayer, selectedBank, myAccount);
 					}
 				}
 			case 6:
