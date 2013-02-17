@@ -142,6 +142,9 @@ public class AckGUI extends GenericPopup {
 				} else if (ackMessage.equalsIgnoreCase("Please Select Bank.") && previousWindow.equalsIgnoreCase("deletebankgui")) {
 					sPlayer.getMainScreen().closePopup();
 					new DeleteBankGUI(plugin, sPlayer);
+				} else if (ackMessage.equalsIgnoreCase("Changes Saved.") && previousWindow.equalsIgnoreCase("accounttypesgui")) {
+					sPlayer.getMainScreen().closePopup();
+					new BankStatusGUI(plugin, sPlayer, selectedBank);
 				} else {
 					sPlayer.getMainScreen().closePopup();
 					new BankMainGUI(plugin, sPlayer, selectedBank);

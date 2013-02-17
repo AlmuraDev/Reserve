@@ -110,6 +110,13 @@ public class ReserveMainGUI extends GenericPopup {
 		accountTypes.setHeight(16).setWidth(120).shiftXPos(-60).shiftYPos(60);
 		options.setHeight(16).setWidth(50).shiftXPos(-110).shiftYPos(95);
 		close.setHeight(16).setWidth(40).shiftXPos(70).shiftYPos(95);
+		
+		createNewBank.setTooltip("Creates New Bank in your current world.");
+		renameBank.setTooltip("Renames the specified bank.");
+		deleteBank.setTooltip("Deletes the specified bank and all accounts.");
+		options.setTooltip("Displays Configuration options for Reserve.");
+		openBank.setTooltip("Opens and Accesses selected bank.");
+		bankStatus.setTooltip("Displays selected bank status.");
 
 		createNewBank.setEnabled(sPlayer.hasPermission("reserve.addbank"));
 		renameBank.setEnabled(sPlayer.hasPermission("reserve.addbank"));

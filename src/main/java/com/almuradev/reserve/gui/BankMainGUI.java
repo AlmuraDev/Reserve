@@ -101,7 +101,7 @@ public class BankMainGUI extends GenericPopup {
 		numForm = NumberFormat.getCurrencyInstance(caLoc);
 		bankNameLabel.setScale(1.0F);
 		bankNameLabel.setAnchor(WidgetAnchor.CENTER_CENTER);
-		bankNameLabel.setText("Total Balance: " + ChatColor.GOLD + numForm.format(selectedBank.getTotalBalanceFor(sPlayer.getName())));
+		bankNameLabel.setText("Total Balance: " + ChatColor.GOLD + numForm.format(selectedBank.getAccountsBalanceFor(sPlayer.getName())));
 		bankNameLabel.setHeight(15).setWidth(GenericLabel.getStringWidth(bankNameLabel.getText()));
 		bankNameLabel.shiftXPos((GenericLabel.getStringWidth(bankNameLabel.getText()) / 2) * -1).shiftYPos(-79);
 
@@ -110,13 +110,21 @@ public class BankMainGUI extends GenericPopup {
 		GenericButton makeWithdraw = new CommandButton(this, 3, "Make Withdraw");
 		GenericButton closeAccount = new CommandButton(this, 4, "Close Account");
 		GenericButton options = new CommandButton(this, 5, "Options");
+		GenericButton faq = new CommandButton(this, 5, "?");
 		GenericButton close = new CommandButton(this, 6, "Close");
 
+		createAccount.setTooltip("Creates a New Bank Accounts");
+		makeDeposit.setTooltip("Takes money you are carrying and deposits into specified account.");
+		makeWithdraw.setTooltip("Removed money from your specified account.");
+		closeAccount.setTooltip("Closes & Deletes the specified bank account.");
+		faq.setTooltip("Frequently Asked Questions Here");
+		
 		createAccount.setAnchor(WidgetAnchor.CENTER_CENTER);
 		makeDeposit.setAnchor(WidgetAnchor.CENTER_CENTER);
 		makeWithdraw.setAnchor(WidgetAnchor.CENTER_CENTER);
 		closeAccount.setAnchor(WidgetAnchor.CENTER_CENTER);
 		options.setAnchor(WidgetAnchor.CENTER_CENTER);
+		faq.setAnchor(WidgetAnchor.CENTER_CENTER);
 		close.setAnchor(WidgetAnchor.CENTER_CENTER);
 
 		createAccount.setHeight(16).setWidth(120).shiftXPos(-60).shiftYPos(15);
@@ -124,6 +132,7 @@ public class BankMainGUI extends GenericPopup {
 		makeWithdraw.setHeight(16).setWidth(120).shiftXPos(-60).shiftYPos(55);
 		closeAccount.setHeight(16).setWidth(120).shiftXPos(-60).shiftYPos(75);
 		options.setHeight(16).setWidth(50).shiftXPos(-110).shiftYPos(95);
+		faq.setHeight(16).setWidth(20).shiftXPos(-10).shiftYPos(95);
 		close.setHeight(16).setWidth(40).shiftXPos(70).shiftYPos(95);
 
 		createAccount.setEnabled(sPlayer.hasPermission("reserve.accountadd"));
@@ -132,7 +141,7 @@ public class BankMainGUI extends GenericPopup {
 		closeAccount.setEnabled(sPlayer.hasPermission("reserve.accountremove") && (selectedBank.getAmountOfAccountsFor(sPlayer.getName()) > 0));
 		options.setEnabled(sPlayer.hasPermission("reserve.admin"));
 
-		attachWidgets(plugin, border, gl, bankNameLabel, gg, gb, createAccount, list, bankAccountsLabel, makeDeposit, makeWithdraw, closeAccount, options, close);
+		attachWidgets(plugin, border, gl, bankNameLabel, gg, gb, createAccount, list, bankAccountsLabel, makeDeposit, makeWithdraw, closeAccount, faq, options, close);
 
 		sPlayer.getMainScreen().closePopup();
 		sPlayer.getMainScreen().attachPopupScreen(this);

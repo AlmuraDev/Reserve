@@ -20,10 +20,11 @@
 package com.almuradev.reserve.econ.type;
 
 public class AccountType {
-	private String name;
+	private String name, imagePath;
 	private boolean hasInterest = false;
 	private double interestRate = 0.0;
 	private boolean dirty = false;
+	
 
 	public AccountType(String name) {
 		this.name = name;
@@ -50,10 +51,28 @@ public class AccountType {
 	}
 
 	/**
+	 * Gets the path to image file.
+	 * @return The name
+	 */
+	public String getImagePath() {
+		return imagePath;
+	}
+	
+	/**
+	 * Sets the image path of this account type.
+	 * @param image path The new image path
+	 * @return This account type
+	 */
+	public AccountType setImagePath(String path) {
+		this.imagePath = path;		
+		return this;
+	}
+	
+	/**
 	 * Returns whether this account type applies interest or not.
 	 * @return True if it applies interest, false if not
 	 */
-	public boolean recievesInterest() {
+	public boolean receivesInterest() {
 		return hasInterest;
 	}
 
@@ -112,7 +131,7 @@ public class AccountType {
 		}
 
 		final AccountType type = (AccountType) other;
-		return type.getName().equalsIgnoreCase(name) && type.recievesInterest() == hasInterest && type.getInterestRate() == interestRate;
+		return type.getName().equalsIgnoreCase(name) && type.receivesInterest() == hasInterest && type.getInterestRate() == interestRate && type.getImagePath() == imagePath;
 	}
 
 	@Override

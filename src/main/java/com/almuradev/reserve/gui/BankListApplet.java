@@ -41,7 +41,8 @@ public class BankListApplet extends GenericListWidget {
 		numForm = NumberFormat.getCurrencyInstance(caLoc);
 		for (String world : allBanks.keySet()) {
 			for (Bank bank : allBanks.get(world)) {
-				this.addItem(new ListWidgetItem(bank.getName() + " / " + ChatColor.AQUA + world, ChatColor.GOLD + numForm.format(bank.getTotalBalance())));
+				this.addItem(new ListWidgetItem(bank.getName() + " / " + ChatColor.AQUA + world, ChatColor.GOLD + numForm.format(bank.getAccountsBalance()), "http://www.almuramc.com/images/AlmuraLogo.png"));
+			
 			}
 		}
 	}

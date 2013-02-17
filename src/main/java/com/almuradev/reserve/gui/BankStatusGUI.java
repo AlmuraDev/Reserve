@@ -101,7 +101,7 @@ public class BankStatusGUI extends GenericPopup {
 		numForm = NumberFormat.getCurrencyInstance(caLoc);
 		bankNameLabel.setScale(1.0F);
 		bankNameLabel.setAnchor(WidgetAnchor.CENTER_CENTER);
-		bankNameLabel.setText("Total Balance: " + ChatColor.GOLD + numForm.format(selectedBank.getTotalBalance()));
+		bankNameLabel.setText("Total Balance: " + ChatColor.GOLD + numForm.format(selectedBank.getAccountsBalance()));
 		bankNameLabel.setHeight(15).setWidth(GenericLabel.getStringWidth(bankNameLabel.getText()));
 		bankNameLabel.shiftXPos((GenericLabel.getStringWidth(bankNameLabel.getText()) / 2) * -1).shiftYPos(-79);
 

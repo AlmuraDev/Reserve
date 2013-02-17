@@ -43,7 +43,7 @@ public class InterestTask implements Runnable {
 			for (Bank bank : BANKS.get(world)) {
 				for (Account account : bank.retrieveAccounts()) {
 					//I = P r t
-					if (account.getType().recievesInterest()) {
+					if (account.getType().receivesInterest()) {
 						final double interest = account.getBalance() * account.getType().getInterestRate() * (1 / 365);
 						account.add(interest);
 					}
