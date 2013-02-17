@@ -60,38 +60,38 @@ public class CreateAccountGUI extends GenericPopup {
 		GenericTexture border = new GenericTexture("http://www.almuramc.com/images/playerplus.png");
 		border.setAnchor(WidgetAnchor.CENTER_CENTER);
 		border.setPriority(RenderPriority.High);
-		border.setWidth(225).setHeight(160);
-		border.shiftXPos(-105).shiftYPos(-80);
+		border.setWidth(225).setHeight(140);
+		border.shiftXPos(0-(border.getWidth()/2)).shiftYPos(-80);
 
 		GenericLabel gl = new GenericLabel();
 		gl.setScale(1.4F).setText(selectedBank.getName());
 		gl.setAnchor(WidgetAnchor.CENTER_CENTER);
 		gl.setHeight(15).setWidth(GenericLabel.getStringWidth(gl.getText(), gl.getScale()));
-		gl.shiftXPos((GenericLabel.getStringWidth(gl.getText(), gl.getScale()) / 2) * -1).shiftYPos(-70);
+		gl.shiftXPos(0-(GenericLabel.getStringWidth(gl.getText(), gl.getScale()) / 2)).shiftYPos(-70);
 
 		GenericGradient gg = new GenericGradient();
 		gg.setBottomColor(bottom).setTopColor(bottom);
 		gg.setAnchor(WidgetAnchor.CENTER_CENTER);
 		gg.setWidth(200).setHeight(1);
-		gg.shiftXPos(-100).shiftYPos(-55);
+		gg.shiftXPos(0-(gg.getWidth()/2)).shiftYPos(-55);
 
 		GenericLabel cl = new GenericLabel("-- Create Account --");
 		cl.setScale(1.0F);
 		cl.setAnchor(WidgetAnchor.CENTER_CENTER);
 		cl.setHeight(15).setWidth(GenericLabel.getStringWidth(cl.getText()));
-		cl.shiftXPos(-45).shiftYPos(-47);
+		cl.shiftXPos(0-(cl.getWidth()/2)).shiftYPos(-47);
 
-		GenericLabel an = new GenericLabel("Account Name: ");
+		GenericLabel an = new GenericLabel("Name: ");
 		an.setScale(1.0F);
 		an.setAnchor(WidgetAnchor.CENTER_CENTER);
 		an.setHeight(15).setWidth(GenericLabel.getStringWidth(an.getText()));
 		an.shiftXPos(-90).shiftYPos(-25);
 
 		accountNameField = new GenericTextField();
-		accountNameField.setWidth(110).setHeight(16);
+		accountNameField.setWidth(150).setHeight(16);
 		accountNameField.setAnchor(WidgetAnchor.CENTER_CENTER);
-		accountNameField.shiftXPos(-10).shiftYPos(-28);
-		accountNameField.setMaximumCharacters(30);
+		accountNameField.shiftXPos(-50).shiftYPos(-28);
+		accountNameField.setMaximumCharacters(22);
 		accountNameField.setMaximumLines(1);
 
 		box = new AccountTypesCombo(this);
@@ -99,7 +99,7 @@ public class CreateAccountGUI extends GenericPopup {
 		box.setAnchor(WidgetAnchor.CENTER_CENTER);
 		box.setWidth(GenericLabel.getStringWidth("12345678901234567890123459"));
 		box.setHeight(18);
-		box.shiftXPos(0-(box.getWidth()/2)).shiftYPos(-10);
+		box.shiftXPos(0-(box.getWidth()/2)).shiftYPos(0);
 		box.setAuto(true);
 		box.setPriority(RenderPriority.Low);
 		populateList();		
@@ -110,7 +110,12 @@ public class CreateAccountGUI extends GenericPopup {
 
 		createAccount.setAnchor(WidgetAnchor.CENTER_CENTER);
 		close.setAnchor(WidgetAnchor.CENTER_CENTER);
-
+		
+		if (box.getSelectedItem() == null) {
+			createAccount.setEnabled(false);
+			createAccount.setTooltip("No Account Types Exist!");
+		}
+		
 		createAccount.setHeight(16).setWidth(50).shiftXPos(7).shiftYPos(40);
 		close.setHeight(16).setWidth(40).shiftXPos(62).shiftYPos(40);
 

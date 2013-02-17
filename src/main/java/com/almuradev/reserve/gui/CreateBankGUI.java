@@ -53,34 +53,34 @@ public class CreateBankGUI extends GenericPopup {
 		border.shiftXPos(-105).shiftYPos(-80);
 
 		GenericLabel gl = new GenericLabel();
-		gl.setScale(1.4F).setText("Create Account");
+		gl.setScale(1.4F).setText("Reserve");
 		gl.setAnchor(WidgetAnchor.CENTER_CENTER);
-		gl.setHeight(15).setWidth(GenericLabel.getStringWidth(gl.getText()));
-		gl.shiftXPos(0).shiftYPos(-70);
+		gl.setHeight(15).setWidth(GenericLabel.getStringWidth(gl.getText(), gl.getScale()));
+		gl.shiftXPos((GenericLabel.getStringWidth(gl.getText(), gl.getScale()) / 2) * -1).shiftYPos(-70);
 
 		GenericGradient gg = new GenericGradient();
 		gg.setBottomColor(bottom).setTopColor(bottom);
-		gg.setAnchor(WidgetAnchor.CENTER_CENTER);
-		gg.shiftXPos(-55).shiftYPos(-55).setMaxWidth(130);
+		gg.setAnchor(WidgetAnchor.CENTER_CENTER);		
 		gg.setWidth(130).setHeight(1);
+		gg.shiftXPos(0-(gg.getWidth()/2)).shiftYPos(-55).setMaxWidth(130);
 
 		GenericLabel cl = new GenericLabel("-- Create New Bank --");
 		cl.setScale(1.0F);
 		cl.setAnchor(WidgetAnchor.CENTER_CENTER);
 		cl.setHeight(15).setWidth(GenericLabel.getStringWidth(cl.getText()));
-		cl.shiftXPos(-45).shiftYPos(-47);
+		cl.shiftXPos(0-(cl.getWidth()/2)).shiftYPos(-47);
 
-		GenericLabel an = new GenericLabel("Bank Name: ");
+		GenericLabel an = new GenericLabel("Name: ");
 		an.setScale(1.0F);
 		an.setAnchor(WidgetAnchor.CENTER_CENTER);
 		an.setHeight(15).setWidth(GenericLabel.getStringWidth(an.getText()));
 		an.shiftXPos(-90).shiftYPos(-25);
 
 		bankNameField = new GenericTextField();
-		bankNameField.setWidth(110).setHeight(16);
+		bankNameField.setWidth(150).setHeight(16);
 		bankNameField.setAnchor(WidgetAnchor.CENTER_CENTER);
-		bankNameField.shiftXPos(-10).shiftYPos(-28);
-		bankNameField.setMaximumCharacters(30);
+		bankNameField.shiftXPos(-50).shiftYPos(-28);
+		bankNameField.setMaximumCharacters(50);
 		bankNameField.setMaximumLines(1);
 
 		GenericButton createAccount = new CommandButton(this, 1, "Create");
@@ -108,6 +108,7 @@ public class CreateBankGUI extends GenericPopup {
 						new AckGUI(plugin, sPlayer, null, "Bank name already exists.", "createbankgui");
 					} else {
 						ReservePlugin.getReserve().add(bankNameField.getText(), sPlayer.getName(), sPlayer.getWorld().getName());
+						
 						sPlayer.getMainScreen().closePopup();
 						new AckGUI(plugin, sPlayer, null, "Bank Created Successfully.", "createbankgui");
 					}

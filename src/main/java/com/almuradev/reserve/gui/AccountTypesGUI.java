@@ -94,7 +94,7 @@ public class AccountTypesGUI extends GenericPopup {
 		gb.shiftXPos(0-(gb.getWidth()/2)).shiftYPos(-65);
 
 		box = new AccountTypesEditCombo(this);
-		box.setText("Accounts");
+		box.setText("Types");
 		box.setAnchor(WidgetAnchor.CENTER_CENTER);
 		box.setWidth(GenericLabel.getStringWidth("12345678901234567890123459"));
 		box.setHeight(18);
@@ -103,7 +103,7 @@ public class AccountTypesGUI extends GenericPopup {
 		box.setPriority(RenderPriority.Low);
 		populateList();		
 		box.setSelection(0);
-		AccountType selectedAccountType = selectedBank.getType(box.getSelectedItem());
+		AccountType selectedAccountType = selectedBank.getType(box.getSelectedItem());		
 		
 		GenericLabel nameLabel = new GenericLabel();
 		nameLabel.setScale(1.0F).setText("Type Name:");		
