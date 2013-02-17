@@ -38,6 +38,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -97,7 +98,7 @@ public class ReservePlugin extends JavaPlugin implements Listener {
 		final double deathTax = config.getDeathTax();
 		final double carrying = VaultUtil.getBalance(died.getName());
 		final double taxed = carrying - (carrying * deathTax);
-		VaultUtil.add(died.getName(), -(taxed));
+		VaultUtil.add(died.getName(), -taxed);
 		died.sendMessage(getPrefix() + "You lost: " + taxed + "!");
 		if (died.hasPermission("reserve.tax.death.broadcast")) {
 			for (Player player : Bukkit.getOnlinePlayers()) {
@@ -111,38 +112,23 @@ public class ReservePlugin extends JavaPlugin implements Listener {
 
 	@EventHandler
 	public void onPlayerInteract(PlayerInteractEvent event) {
+		if (event.isCancelled() || !event.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
+			return;
+		}
 		final Block interacted = event.getClickedBlock();
 		final SpoutPlayer sPlayer = (SpoutPlayer) event.getPlayer();
 		
-		if (!(interacted.getState() instanceof Sign)) {
+		if (interacted.getState() == null || !(interacted.getState() instanceof Sign)) {
 			return;
 		}
+		event.setCancelled(true); //Don't want to place the block
 		final Sign sign = (Sign) interacted.getState();
 		//Not a reserve sign
-		if (!sign.getLine(0).trim().toLowerCase().contains("[reserve]")) {
+		if (!ChatColor.stripColor(sign.getLine(0).trim().toLowerCase()).contains("[reserve]")) {
 			return;
 		}
 		//At this point [Mybank]...or should be
-		final String bankNameRaw = sign.getLine(1).trim().toLowerCase();
-		//Doesn't start with [ so abort
-		if (!bankNameRaw.startsWith("[")) {
-			return;
-		}
-		//At this point Array is {"[", "MyBank]"}
-		String[] splitLeft = bankNameRaw.split("[");
-		if (splitLeft.length != 2) {
-			return;
-		}
-		//Doesn't end with ] so abort.
-		if (!splitLeft[1].endsWith("]")) {
-			return;
-		}
-		//At this point Array is {"MyBank", "]"}
-		String[] splitRight = splitLeft[1].split("]");
-		if (splitRight.length != 2) {
-			return;
-		}
-		final String bankName = splitRight[0];
+		final String bankName = ChatColor.stripColor(sign.getLine(1).trim().toLowerCase());
 		new BankPopup(this, sPlayer, ReservePlugin.getReserve().get(bankName.trim(), sPlayer.getWorld().getName()));
 	}
 
