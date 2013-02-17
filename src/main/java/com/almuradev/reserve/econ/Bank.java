@@ -228,7 +228,7 @@ public class Bank {
 		final AccountType toFind = getType(type);
 		if (toFind != null) {
 			for (Account account : getAccountsFor(holder)) {
-				if (account.getType().equals(type)) {
+				if (account.getType().equals(toFind)) {
 					has = true;
 					break;
 				}
