@@ -218,6 +218,26 @@ public class Bank {
 	}
 
 	/**
+	 * Returns if the holder has at least one account for the type specified.
+	 * @param holder The holder
+	 * @param type The type
+	 * @return True if the holder has at least one account with the type specified, false if not.
+	 */
+	public boolean typeExistsFor(String holder, String type) {
+		boolean has = false;
+		final AccountType toFind = getType(type);
+		if (toFind != null) {
+			for (Account account : getAccountsFor(holder)) {
+				if (account.getType().equals(type)) {
+					has = true;
+					break;
+				}
+			}
+		}
+		return has;
+	}
+
+	/**
 	 * Retrieves all accounts in this bank.
 	 * @return List of accounts
 	 */
