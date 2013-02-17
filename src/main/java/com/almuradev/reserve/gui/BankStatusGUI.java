@@ -87,7 +87,7 @@ public class BankStatusGUI extends GenericPopup {
 		list = new MasterAccountListApplet(selectedBank, sPlayer);
 		list.setAnchor(WidgetAnchor.CENTER_CENTER);
 		list.shiftXPos(-100).shiftYPos(-60);
-		list.setWidth(200).setHeight(70);
+		list.setWidth(200).setHeight(140);
 		list.setPriority(RenderPriority.Lowest);
 
 		GenericLabel bankAccountsLabel = new GenericLabel();
@@ -105,23 +105,16 @@ public class BankStatusGUI extends GenericPopup {
 		bankNameLabel.setHeight(15).setWidth(GenericLabel.getStringWidth(bankNameLabel.getText()));
 		bankNameLabel.shiftXPos((GenericLabel.getStringWidth(bankNameLabel.getText()) / 2) * -1).shiftYPos(-79);
 
-		GenericButton accountTypes = new CommandButton(this, 1, "Account Types");
-		
-		
-		
-		
-		GenericButton close = new CommandButton(this, 6, "Close");
+		GenericButton accountTypes = new CommandButton(this, 1, "Account Types");		
+		GenericButton close = new CommandButton(this, 2, "Close");
 
-		accountTypes.setAnchor(WidgetAnchor.CENTER_CENTER);
-		
+		accountTypes.setAnchor(WidgetAnchor.CENTER_CENTER);		
 		close.setAnchor(WidgetAnchor.CENTER_CENTER);
 
-		accountTypes.setHeight(16).setWidth(120).shiftXPos(-60).shiftYPos(15);
-		
+		accountTypes.setHeight(16).setWidth(120).shiftXPos(-80).shiftYPos(95);		
 		close.setHeight(16).setWidth(40).shiftXPos(70).shiftYPos(95);
 
-		accountTypes.setEnabled(sPlayer.hasPermission("reserve.admin"));
-		
+		accountTypes.setEnabled(sPlayer.hasPermission("reserve.admin"));		
 		attachWidgets(plugin, border, gl, bankNameLabel, gg, gb, accountTypes, list, bankAccountsLabel, close);
 
 		sPlayer.getMainScreen().closePopup();
@@ -133,20 +126,8 @@ public class BankStatusGUI extends GenericPopup {
 			case 1:
 				sPlayer.getMainScreen().closePopup();
 				new AccountTypesGUI(plugin, sPlayer, selectedBank);
-				break;
+				break;		
 			case 2:
-
-				break;
-			case 3:
-
-				break;
-			case 4:
-
-				break;
-			case 5:
-
-				break;
-			case 6:
 				sPlayer.getMainScreen().closePopup();
 				new ReserveMainGUI(plugin, sPlayer);
 				break;

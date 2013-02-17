@@ -122,27 +122,25 @@ public class CreateAccountGUI extends GenericPopup {
 
 	public void onClickCommand(int commandGoal) {
 		switch (commandGoal) {
-			case 1: //Create
-				if (accountNameField.getText().isEmpty()) {
-					new AckGUI(plugin, sPlayer, selectedBank, "Please specify name.", "createaccountgui");
+		case 1: 
+			if (accountNameField.getText().isEmpty()) {
+				new AckGUI(plugin, sPlayer, selectedBank, "Please specify name.", "createaccountgui");
+			} else {
+				if (selectedBank.getAccount(accountNameField.getText(), sPlayer.getName()) != null) {
+					new AckGUI(plugin, sPlayer, selectedBank, "Account with that name already exists.", "createaccountgui");
+				} else if (selectedBank.typeExistsFor(sPlayer.getName(), box.getSelectedItem())) {
+					new AckGUI(plugin, sPlayer, selectedBank, "You already have an account of that type.", "createaccountgui");
 				} else {
-					if (selectedBank.getAccount(accountNameField.getText(), sPlayer.getName()) != null) {
-						new AckGUI(plugin, sPlayer, selectedBank, "Account already exists.", "createaccountgui");
-					} else {
-						//TODO TESTING CODE - REMOVE DOCKTER
-						//selectedBank.addType(new AccountType("checking"));
-						//TODO NEED PROPER GUI
-						selectedBank.addAccount(new Account(selectedBank.getType(box.getSelectedItem()), accountNameField.getText(), sPlayer.getName()));
-						//TODO END OF TESTING CODE
-						sPlayer.getMainScreen().closePopup();
-						new AckGUI(plugin, sPlayer, selectedBank, "Account Created Successfully", "createaccountgui");
-					}
-				}
-				break;
-			case 2:
-				sPlayer.getMainScreen().closePopup();
-				new BankMainGUI(plugin, sPlayer, selectedBank);
-				break;
+					selectedBank.addAccount(new Account(selectedBank.getType(box.getSelectedItem()), accountNameField.getText(), sPlayer.getName()));
+					sPlayer.getMainScreen().closePopup();
+					new AckGUI(plugin, sPlayer, selectedBank, "Account Created Successfully", "createaccountgui");
+				}					
+			}
+			break;
+		case 2:
+			sPlayer.getMainScreen().closePopup();
+			new BankMainGUI(plugin, sPlayer, selectedBank);
+			break;
 		}
 	}
 	

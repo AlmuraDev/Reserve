@@ -61,7 +61,7 @@ public class AccountTypesGUI extends GenericPopup {
 	private final GenericTextField accountTypeName, intCycleField, imageField;
 	private static NumberFormat numForm;
 	private static Locale caLoc = new Locale("en", "US");
-	private boolean shown = false;
+	private boolean shown, newType;
 	Color bottom = new Color(1.0F, 1.0F, 1.0F, 0.50F);	
 
 	public AccountTypesGUI(ReservePlugin plugin, SpoutPlayer sPlayer, Bank bank) {
@@ -98,7 +98,7 @@ public class AccountTypesGUI extends GenericPopup {
 		box.setAnchor(WidgetAnchor.CENTER_CENTER);
 		box.setWidth(GenericLabel.getStringWidth("12345678901234567890123459"));
 		box.setHeight(18);
-		box.shiftXPos(0-(box.getWidth()/2)).shiftYPos(-90);
+		box.shiftXPos(0-(box.getWidth()/2)-30).shiftYPos(-90);
 		box.setAuto(true);
 		box.setPriority(RenderPriority.Low);
 		populateList();		
@@ -169,17 +169,20 @@ public class AccountTypesGUI extends GenericPopup {
 		
 		GenericButton save = new CommandButton(this, 1, "Save");
 		GenericButton testImage = new CommandButton(this, 2, "Test Image");
-		GenericButton close = new CommandButton(this, 6, "Close");
+		GenericButton newButton = new CommandButton(this, 3, "New");
+		GenericButton close = new CommandButton(this, 4, "Close");
 		
 		save.setAnchor(WidgetAnchor.CENTER_CENTER);
+		newButton.setAnchor(WidgetAnchor.CENTER_CENTER);
 		testImage.setAnchor(WidgetAnchor.CENTER_CENTER);
 		close.setAnchor(WidgetAnchor.CENTER_CENTER);
 
 		save.setHeight(16).setWidth(40).shiftXPos(20).shiftYPos(95);
+		newButton.setHeight(16).setWidth(40).shiftXPos(70).shiftYPos(-90);
 		testImage.setHeight(16).setWidth(70).shiftXPos(40).shiftYPos(42);
 		close.setHeight(16).setWidth(40).shiftXPos(70).shiftYPos(95);
 
-		attachWidgets(plugin, border, gl, gg, box, nameLabel, accountTypeName, intNameLabel, intCycleField, imageNameLabel, imageField, intsetting, gb, myImage, save, testImage, close);
+		attachWidgets(plugin, border, gl, gg, box, nameLabel, accountTypeName, intNameLabel, intCycleField, imageNameLabel, imageField, intsetting, gb, myImage, save, newButton, testImage, close);
 
 		sPlayer.getMainScreen().closePopup();
 		sPlayer.getMainScreen().attachPopupScreen(this);
@@ -197,14 +200,31 @@ public class AccountTypesGUI extends GenericPopup {
 		switch (commandGoal) {
 			case 1:
 				AccountType selectedAccountType = selectedBank.getType(box.getSelectedItem());
-				if (selectedAccountType != null) {
+				if (selectedAccountType != null && !newType) {
 					selectedAccountType.setName(accountTypeName.getText().trim());
 					selectedAccountType.setInterestRate(Double.parseDouble((intCycleField.getText().trim())));
 					selectedAccountType.setImagePath(imageField.getText().trim());
 					selectedAccountType.shouldReceiveInterest(intsetting.isChecked());
 					sPlayer.getMainScreen().closePopup();
 					new AckGUI(plugin, sPlayer, selectedBank, "Changes Saved.", "accounttypesgui");
+				} else if (selectedAccountType != null && newType) {					
+					if (accountTypeName.getText().isEmpty()) {
+						newType = false;
+						new AckGUI(plugin, sPlayer, selectedBank, "Specify name.", "accounttypesgui");
+					} else if (selectedBank.getType(accountTypeName.getText().trim()) != null) {
+						newType = false;
+						new AckGUI(plugin, sPlayer, selectedBank, "That name already exists.", "accounttypesgui");
+					} else {
+						AccountType newAccountType = selectedBank.addType(new AccountType(accountTypeName.getText()));
+						newAccountType.setInterestRate(Double.parseDouble((intCycleField.getText().trim())));
+						newAccountType.setImagePath(imageField.getText().trim());
+						newAccountType.shouldReceiveInterest(intsetting.isChecked());
+						newType = false;
+						sPlayer.getMainScreen().closePopup();
+						new AckGUI(plugin, sPlayer, selectedBank, "Account Type Added.", "accounttypesgui");
+					}
 				}
+				
 				break;
 			case 2:
 				if (!imageField.getText().isEmpty()) {
@@ -213,16 +233,16 @@ public class AccountTypesGUI extends GenericPopup {
 				}
 				
 				break;
-			case 3:				
-				
-				break;
+			case 3:		
+				if (!newType) {
+					newType = true;
+					imageField.setText("");
+					intsetting.setChecked(false);
+					intCycleField.setText("0.0");
+					accountTypeName.setText("");
+				}
+				break;		
 			case 4:
-				
-				break;
-			case 5:
-				
-				break;
-			case 6:
 				sPlayer.getMainScreen().closePopup();
 				new BankStatusGUI(plugin, sPlayer, selectedBank);
 				break;

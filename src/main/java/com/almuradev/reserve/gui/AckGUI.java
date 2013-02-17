@@ -51,9 +51,6 @@ public class AckGUI extends GenericPopup {
 		this.ackMessage = ackMessage;
 		this.previousWindow = prevWindow;
 
-		//Check if playerBank is null here and handle appropriately. May want to check this BEFORE you get to actually
-		//constructing the GUI (ie in the right click of a NPC).
-
 		GenericLabel gl = new GenericLabel();
 		gl.setScale(1.4F).setText("Message Center");
 		gl.setAnchor(WidgetAnchor.CENTER_CENTER);
@@ -97,59 +94,54 @@ public class AckGUI extends GenericPopup {
 
 	public void onClickCommand(int commandGoal) {
 		switch (commandGoal) {
-			case 1: //OK
-				System.out.println("AckMessage:" + ackMessage);
-				System.out.println("PreviousWindow: " + previousWindow);
-				if (ackMessage.equalsIgnoreCase("Please specify account.") && previousWindow.equalsIgnoreCase("depositgui")) {
-					sPlayer.getMainScreen().closePopup();
-					new DepositGUI(plugin, sPlayer, selectedBank, null);
-				} else if (ackMessage.equalsIgnoreCase("Please select bank.") && previousWindow.equalsIgnoreCase("reservemaingui")) {
-					sPlayer.getMainScreen().closePopup();
-					new ReserveMainGUI(plugin, sPlayer);
-				} else if (ackMessage.equalsIgnoreCase("Deposit amount has to be more than zero.") && previousWindow.equalsIgnoreCase("depositgui")) {
-					sPlayer.getMainScreen().closePopup();
-					new DepositGUI(plugin, sPlayer, selectedBank, null);
-				} else if (ackMessage.equalsIgnoreCase("Insuffient funds available for deposit.") && previousWindow.equalsIgnoreCase("depositgui")) {
-					sPlayer.getMainScreen().closePopup();
-					new DepositGUI(plugin, sPlayer, selectedBank, null);
-				} else if (ackMessage.equalsIgnoreCase("Withdraw amount cannot be greater than current balance.") && previousWindow.equalsIgnoreCase("withdrawgui")) {
-					sPlayer.getMainScreen().closePopup();
-					new WithdrawGUI(plugin, sPlayer, selectedBank, null);
-				} else if (ackMessage.equalsIgnoreCase("Please specify name.") && previousWindow.equalsIgnoreCase("createaccountgui")) {
-					sPlayer.getMainScreen().closePopup();
-					new CreateAccountGUI(plugin, sPlayer, selectedBank);
-				} else if (ackMessage.equalsIgnoreCase("Account already exists.") && previousWindow.equalsIgnoreCase("createaccountgui")) {
-					sPlayer.getMainScreen().closePopup();
-					new CreateAccountGUI(plugin, sPlayer, selectedBank);
-				} else if (ackMessage.equalsIgnoreCase("Account balance is not zero.") && previousWindow.equalsIgnoreCase("deleteaccountgui")) {
-					sPlayer.getMainScreen().closePopup();
-					new DeleteAccountGUI(plugin, sPlayer, selectedBank);
-				} else if (ackMessage.equalsIgnoreCase("Please specify account.") && previousWindow.equalsIgnoreCase("deleteaccountgui")) {
-					sPlayer.getMainScreen().closePopup();
-					new DepositGUI(plugin, sPlayer, selectedBank, null);
-				} else if (ackMessage.equalsIgnoreCase("Bank Created Successfully.") && previousWindow.equalsIgnoreCase("createbankgui")) {
-					sPlayer.getMainScreen().closePopup();
-					new ReserveMainGUI(plugin, sPlayer);
-				} else if (ackMessage.equalsIgnoreCase("Please specify name.") && previousWindow.equalsIgnoreCase("createbankgui")) {
-					sPlayer.getMainScreen().closePopup();
-					new CreateBankGUI(plugin, sPlayer);
-				} else if (ackMessage.equalsIgnoreCase("Bank already exists.") && previousWindow.equalsIgnoreCase("createbankgui")) {
-					sPlayer.getMainScreen().closePopup();
-					new CreateBankGUI(plugin, sPlayer);
-				} else if (ackMessage.equalsIgnoreCase("Bank Removed.") && previousWindow.equalsIgnoreCase("deletebankgui")) {
-					sPlayer.getMainScreen().closePopup();
-					new ReserveMainGUI(plugin, sPlayer);
-				} else if (ackMessage.equalsIgnoreCase("Please Select Bank.") && previousWindow.equalsIgnoreCase("deletebankgui")) {
-					sPlayer.getMainScreen().closePopup();
-					new DeleteBankGUI(plugin, sPlayer);
-				} else if (ackMessage.equalsIgnoreCase("Changes Saved.") && previousWindow.equalsIgnoreCase("accounttypesgui")) {
-					sPlayer.getMainScreen().closePopup();
-					new BankStatusGUI(plugin, sPlayer, selectedBank);
-				} else {
-					sPlayer.getMainScreen().closePopup();
-					new BankMainGUI(plugin, sPlayer, selectedBank);
-				}
-				break;
+		case 1:	
+			sPlayer.getMainScreen().closePopup();
+			if (ackMessage.equalsIgnoreCase("Please specify account.") && previousWindow.equalsIgnoreCase("depositgui")) {					
+				new DepositGUI(plugin, sPlayer, selectedBank, null);
+			} else if (ackMessage.equalsIgnoreCase("Please select bank.") && previousWindow.equalsIgnoreCase("reservemaingui")) {					
+				new ReserveMainGUI(plugin, sPlayer);
+			} else if (ackMessage.equalsIgnoreCase("Deposit amount has to be more than zero.") && previousWindow.equalsIgnoreCase("depositgui")) {					
+				new DepositGUI(plugin, sPlayer, selectedBank, null);
+			} else if (ackMessage.equalsIgnoreCase("Insuffient funds available for deposit.") && previousWindow.equalsIgnoreCase("depositgui")) {					
+				new DepositGUI(plugin, sPlayer, selectedBank, null);
+			} else if (ackMessage.equalsIgnoreCase("Withdraw amount cannot be greater than current balance.") && previousWindow.equalsIgnoreCase("withdrawgui")) {					
+				new WithdrawGUI(plugin, sPlayer, selectedBank, null);
+			} else if (ackMessage.equalsIgnoreCase("Please specify name.") && previousWindow.equalsIgnoreCase("createaccountgui")) {					
+				new CreateAccountGUI(plugin, sPlayer, selectedBank);
+			} else if (ackMessage.equalsIgnoreCase("Account with that name already exists.") && previousWindow.equalsIgnoreCase("createaccountgui")) {					
+				new CreateAccountGUI(plugin, sPlayer, selectedBank);
+			} else if (ackMessage.equalsIgnoreCase("You already have an account of that type.") && previousWindow.equalsIgnoreCase("createaccountgui")) {					
+				new CreateAccountGUI(plugin, sPlayer, selectedBank);
+			} else if (ackMessage.equalsIgnoreCase("Account balance is not zero.") && previousWindow.equalsIgnoreCase("deleteaccountgui")) {					
+				new DeleteAccountGUI(plugin, sPlayer, selectedBank);
+			} else if (ackMessage.equalsIgnoreCase("Please specify account.") && previousWindow.equalsIgnoreCase("deleteaccountgui")) {					
+				new DepositGUI(plugin, sPlayer, selectedBank, null);
+			} else if (ackMessage.equalsIgnoreCase("Bank Created Successfully.") && previousWindow.equalsIgnoreCase("createbankgui")) {					
+				new ReserveMainGUI(plugin, sPlayer);
+			} else if (ackMessage.equalsIgnoreCase("Please specify name.") && previousWindow.equalsIgnoreCase("createbankgui")) {					
+				new CreateBankGUI(plugin, sPlayer);
+			} else if (ackMessage.equalsIgnoreCase("Bank already exists.") && previousWindow.equalsIgnoreCase("createbankgui")) {					
+				new CreateBankGUI(plugin, sPlayer);
+			} else if (ackMessage.equalsIgnoreCase("Bank Removed.") && previousWindow.equalsIgnoreCase("deletebankgui")) {					
+				new ReserveMainGUI(plugin, sPlayer);
+			} else if (ackMessage.equalsIgnoreCase("Please Select Bank.") && previousWindow.equalsIgnoreCase("deletebankgui")) {					
+				new DeleteBankGUI(plugin, sPlayer);
+			} else if (ackMessage.equalsIgnoreCase("Changes Saved.") && previousWindow.equalsIgnoreCase("accounttypesgui")) {					
+				new BankStatusGUI(plugin, sPlayer, selectedBank);
+			} else if (ackMessage.equalsIgnoreCase("Account Type Added.") && previousWindow.equalsIgnoreCase("accounttypesgui")) {					
+				new BankStatusGUI(plugin, sPlayer, selectedBank);
+			} else if (ackMessage.equalsIgnoreCase("Specify Name.") && previousWindow.equalsIgnoreCase("accounttypesgui")) {					
+				new AccountTypesGUI(plugin, sPlayer, selectedBank);
+			} else if (ackMessage.equalsIgnoreCase("That name already exists.") && previousWindow.equalsIgnoreCase("accounttypesgui")) {					
+				new AccountTypesGUI(plugin, sPlayer, selectedBank);
+			} else if (ackMessage.equalsIgnoreCase("Please specify new name.") && previousWindow.equalsIgnoreCase("renamebankgui")) {					
+				new RenameBankGUI(plugin, sPlayer, selectedBank);
+			} else if (ackMessage.equalsIgnoreCase("Changes saved.") && previousWindow.equalsIgnoreCase("renamebankgui")) {					
+				new ReserveMainGUI(plugin, sPlayer);
+			} else {					
+				new BankMainGUI(plugin, sPlayer, selectedBank);
+			}
+			break;
 		}
 	}
 }

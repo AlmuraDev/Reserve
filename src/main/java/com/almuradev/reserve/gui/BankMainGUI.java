@@ -141,14 +141,13 @@ public class BankMainGUI extends GenericPopup {
 		closeAccount.setEnabled(sPlayer.hasPermission("reserve.accountremove") && (selectedBank.getAmountOfAccountsFor(sPlayer.getName()) > 0));
 		options.setEnabled(sPlayer.hasPermission("reserve.admin"));
 
-		attachWidgets(plugin, border, gl, bankNameLabel, gg, gb, createAccount, list, bankAccountsLabel, makeDeposit, makeWithdraw, closeAccount, faq, options, close);
+		attachWidgets(plugin, border, gl, bankNameLabel, gg, gb, createAccount, list, bankAccountsLabel, makeDeposit, makeWithdraw, closeAccount, close);  //faq & options not displayed at this time.
 
 		sPlayer.getMainScreen().closePopup();
 		sPlayer.getMainScreen().attachPopupScreen(this);
 	}
 
-	public void onClickCommand(int commandGoal) {
-		String[] split = list.getSelectedItem().getTitle().split("\\/");
+	public void onClickCommand(int commandGoal) {		
 		switch (commandGoal) {
 			case 1:
 				sPlayer.getMainScreen().closePopup();
@@ -159,6 +158,7 @@ public class BankMainGUI extends GenericPopup {
 				if (list.getSelectedItem() == null) {
 					new DepositGUI(plugin, sPlayer, selectedBank, selectedAccount);
 				} else {
+					String[] split = list.getSelectedItem().getTitle().split("\\/");
 					Account myAccount = selectedBank.getAccount(split[0].trim(), sPlayer.getName());
 					new DepositGUI(plugin, sPlayer, selectedBank, myAccount);
 				}
@@ -168,10 +168,10 @@ public class BankMainGUI extends GenericPopup {
 				if (list.getSelectedItem() == null) {
 					new WithdrawGUI(plugin, sPlayer, selectedBank, selectedAccount);
 				} else {
+					String[] split = list.getSelectedItem().getTitle().split("\\/");
 					Account myAccount = selectedBank.getAccount(split[0].trim(), sPlayer.getName());
 					new WithdrawGUI(plugin, sPlayer, selectedBank, myAccount);
 				}
-
 				break;
 			case 4:
 				sPlayer.getMainScreen().closePopup();

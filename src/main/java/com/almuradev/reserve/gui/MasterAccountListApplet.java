@@ -45,7 +45,7 @@ public class MasterAccountListApplet extends GenericListWidget {
 		numForm = NumberFormat.getCurrencyInstance(caLoc);    	
 		List<Account> accountNames = selectedBank.retrieveAccounts();
 		for (Account account: accountNames) {
-			this.addItem(new ListWidgetItem(account.getHolder() + " / " + account.getName(), ChatColor.GREEN + numForm.format(account.getBalance()), account.getType().getImagePath().trim()));
+			this.addItem(new ListWidgetItem(ChatColor.AQUA + account.getHolder() + ChatColor.RESET + " / " + account.getName(), ChatColor.GREEN + numForm.format(account.getBalance()) + ChatColor.RESET + " - " + account.getType().getName(), account.getType().getImagePath().trim()));
 		}
 	}
 }

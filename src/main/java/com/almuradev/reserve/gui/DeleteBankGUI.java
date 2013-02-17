@@ -115,7 +115,7 @@ public class DeleteBankGUI extends GenericPopup {
 
 	public void onClickCommand(int commandGoal) {
 		switch (commandGoal) {
-			case 1: // Ok
+			case 1:
 				if (list.getSelectedItem() == null) {
 					new AckGUI(plugin, sPlayer, null, "Please Select Bank.", "deletebankgui");
 				} else {
@@ -124,7 +124,7 @@ public class DeleteBankGUI extends GenericPopup {
 					new AckGUI(plugin, sPlayer, null, "Bank Removed.", "deletebankgui");
 				}
 				break;
-			case 2: // Close
+			case 2:
 				sPlayer.getMainScreen().closePopup();
 				new ReserveMainGUI(plugin, sPlayer);
 				break;

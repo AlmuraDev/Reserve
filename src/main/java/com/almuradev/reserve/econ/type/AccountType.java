@@ -132,7 +132,7 @@ public class AccountType {
 		}
 
 		final AccountType type = (AccountType) other;
-		return type.getName().equalsIgnoreCase(name) && type.receivesInterest() == hasInterest && type.getInterestRate() == interestRate && type.getImagePath() == imagePath;
+		return type.getName().equalsIgnoreCase(name) && type.receivesInterest() == hasInterest && type.getInterestRate() == interestRate && type.getImagePath().equalsIgnoreCase(imagePath);
 	}
 
 	@Override

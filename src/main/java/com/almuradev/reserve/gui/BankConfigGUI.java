@@ -110,7 +110,7 @@ public class BankConfigGUI extends GenericPopup {
 
 	public void onClickCommand(int commandGoal) {
 		switch (commandGoal) {
-			case 1: //Create
+			case 1:
 				sPlayer.getMainScreen().closePopup();
 				new AckGUI(plugin, sPlayer, selectedBank, "Bank Configuration Saved", "bankconfiggui");
 				break;

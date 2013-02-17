@@ -171,7 +171,7 @@ public class DepositGUI extends GenericPopup {
 
 	public void onClickCommand(int commandGoal) {
 		switch (commandGoal) {
-			case 1: // Ok
+			case 1:
 				if (box.getSelectedItem() == null) {
 					new AckGUI(plugin, sPlayer, selectedBank, "Please specify account.", "depositgui");
 				} else {
@@ -186,8 +186,7 @@ public class DepositGUI extends GenericPopup {
 					if (deposit == 0) {
 						sPlayer.getMainScreen().closePopup();
 						new AckGUI(plugin, sPlayer, selectedBank, "Deposit amount has to be more than zero.", "depositgui");
-					} else {
-						// Remove from Users Economy
+					} else {						
 						if (VaultUtil.getBalance(sPlayer.getName()) < deposit) {
 							sPlayer.getMainScreen().closePopup();
 							new AckGUI(plugin, sPlayer, selectedBank, "Insuffient funds available for deposit.", "depositgui");

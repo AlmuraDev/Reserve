@@ -24,6 +24,7 @@
 package com.almuradev.reserve.gui;
 
 import com.almuradev.reserve.ReservePlugin;
+import com.almuradev.reserve.econ.Bank;
 
 import org.getspout.spoutapi.gui.Color;
 import org.getspout.spoutapi.gui.GenericButton;
@@ -36,63 +37,54 @@ import org.getspout.spoutapi.gui.RenderPriority;
 import org.getspout.spoutapi.gui.WidgetAnchor;
 import org.getspout.spoutapi.player.SpoutPlayer;
 
-public class CreateBankGUI extends GenericPopup {
+public class RenameBankGUI extends GenericPopup {
 	private final ReservePlugin plugin;
 	private final SpoutPlayer sPlayer;
-	private GenericTextField bankNameField;
+	private final Bank selectedBank;
+	private final GenericTextField bankNameField;
 	Color bottom = new Color(1.0F, 1.0F, 1.0F, 0.50F);
 
-	public CreateBankGUI(ReservePlugin plugin, SpoutPlayer sPlayer) {
+	public RenameBankGUI(ReservePlugin plugin, SpoutPlayer sPlayer, Bank bank) {
 		this.plugin = plugin;
 		this.sPlayer = sPlayer;
+		this.selectedBank = bank;	
 
+		GenericLabel gl = new GenericLabel();
+		gl.setScale(1.4F).setText("Rename Bank");
+		gl.setAnchor(WidgetAnchor.CENTER_CENTER);
+		gl.setHeight(15).setWidth(GenericLabel.getStringWidth(gl.getText(), gl.getScale()));
+		gl.shiftXPos((GenericLabel.getStringWidth(gl.getText(), gl.getScale()) / 2) * -1).shiftYPos(-70);
+		
 		GenericTexture border = new GenericTexture("http://www.almuramc.com/images/playerplus.png");
 		border.setAnchor(WidgetAnchor.CENTER_CENTER);
 		border.setPriority(RenderPriority.High);
-		border.setWidth(225).setHeight(100);
-		border.shiftXPos(-105).shiftYPos(-80);
-
-		GenericLabel gl = new GenericLabel();
-		gl.setScale(1.4F).setText("Create Account");
-		gl.setAnchor(WidgetAnchor.CENTER_CENTER);
-		gl.setHeight(15).setWidth(GenericLabel.getStringWidth(gl.getText()));
-		gl.shiftXPos(0).shiftYPos(-70);
-
+		border.setWidth(gl.getWidth() + 25).setHeight(90);
+		border.shiftXPos(0 - (border.getWidth() / 2)).shiftYPos(-80);
+		
 		GenericGradient gg = new GenericGradient();
 		gg.setBottomColor(bottom).setTopColor(bottom);
 		gg.setAnchor(WidgetAnchor.CENTER_CENTER);
-		gg.shiftXPos(-55).shiftYPos(-55).setMaxWidth(130);
-		gg.setWidth(130).setHeight(1);
-
-		GenericLabel cl = new GenericLabel("-- Create New Bank --");
-		cl.setScale(1.0F);
-		cl.setAnchor(WidgetAnchor.CENTER_CENTER);
-		cl.setHeight(15).setWidth(GenericLabel.getStringWidth(cl.getText()));
-		cl.shiftXPos(-45).shiftYPos(-47);
-
-		GenericLabel an = new GenericLabel("Bank Name: ");
-		an.setScale(1.0F);
-		an.setAnchor(WidgetAnchor.CENTER_CENTER);
-		an.setHeight(15).setWidth(GenericLabel.getStringWidth(an.getText()));
-		an.shiftXPos(-90).shiftYPos(-25);
-
+		gg.setWidth(border.getWidth() - 25).setHeight(1);
+		gg.shiftXPos(0 - gg.getWidth() / 2).shiftYPos(-55);
+		
 		bankNameField = new GenericTextField();
+		bankNameField.setText(selectedBank.getName().trim());
 		bankNameField.setWidth(110).setHeight(16);
 		bankNameField.setAnchor(WidgetAnchor.CENTER_CENTER);
 		bankNameField.shiftXPos(-10).shiftYPos(-28);
 		bankNameField.setMaximumCharacters(30);
 		bankNameField.setMaximumLines(1);
-
-		GenericButton createAccount = new CommandButton(this, 1, "Create");
-		GenericButton close = new CommandButton(this, 2, "Close");
-
-		createAccount.setAnchor(WidgetAnchor.CENTER_CENTER);
+		
+		GenericButton close = new CommandButton(this, 1, "OK");
+		GenericButton save = new CommandButton(this, 2, "Save");
+		
+		save.setAnchor(WidgetAnchor.CENTER_CENTER);
 		close.setAnchor(WidgetAnchor.CENTER_CENTER);
+		
+		save.setHeight(16).setWidth(40).shiftXPos(-60).shiftYPos(-20);
+		close.setHeight(16).setWidth(40).shiftXPos(-20).shiftYPos(-20);		
 
-		createAccount.setHeight(16).setWidth(50).shiftXPos(7).shiftYPos(0);
-		close.setHeight(16).setWidth(40).shiftXPos(62).shiftYPos(0);
-
-		attachWidgets(plugin, border, gl, gg, cl, an, bankNameField, createAccount, close);
+		attachWidgets(plugin, border, gl, gg, save, close);
 
 		sPlayer.getMainScreen().closePopup();
 		sPlayer.getMainScreen().attachPopupScreen(this);
@@ -100,23 +92,18 @@ public class CreateBankGUI extends GenericPopup {
 
 	public void onClickCommand(int commandGoal) {
 		switch (commandGoal) {
-			case 1: 
-				if (bankNameField.getText().isEmpty()) {
-					new AckGUI(plugin, sPlayer, null, "Please specify name.", "createbankgui");
-				} else {
-					if (ReservePlugin.getReserve().get(bankNameField.getText(), sPlayer.getWorld().getName()) != null) {
-						new AckGUI(plugin, sPlayer, null, "Bank name already exists.", "createbankgui");
-					} else {
-						ReservePlugin.getReserve().add(bankNameField.getText(), sPlayer.getName(), sPlayer.getWorld().getName());
-						sPlayer.getMainScreen().closePopup();
-						new AckGUI(plugin, sPlayer, null, "Bank Created Successfully.", "createbankgui");
-					}
-				}
-				break;
-			case 2:
-				sPlayer.getMainScreen().closePopup();
-				new ReserveMainGUI(plugin, sPlayer);
-				break;
+		case 1:	
+			sPlayer.getMainScreen().closePopup();								
+			new ReserveMainGUI(plugin, sPlayer);			
+			break;
+		case 2:
+			if (bankNameField.getText().isEmpty()) {
+				new AckGUI(plugin, sPlayer, null, "Please specify new name.", "renamebankgui");
+			} else {
+				selectedBank.setName(bankNameField.getText().trim());
+				new AckGUI(plugin, sPlayer, null, "Changes Saved.", "renamebankgui");
+			}
+			break;
 		}
 	}
 }
