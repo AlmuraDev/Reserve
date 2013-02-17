@@ -22,7 +22,6 @@ package com.almuradev.reserve;
 import com.almuradev.reserve.config.ReserveConfiguration;
 import com.almuradev.reserve.gui.ReserveMainGUI;
 import com.almuradev.reserve.storage.Reserve;
-import com.almuradev.reserve.storage.SaveTask;
 import com.almuradev.reserve.storage.Storage;
 import com.almuradev.reserve.task.InterestTask;
 
@@ -63,7 +62,7 @@ public class ReservePlugin extends JavaPlugin {
 		if (config.shouldInterest()) {
 			scheduler.scheduleSyncRepeatingTask(this, new InterestTask(this, reserve), 0, config.getInterestInterval());
 		}
-		scheduler.scheduleSyncRepeatingTask(this, new SaveTask(this, reserve, storage), 0, config.getSaveInterval());
+		scheduler.scheduleSyncRepeatingTask(this, reserve, 0, config.getSaveInterval());
 	}
 
 	public static Reserve getReserve() {

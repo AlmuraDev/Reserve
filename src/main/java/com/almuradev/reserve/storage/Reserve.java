@@ -28,7 +28,7 @@ import java.util.Map;
 
 import com.almuradev.reserve.econ.Bank;
 
-public final class Reserve {
+public final class Reserve implements Runnable {
 	private static final HashMap<String, List<Bank>> BANKS = new HashMap<>();
 	private final Storage storage;
 
@@ -41,11 +41,7 @@ public final class Reserve {
 	}
 
 	public void onDisable() {
-		for (String world : BANKS.keySet()) {
-			for (Bank bank : BANKS.get(world)) {
-				storage.save(world, bank);
-			}
-		}
+		run();
 	}
 
 	/**
@@ -150,5 +146,22 @@ public final class Reserve {
 		}
 		ENTRY.add(injectBank);
 		injectBank.setDirty(false);
+	}
+
+	@Override
+	public void run() {
+		//Step 1, save all to files
+		for (String world : BANKS.keySet()) {
+			for (Bank bank : BANKS.get(world)) {
+				if (!bank.isDirty()) {
+					continue;
+				}
+				storage.save(world, bank);
+				//Save to flat file.
+				bank.setDirty(false);
+			}
+		}
+		//Step 2, cleanup
+		storage.cleanup();
 	}
 }
