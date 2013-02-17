@@ -24,6 +24,7 @@
 package com.almuradev.reserve.gui;
 
 import com.almuradev.reserve.ReservePlugin;
+import com.almuradev.reserve.econ.Account;
 import com.almuradev.reserve.econ.Bank;
 
 import org.getspout.spoutapi.gui.Color;
@@ -37,20 +38,22 @@ import org.getspout.spoutapi.gui.RenderPriority;
 import org.getspout.spoutapi.gui.WidgetAnchor;
 import org.getspout.spoutapi.player.SpoutPlayer;
 
-public class RenameBankGUI extends GenericPopup {
+public class RenameAccountGUI extends GenericPopup {
 	private final ReservePlugin plugin;
 	private final SpoutPlayer sPlayer;
 	private final Bank selectedBank;
-	private final GenericTextField bankNameField;
+	private final Account myAccount;
+	private final GenericTextField accountNameField;
 	Color bottom = new Color(1.0F, 1.0F, 1.0F, 0.50F);
 
-	public RenameBankGUI(ReservePlugin plugin, SpoutPlayer sPlayer, Bank bank) {
+	public RenameAccountGUI(ReservePlugin plugin, SpoutPlayer sPlayer, Bank bank, Account account) {
 		this.plugin = plugin;
 		this.sPlayer = sPlayer;
-		this.selectedBank = bank;	
+		this.selectedBank = bank;
+		this.myAccount = account;
 
 		GenericLabel gl = new GenericLabel();
-		gl.setScale(1.4F).setText("Rename Bank");
+		gl.setScale(1.4F).setText("Rename Account");
 		gl.setAnchor(WidgetAnchor.CENTER_CENTER);
 		gl.setHeight(15).setWidth(GenericLabel.getStringWidth(gl.getText(), gl.getScale()));
 		gl.shiftXPos((GenericLabel.getStringWidth(gl.getText(), gl.getScale()) / 2) * -1).shiftYPos(-70);
@@ -67,13 +70,13 @@ public class RenameBankGUI extends GenericPopup {
 		gg.setWidth(border.getWidth() - 25).setHeight(1);
 		gg.shiftXPos(0 - gg.getWidth() / 2).shiftYPos(-55);
 		
-		bankNameField = new GenericTextField();
-		bankNameField.setText(selectedBank.getName().trim());
-		bankNameField.setWidth(110).setHeight(16);
-		bankNameField.setAnchor(WidgetAnchor.CENTER_CENTER);
-		bankNameField.shiftXPos(-55).shiftYPos(-45);
-		bankNameField.setMaximumCharacters(30);
-		bankNameField.setMaximumLines(1);
+		accountNameField = new GenericTextField();
+		accountNameField.setText(myAccount.getName().trim());
+		accountNameField.setWidth(110).setHeight(16);
+		accountNameField.setAnchor(WidgetAnchor.CENTER_CENTER);
+		accountNameField.shiftXPos(-55).shiftYPos(-45);
+		accountNameField.setMaximumCharacters(30);
+		accountNameField.setMaximumLines(1);
 		
 		GenericButton close = new CommandButton(this, 1, "Close");
 		GenericButton save = new CommandButton(this, 2, "Save");
@@ -84,7 +87,7 @@ public class RenameBankGUI extends GenericPopup {
 		save.setHeight(16).setWidth(40).shiftXPos(-30).shiftYPos(-10);
 		close.setHeight(16).setWidth(40).shiftXPos(20).shiftYPos(-10);		
 
-		attachWidgets(plugin, border, gl, gg, bankNameField, save, close);
+		attachWidgets(plugin, border, gl, gg, accountNameField, save, close);
 
 		sPlayer.getMainScreen().closePopup();
 		sPlayer.getMainScreen().attachPopupScreen(this);
@@ -97,13 +100,15 @@ public class RenameBankGUI extends GenericPopup {
 			new ReserveMainGUI(plugin, sPlayer);			
 			break;
 		case 2:
-			if (bankNameField.getText().isEmpty()) {
+			if (accountNameField.getText().isEmpty()) {
+				new AckGUI(plugin, sPlayer, selectedBank, "Please specify a new name.", "renameaccountgui");
+			} else if (accountNameField.getText().trim().equalsIgnoreCase("Bank Vault")) {
 				sPlayer.getMainScreen().closePopup();
-				new AckGUI(plugin, sPlayer, null, "Please specify new name.", "renamebankgui");
-			} else {				
-				selectedBank.setName(bankNameField.getText().trim());
+				new AckGUI(plugin, sPlayer, selectedBank, "You cannot rename Bank Vault.", "renameaccountgui");
+			} else {
+				myAccount.setName(accountNameField.getText().trim());
 				sPlayer.getMainScreen().closePopup();
-				new AckGUI(plugin, sPlayer, null, "Changes Saved.", "renamebankgui");
+				new AckGUI(plugin, sPlayer, selectedBank, "Changes Saved.", "renameaccountgui");
 			}
 			break;
 		}

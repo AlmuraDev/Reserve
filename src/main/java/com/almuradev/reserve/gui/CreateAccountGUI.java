@@ -48,6 +48,7 @@ public class CreateAccountGUI extends GenericPopup {
 	private final ReservePlugin plugin;
 	private final SpoutPlayer sPlayer;
 	private Bank selectedBank;
+	private GenericButton createAccount;
 	private GenericComboBox box;
 	private GenericTextField accountNameField;
 	Color bottom = new Color(1.0F, 1.0F, 1.0F, 0.50F);
@@ -101,28 +102,30 @@ public class CreateAccountGUI extends GenericPopup {
 		box.setHeight(18);
 		box.shiftXPos(0-(box.getWidth()/2)).shiftYPos(0);
 		box.setAuto(true);
-		box.setPriority(RenderPriority.Low);
-		populateList();		
-		box.setSelection(0);
+		box.setPriority(RenderPriority.Low);		
 		
-		GenericButton createAccount = new CommandButton(this, 1, "Create");
+		createAccount = new CommandButton(this, 1, "Create");
 		GenericButton close = new CommandButton(this, 2, "Close");
-
 		createAccount.setAnchor(WidgetAnchor.CENTER_CENTER);
 		close.setAnchor(WidgetAnchor.CENTER_CENTER);
+		
+		populateList();		
+		box.setSelection(0);
 		
 		if (box.getSelectedItem() == null) {
 			createAccount.setEnabled(false);
 			createAccount.setTooltip("No Account Types Exist!");
 		}
 		
-		createAccount.setHeight(16).setWidth(50).shiftXPos(7).shiftYPos(40);
-		close.setHeight(16).setWidth(40).shiftXPos(62).shiftYPos(40);
+		createAccount.setHeight(16).setWidth(50).shiftXPos(7).shiftYPos(35);
+		close.setHeight(16).setWidth(40).shiftXPos(62).shiftYPos(35);
 
 		attachWidgets(plugin, border, gl, gg, cl, an, accountNameField, createAccount, box, close);
 
 		sPlayer.getMainScreen().closePopup();
 		sPlayer.getMainScreen().attachPopupScreen(this);
+		
+		accountNameField.setFocus(true);
 	}
 
 	public void onClickCommand(int commandGoal) {
@@ -131,7 +134,7 @@ public class CreateAccountGUI extends GenericPopup {
 			if (accountNameField.getText().isEmpty()) {
 				new AckGUI(plugin, sPlayer, selectedBank, "Please specify name.", "createaccountgui");
 			} else {
-				if (selectedBank.getAccount(accountNameField.getText(), sPlayer.getName()) != null) {
+				if (selectedBank.getAccount(accountNameField.getText().trim(), sPlayer.getName()) != null) {
 					new AckGUI(plugin, sPlayer, selectedBank, "Account with that name already exists.", "createaccountgui");
 				} else if (selectedBank.typeExistsFor(sPlayer.getName(), box.getSelectedItem())) {
 					new AckGUI(plugin, sPlayer, selectedBank, "You already have an account of that type.", "createaccountgui");
@@ -161,7 +164,14 @@ public class CreateAccountGUI extends GenericPopup {
 			Collections.sort(items, String.CASE_INSENSITIVE_ORDER);
 			box.setItems(items);
 			box.setSelection(0);
-			box.setText(null);			
+			box.setText(null);	
+			if (box.getSelectedItem().equalsIgnoreCase("Vault")) {
+				createAccount.setEnabled(false);
+				createAccount.setTooltip("Cannot Create new Vault Accounts");
+			} else {
+				createAccount.setEnabled(true);
+				createAccount.setTooltip("");
+			}
 		}				
 	}
 	

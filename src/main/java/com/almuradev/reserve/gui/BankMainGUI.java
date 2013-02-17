@@ -89,6 +89,7 @@ public class BankMainGUI extends GenericPopup {
 		list.shiftXPos(-100).shiftYPos(-60);
 		list.setWidth(195).setHeight(70);
 		list.setPriority(RenderPriority.Lowest);
+		list.setSelection(0);
 
 		GenericLabel bankAccountsLabel = new GenericLabel();
 		bankAccountsLabel.setScale(1.0F);
@@ -128,8 +129,8 @@ public class BankMainGUI extends GenericPopup {
 		close.setAnchor(WidgetAnchor.CENTER_CENTER);
 
 		createAccount.setHeight(16).setWidth(120).shiftXPos(-60).shiftYPos(15);
-		makeDeposit.setHeight(16).setWidth(55).shiftXPos(-60).shiftYPos(35);
-		makeWithdraw.setHeight(16).setWidth(55).shiftXPos(0).shiftYPos(35);
+		makeDeposit.setHeight(16).setWidth(60).shiftXPos(-60).shiftYPos(35);
+		makeWithdraw.setHeight(16).setWidth(60).shiftXPos(0).shiftYPos(35);
 		closeAccount.setHeight(16).setWidth(120).shiftXPos(-60).shiftYPos(75);
 		rename.setHeight(16).setWidth(120).shiftXPos(-60).shiftYPos(55);
 		faq.setHeight(16).setWidth(20).shiftXPos(-10).shiftYPos(95);
@@ -179,8 +180,17 @@ public class BankMainGUI extends GenericPopup {
 				break;
 			case 5:
 				sPlayer.getMainScreen().closePopup();
-				new OptionsGUI(plugin, sPlayer);
-				break;
+				if (list.getSelectedItem() == null) {
+					new WithdrawGUI(plugin, sPlayer, selectedBank, selectedAccount);
+				} else {				
+					String[] split = list.getSelectedItem().getTitle().split("\\/");
+					Account myAccount = selectedBank.getAccount(split[0].trim(), sPlayer.getName());
+					if (myAccount.getName().equalsIgnoreCase("Bank Vault")) {
+						new AckGUI(plugin, sPlayer, selectedBank, "You cannot rename Bank Vault.", "bankmaingui");
+					} else {
+					  new RenameAccountGUI(plugin, sPlayer, selectedBank, myAccount);
+					}
+				}
 			case 6:
 				Screen screen = sPlayer.getMainScreen();
 				screen.removeWidget(this);

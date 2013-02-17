@@ -88,6 +88,7 @@ public class BankStatusGUI extends GenericPopup {
 		list.shiftXPos(-100).shiftYPos(-60);
 		list.setWidth(200).setHeight(140);
 		list.setPriority(RenderPriority.Lowest);
+		list.setSelection(0);
 
 		GenericLabel bankAccountsLabel = new GenericLabel();
 		bankAccountsLabel.setScale(1.0F);

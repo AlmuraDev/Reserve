@@ -24,6 +24,9 @@
 package com.almuradev.reserve.gui;
 
 import com.almuradev.reserve.ReservePlugin;
+import com.almuradev.reserve.econ.Account;
+import com.almuradev.reserve.econ.Bank;
+import com.almuradev.reserve.econ.type.AccountType;
 
 import org.getspout.spoutapi.gui.Color;
 import org.getspout.spoutapi.gui.GenericButton;
@@ -96,6 +99,9 @@ public class CreateBankGUI extends GenericPopup {
 
 		sPlayer.getMainScreen().closePopup();
 		sPlayer.getMainScreen().attachPopupScreen(this);
+		
+		bankNameField.setFocus(true);
+		
 	}
 
 	public void onClickCommand(int commandGoal) {
@@ -107,7 +113,26 @@ public class CreateBankGUI extends GenericPopup {
 					if (ReservePlugin.getReserve().get(bankNameField.getText(), sPlayer.getWorld().getName()) != null) {
 						new AckGUI(plugin, sPlayer, null, "Bank name already exists.", "createbankgui");
 					} else {
-						ReservePlugin.getReserve().add(bankNameField.getText(), sPlayer.getName(), sPlayer.getWorld().getName());
+						Bank selectedBank = ReservePlugin.getReserve().add(bankNameField.getText().trim(), sPlayer.getName(), sPlayer.getWorld().getName());
+						selectedBank.setBalance(Double.parseDouble("0.0"));
+						
+						// Create Bank Vault & Vault Type.						
+						AccountType newAccountType = selectedBank.addType(new AccountType("Vault"));
+						newAccountType.setInterestRate(Double.parseDouble("0.0"));
+						newAccountType.setImagePath("http://www.almuramc.com/images/vault.png");
+						newAccountType.shouldReceiveInterest(false);						
+						
+						AccountType newAccountType1 = selectedBank.addType(new AccountType("Savings"));
+						newAccountType1.setInterestRate(Double.parseDouble("0.0"));
+						newAccountType1.setImagePath("http://www.almuramc.com/images/savings.png");
+						newAccountType1.shouldReceiveInterest(false);
+						
+						AccountType newAccountType2 = selectedBank.addType(new AccountType("Checking"));
+						newAccountType2.setInterestRate(Double.parseDouble("0.0"));
+						newAccountType2.setImagePath("http://www.almuramc.com/images/check.png");						
+						newAccountType2.shouldReceiveInterest(false);
+						
+						selectedBank.addAccount(new Account(selectedBank.getType("Vault"), "Bank Vault", sPlayer.getName()));
 						
 						sPlayer.getMainScreen().closePopup();
 						new AckGUI(plugin, sPlayer, null, "Bank Created Successfully.", "createbankgui");

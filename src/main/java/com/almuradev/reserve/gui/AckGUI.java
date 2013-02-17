@@ -138,6 +138,14 @@ public class AckGUI extends GenericPopup {
 				new RenameBankGUI(plugin, sPlayer, selectedBank);
 			} else if (ackMessage.equalsIgnoreCase("Changes saved.") && previousWindow.equalsIgnoreCase("renamebankgui")) {					
 				new ReserveMainGUI(plugin, sPlayer);
+			} else if (ackMessage.equalsIgnoreCase("You cannot rename Bank Vault.") && previousWindow.equalsIgnoreCase("bankmaingui")) {					
+				new BankMainGUI(plugin, sPlayer, selectedBank);
+			} else if (ackMessage.equalsIgnoreCase("Please specify a new name.") && previousWindow.equalsIgnoreCase("renameaccountgui")) {					
+				new BankMainGUI(plugin, sPlayer, selectedBank);
+			} else if (ackMessage.equalsIgnoreCase("Changes Saved.") && previousWindow.equalsIgnoreCase("renameaccountgui")) {					
+				new BankMainGUI(plugin, sPlayer, selectedBank);
+			} else if (ackMessage.equalsIgnoreCase("You cannot rename Bank Vault.") && previousWindow.equalsIgnoreCase("renameaccountgui")) {					
+				new BankMainGUI(plugin, sPlayer, selectedBank);
 			} else {					
 				new BankMainGUI(plugin, sPlayer, selectedBank);
 			}

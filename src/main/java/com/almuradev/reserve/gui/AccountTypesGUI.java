@@ -69,18 +69,21 @@ public class AccountTypesGUI extends GenericPopup {
 		this.sPlayer = sPlayer;
 		this.selectedBank = bank;		
 
-		GenericTexture border = new GenericTexture("http://www.almuramc.com/images/playerplus.png");
-		border.setAnchor(WidgetAnchor.CENTER_CENTER);
-		border.setPriority(RenderPriority.High);
-		border.setWidth(250).setHeight(250);
-		border.shiftXPos(0-(border.getWidth()/2)).shiftYPos(-120);
-
 		GenericLabel gl = new GenericLabel();
 		gl.setScale(1.2F).setText(selectedBank.getName() + " - AccountTypes");		
 		gl.setAnchor(WidgetAnchor.CENTER_CENTER);
 		gl.setHeight(15).setWidth(GenericLabel.getStringWidth(gl.getText(), gl.getScale()));
 		gl.shiftXPos((GenericLabel.getStringWidth(gl.getText(), gl.getScale()) / 2) * -1).shiftYPos(-110);
 
+		GenericTexture border = new GenericTexture("http://www.almuramc.com/images/playerplus.png");
+		border.setAnchor(WidgetAnchor.CENTER_CENTER);
+		border.setPriority(RenderPriority.High);
+		border.setWidth(gl.getWidth()+25).setHeight(250);
+		if (border.getWidth()<250) {
+			border.setWidth(250);
+		}
+		border.shiftXPos(0-(border.getWidth()/2)).shiftYPos(-120);
+		
 		GenericGradient gg = new GenericGradient();
 		gg.setBottomColor(bottom).setTopColor(bottom);
 		gg.setAnchor(WidgetAnchor.CENTER_CENTER);		
@@ -213,7 +216,7 @@ public class AccountTypesGUI extends GenericPopup {
 						new AckGUI(plugin, sPlayer, selectedBank, "Specify name.", "accounttypesgui");
 					} else if (selectedBank.getType(accountTypeName.getText().trim()) != null) {
 						newType = false;
-						new AckGUI(plugin, sPlayer, selectedBank, "That name already exists.", "accounttypesgui");
+						new AckGUI(plugin, sPlayer, selectedBank, "That name already exists.", "accounttypesgui");					
 					} else {
 						AccountType newAccountType = selectedBank.addType(new AccountType(accountTypeName.getText()));
 						newAccountType.setInterestRate(Double.parseDouble((intCycleField.getText().trim())));

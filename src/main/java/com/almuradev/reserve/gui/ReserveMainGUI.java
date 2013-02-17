@@ -83,6 +83,7 @@ public class ReserveMainGUI extends GenericPopup {
 		list.shiftXPos(-105).shiftYPos(-90);
 		list.setWidth(210).setHeight(80);
 		list.setPriority(RenderPriority.Lowest);
+		list.setSelection(0);
 
 		GenericButton createNewBank = new CommandButton(this, 1, "New");
 		GenericButton renameBank = new CommandButton(this, 2, "Rename");
@@ -127,10 +128,16 @@ public class ReserveMainGUI extends GenericPopup {
 
 		accountTypes.setEnabled(sPlayer.hasPermission("reserve.admin"));		
 
-		if (list.getItems() == null) {
+		if (list.getSelectedItem() == null) {
 			openBank.setEnabled(false);
-		} else {
+			deleteBank.setEnabled(false);
+			bankStatus.setEnabled(false);
+			renameBank.setEnabled(false);
+		} else {			
 			openBank.setEnabled(true);
+			deleteBank.setEnabled(true);
+			bankStatus.setEnabled(true);
+			renameBank.setEnabled(true);
 		}
 
 		attachWidgets(plugin, border, gl, gg, gb, createNewBank, list, renameBank, deleteBank, openBank, bankStatus, options, close);

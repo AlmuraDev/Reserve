@@ -51,6 +51,7 @@ public class DeleteAccountGUI extends GenericPopup {
 	private final SpoutPlayer sPlayer;
 	private final Bank selectedBank;
 	private final GenericLabel an;
+	private final GenericButton deleteButton;
 	private final ComboBox box;
 	private static NumberFormat numForm;
 	private static Locale caLoc = new Locale("en", "US");
@@ -99,8 +100,7 @@ public class DeleteAccountGUI extends GenericPopup {
 		box.shiftXPos(-58).shiftYPos(-37);
 		box.setAuto(true);
 		box.setPriority(RenderPriority.Low);
-		populateList();
-
+		
 		an = new GenericLabel();
 		numForm = NumberFormat.getCurrencyInstance(caLoc);
 		an.setText("Current Balance: ");
@@ -109,19 +109,27 @@ public class DeleteAccountGUI extends GenericPopup {
 		an.setHeight(15).setWidth(GenericLabel.getStringWidth(an.getText()));
 		an.shiftXPos(-110).shiftYPos(-10);
 
-		GenericButton depositButton = new CommandButton(this, 1, "Close Account");
+		deleteButton = new CommandButton(this, 1, "Close Account");
 		GenericButton close = new CommandButton(this, 2, "Close");
 
-		depositButton.setAnchor(WidgetAnchor.CENTER_CENTER);
+		deleteButton.setAnchor(WidgetAnchor.CENTER_CENTER);
 		close.setAnchor(WidgetAnchor.CENTER_CENTER);
 
-		depositButton.setHeight(16).setWidth(80).shiftXPos(-10).shiftYPos(47);
+		deleteButton.setHeight(16).setWidth(80).shiftXPos(-10).shiftYPos(47);
 		close.setHeight(16).setWidth(40).shiftXPos(75).shiftYPos(47);
 
-		attachWidgets(plugin, border, gl, gg, box, cl, windowLabel, an, depositButton, close);
+		populateList();
+		attachWidgets(plugin, border, gl, gg, box, cl, windowLabel, an, deleteButton, close);
 
 		sPlayer.getMainScreen().closePopup();
 		sPlayer.getMainScreen().attachPopupScreen(this);
+		
+		plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
+			@Override
+			public void run() {
+				setDirty(true);
+			}
+		}, 5L);
 	}
 
 	public void onClickCommand(int commandGoal) {
@@ -158,12 +166,31 @@ public class DeleteAccountGUI extends GenericPopup {
 			Collections.sort(items, String.CASE_INSENSITIVE_ORDER);
 			box.setItems(items);
 			box.setDirty(true);
+			box.setSelection(0);
+			if (box.getSelectedItem().equalsIgnoreCase("Bank Vault")) {
+				deleteButton.setEnabled(false);
+				deleteButton.setTooltip("Cannot Remove Bank Vault.");				
+			} else {
+				deleteButton.setEnabled(true);
+				deleteButton.setTooltip("");
+			}
 		}
 	}
 
 	void onSelect(int i, String text) {
 		Account myAccount = selectedBank.getAccount(box.getSelectedItem(), sPlayer.getName());
-		double balance = 0;
-		an.setText("Current Balance: " + ChatColor.GREEN + numForm.format(myAccount.getBalance()));
+		double balance = 0;		
+		if (box.getSelectedItem().equalsIgnoreCase("Bank Vault")) {
+			deleteButton.setEnabled(false);
+			deleteButton.setTooltip("Cannot Remove Bank Vault.");				
+		} else if (myAccount.getBalance()>0) {
+			an.setText("Current Balance: " + ChatColor.RED + numForm.format(myAccount.getBalance()));
+			deleteButton.setEnabled(false);
+			deleteButton.setTooltip("Cannot Remove accounts that have a positive balance.");
+		} else {
+			an.setText("Current Balance: " + ChatColor.GREEN + numForm.format(myAccount.getBalance()));
+			deleteButton.setEnabled(true);
+			deleteButton.setTooltip("");		
+		}
 	}
 }

@@ -145,20 +145,17 @@ public class WithdrawGUI extends GenericPopup {
 		depositAmountField.setMaximumLines(1);
 
 		GenericButton depositButton = new CommandButton(this, 1, "Withdraw");
-		GenericButton close = new CommandButton(this, 2, "Close");
-		GenericButton test = new CommandButton(this, 3, "Test");
+		GenericButton close = new CommandButton(this, 2, "Close");		
 
 		depositButton.setAnchor(WidgetAnchor.CENTER_CENTER);
-		close.setAnchor(WidgetAnchor.CENTER_CENTER);
-		test.setAnchor(WidgetAnchor.CENTER_CENTER);
+		close.setAnchor(WidgetAnchor.CENTER_CENTER);		
 
 		depositButton.setHeight(16).setWidth(50).shiftXPos(20).shiftYPos(50);
-		close.setHeight(16).setWidth(40).shiftXPos(75).shiftYPos(50);
-		test.setHeight(16).setWidth(40).shiftXPos(-20).shiftYPos(50);
+		close.setHeight(16).setWidth(40).shiftXPos(75).shiftYPos(50);		
 
 		populateList();
 
-		attachWidgets(plugin, border, gl, gg, ag, ab, at, att, gm, box, cl, depositAmountField, an, depositButton, close, test);
+		attachWidgets(plugin, border, gl, gg, ag, ab, at, att, gm, box, cl, depositAmountField, an, depositButton, close);
 
 		sPlayer.getMainScreen().closePopup();
 		sPlayer.getMainScreen().attachPopupScreen(this);
