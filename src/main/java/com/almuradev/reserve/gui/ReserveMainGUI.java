@@ -127,15 +127,15 @@ public class ReserveMainGUI extends GenericPopup {
 		openBank.setEnabled(sPlayer.hasPermission("reserve.viewbank"));
 		bankStatus.setEnabled(sPlayer.hasPermission("reserve.viewbank"));
 
-		accountTypes.setEnabled(sPlayer.hasPermission("reserve.admin"));		
+		accountTypes.setEnabled(sPlayer.hasPermission("reserve.admin"));
 
 		if (list.getSelectedItem() == null) {
 			openBank.setEnabled(false);
 			deleteBank.setEnabled(false);
 			bankStatus.setEnabled(false);
 			renameBank.setEnabled(false);
-			accountTypes.setEnabled(false);			
-		} else {			
+			accountTypes.setEnabled(false);
+		} else {
 			openBank.setEnabled(true);
 			deleteBank.setEnabled(true);
 			bankStatus.setEnabled(true);
@@ -185,7 +185,7 @@ public class ReserveMainGUI extends GenericPopup {
 				} else {
 					sPlayer.getMainScreen().closePopup();
 					String[] split = list.getSelectedItem().getTitle().split("\\/");
-					new BankStatusGUI(plugin, sPlayer, ReservePlugin.getReserve().get(split[0].trim(), ChatColor.stripColor(split[1].trim())));					
+					new BankStatusGUI(plugin, sPlayer, ReservePlugin.getReserve().get(split[0].trim(), ChatColor.stripColor(split[1].trim())));
 				}
 				break;
 			case 6:

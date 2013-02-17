@@ -105,8 +105,8 @@ public class BankStatusGUI extends GenericPopup {
 		bankNameLabel.setHeight(15).setWidth(GenericLabel.getStringWidth(bankNameLabel.getText()));
 		bankNameLabel.shiftXPos((GenericLabel.getStringWidth(bankNameLabel.getText()) / 2) * -1).shiftYPos(-79);
 
-		GenericButton close = new CommandButton(this, 2, "Close");			
-		close.setAnchor(WidgetAnchor.CENTER_CENTER);			
+		GenericButton close = new CommandButton(this, 2, "Close");
+		close.setAnchor(WidgetAnchor.CENTER_CENTER);
 		close.setHeight(16).setWidth(40).shiftXPos(70).shiftYPos(95);
 
 		attachWidgets(plugin, border, gl, bankNameLabel, gg, gb, list, bankAccountsLabel, close);
