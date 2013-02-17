@@ -141,7 +141,7 @@ public class ReservePlugin extends JavaPlugin implements Listener {
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		if (!(sender instanceof Player)) {
-			sender.sendMessage("Cannot open Reserve popup from the console!");
+			sender.sendMessage("Cannot execute Reserve commands from the console!");
 			return true;
 		}
 		if (cmd.getName().equalsIgnoreCase("reserve")) {
