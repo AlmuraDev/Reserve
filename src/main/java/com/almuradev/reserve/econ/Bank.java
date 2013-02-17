@@ -225,13 +225,10 @@ public class Bank {
 	 */
 	public boolean typeExistsFor(String holder, String type) {
 		boolean has = false;
-		final AccountType toFind = getType(type);
-		if (toFind != null) {
-			for (Account account : getAccountsFor(holder)) {
-				if (account.getType().equals(toFind)) {
-					has = true;
-					break;
-				}
+		for (Account account : getAccountsFor(holder)) {
+			if (account.getType().getName().equalsIgnoreCase(type)) {
+				has = true;
+				break;
 			}
 		}
 		return has;
