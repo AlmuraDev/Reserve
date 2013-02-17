@@ -145,9 +145,11 @@ public class AckGUI extends GenericPopup {
 				} else if (ackMessage.equalsIgnoreCase("Changes Saved.") && previousWindow.equalsIgnoreCase("renameaccountgui")) {
 					new BankMainGUI(plugin, sPlayer, selectedBank);
 				} else if (ackMessage.equalsIgnoreCase("You cannot rename Bank Vault.") && previousWindow.equalsIgnoreCase("renameaccountgui")) {
-					new BankMainGUI(plugin, sPlayer, selectedBank);
+					new BankMainGUI(plugin, sPlayer, selectedBank);					
+				} else if (ackMessage.equalsIgnoreCase("Reserve Configuration Saved.") && previousWindow.equalsIgnoreCase("reserveconfiggui")) {
+					new ReserveMainGUI(plugin, sPlayer);
 				} else {
-					new BankMainGUI(plugin, sPlayer, selectedBank);
+					// unhandled return, don't start another screen.
 				}
 				break;
 		}

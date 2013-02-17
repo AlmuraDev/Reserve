@@ -29,6 +29,7 @@ import com.almuradev.reserve.econ.Bank;
 import org.getspout.spoutapi.gui.CheckBox;
 import org.getspout.spoutapi.gui.Color;
 import org.getspout.spoutapi.gui.GenericButton;
+import org.getspout.spoutapi.gui.GenericCheckBox;
 import org.getspout.spoutapi.gui.GenericGradient;
 import org.getspout.spoutapi.gui.GenericLabel;
 import org.getspout.spoutapi.gui.GenericPopup;
@@ -42,6 +43,8 @@ public class ReserveConfigGUI extends GenericPopup {
 	private final ReservePlugin plugin;
 	private final SpoutPlayer sPlayer;
 	private final Bank selectedBank;
+	private final GenericTextField saveTime, intTime;
+	private final GenericCheckBox deathCheckBox, gainInterest;
 	Color bottom = new Color(1.0F, 1.0F, 1.0F, 0.50F);
 
 	public ReserveConfigGUI(ReservePlugin plugin, SpoutPlayer sPlayer, Bank bank) {
@@ -67,31 +70,41 @@ public class ReserveConfigGUI extends GenericPopup {
 		gg.shiftXPos(-45).shiftYPos(-55).setMaxWidth(130);
 		gg.setWidth(130).setHeight(1);
 
-		CheckBox multipleCheckbox = new ConfigMultipleCheckBox(sPlayer, plugin);
-		multipleCheckbox.setText("Allow Multiple Accounts");
-		multipleCheckbox.setAnchor(WidgetAnchor.CENTER_CENTER);
-		multipleCheckbox.setHeight(20).setWidth(19);
-		multipleCheckbox.shiftXPos(-45).shiftYPos(-42);
+		deathCheckBox = new ConfigMultipleCheckBox(sPlayer, plugin);
+		deathCheckBox.setText("Player Death Penalty");		
+		deathCheckBox.setEnabled(ReservePlugin.getConfiguration().shouldTaxDeath());
+		deathCheckBox.setAnchor(WidgetAnchor.CENTER_CENTER);
+		deathCheckBox.setHeight(20).setWidth(19);
+		deathCheckBox.shiftXPos(-45).shiftYPos(-42);
 
-		CheckBox shareCheckbox = new ConfigShareCheckBox(sPlayer, plugin);
-		shareCheckbox.setText("Allow Multiple Accounts");
-		shareCheckbox.setAnchor(WidgetAnchor.CENTER_CENTER);
-		shareCheckbox.setHeight(20).setWidth(19);
-		shareCheckbox.shiftXPos(-45).shiftYPos(-17);
+		gainInterest = new ConfigShareCheckBox(sPlayer, plugin);
+		gainInterest.setText("Account Gain Interest");
+		gainInterest.setEnabled(ReservePlugin.getConfiguration().shouldInterest());
+		gainInterest.setAnchor(WidgetAnchor.CENTER_CENTER);
+		gainInterest.setHeight(20).setWidth(19);
+		gainInterest.shiftXPos(-45).shiftYPos(-17);
 
-		GenericLabel an = new GenericLabel("Interest Calc: ");
+		GenericLabel an = new GenericLabel("Interest Time Interval: ");
 		an.setScale(1.0F);
 		an.setAnchor(WidgetAnchor.CENTER_CENTER);
 		an.setHeight(15).setWidth(GenericLabel.getStringWidth(an.getText()));
-		an.shiftXPos(-45).shiftYPos(16);
+		an.shiftXPos(-65).shiftYPos(16);
 
-		GenericTextField interestAmountField = new GenericTextField();
-		interestAmountField.setWidth(50).setHeight(16);
-		interestAmountField.setAnchor(WidgetAnchor.CENTER_CENTER);
-		interestAmountField.shiftXPos(30).shiftYPos(13);
-		interestAmountField.setText("0.00");
-		interestAmountField.setMaximumCharacters(5);
-		interestAmountField.setMaximumLines(1);
+		saveTime = new GenericTextField();
+		saveTime.setWidth(50).setHeight(16);
+		saveTime.setText(Double.toString(ReservePlugin.getConfiguration().getSaveInterval()));
+		saveTime.setAnchor(WidgetAnchor.CENTER_CENTER);
+		saveTime.shiftXPos(30).shiftYPos(13);		
+		saveTime.setMaximumCharacters(5);
+		saveTime.setMaximumLines(1);
+		
+		intTime = new GenericTextField();
+		intTime.setWidth(50).setHeight(16);
+		intTime.setText(Double.toString(ReservePlugin.getConfiguration().getInterestInterval()));
+		intTime.setAnchor(WidgetAnchor.CENTER_CENTER);
+		intTime.shiftXPos(30).shiftYPos(33);		
+		intTime.setMaximumCharacters(5);
+		intTime.setMaximumLines(1);
 
 		GenericButton depositButton = new CommandButton(this, 1, "Save");
 		GenericButton close = new CommandButton(this, 2, "Close");
@@ -102,7 +115,7 @@ public class ReserveConfigGUI extends GenericPopup {
 		depositButton.setHeight(16).setWidth(50).shiftXPos(30).shiftYPos(47);
 		close.setHeight(16).setWidth(40).shiftXPos(85).shiftYPos(47);
 
-		attachWidgets(plugin, border, gl, gg, shareCheckbox, multipleCheckbox, interestAmountField, an, depositButton, close);
+		attachWidgets(plugin, border, gl, gg, deathCheckBox, gainInterest, saveTime, intTime, an, depositButton, close);
 
 		sPlayer.getMainScreen().closePopup();
 		sPlayer.getMainScreen().attachPopupScreen(this);
@@ -112,7 +125,7 @@ public class ReserveConfigGUI extends GenericPopup {
 		switch (commandGoal) {
 			case 1: //Create
 				sPlayer.getMainScreen().closePopup();
-				new AckGUI(plugin, sPlayer, selectedBank, "Bank Configuration Saved", "reserveconfiggui");
+				new AckGUI(plugin, sPlayer, selectedBank, "Reserve Configuration Saved.", "reserveconfiggui");
 				break;
 			case 2:
 				sPlayer.getMainScreen().closePopup();
