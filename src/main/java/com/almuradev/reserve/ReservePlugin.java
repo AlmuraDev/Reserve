@@ -62,11 +62,13 @@ public class ReservePlugin extends JavaPlugin implements Listener {
 		reserve = new Reserve(storage);
 		reserve.onEnable();
 		//Schedule tasks
-		scheduler = Bukkit.getServer().getScheduler();
+		scheduler = getServer().getScheduler();
 		if (config.shouldInterest()) {
 			scheduler.scheduleSyncRepeatingTask(this, new InterestTask(this, reserve), 0, config.getInterestInterval());
 		}
 		scheduler.scheduleSyncRepeatingTask(this, reserve, 0, config.getSaveInterval());
+		//Register listeners
+		getServer().getPluginManager().registerEvents(this, this);
 	}
 
 	public static Reserve getReserve() {
