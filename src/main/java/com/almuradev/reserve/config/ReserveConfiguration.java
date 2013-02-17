@@ -78,6 +78,6 @@ public class ReserveConfiguration {
 			}
 		}
 		//Pick random from range
-		return lower + (upper - lower) * RANDOM.nextDouble();
+		return (lower + (upper - lower) * RANDOM.nextDouble()) / 100;
 	}
 }

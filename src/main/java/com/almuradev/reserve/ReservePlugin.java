@@ -19,6 +19,9 @@
  */
 package com.almuradev.reserve;
 
+import java.text.NumberFormat;
+import java.util.Locale;
+
 import com.almuradev.reserve.config.ReserveConfiguration;
 import com.almuradev.reserve.econ.VaultUtil;
 import com.almuradev.reserve.gui.popup.BankPopup;
@@ -27,6 +30,7 @@ import com.almuradev.reserve.storage.Reserve;
 import com.almuradev.reserve.storage.Storage;
 import com.almuradev.reserve.task.InterestTask;
 
+import org.getspout.spoutapi.SpoutManager;
 import org.getspout.spoutapi.player.SpoutPlayer;
 
 import org.bukkit.Bukkit;
@@ -45,6 +49,8 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitScheduler;
 
 public class ReservePlugin extends JavaPlugin implements Listener {
+	public static final Locale CURRENCY_LOCALE = new Locale("en", "US");
+	public static final NumberFormat NUMBER_FORMAT = NumberFormat.getCurrencyInstance(CURRENCY_LOCALE);
 	private static Reserve reserve;
 	private static Storage storage;
 	private static ReserveConfiguration config;
@@ -99,13 +105,13 @@ public class ReservePlugin extends JavaPlugin implements Listener {
 		final double carrying = VaultUtil.getBalance(died.getName());
 		final double taxed = carrying - (carrying * deathTax);
 		VaultUtil.add(died.getName(), -taxed);
-		died.sendMessage(getPrefix() + "You lost: " + taxed + "!");
+		died.sendMessage(getPrefix() + "You lost: " + NUMBER_FORMAT.format(taxed) + "!");
 		if (died.hasPermission("reserve.tax.death.broadcast")) {
 			for (Player player : Bukkit.getOnlinePlayers()) {
 				if (player.getName().equalsIgnoreCase(event.getEntity().getName())) {
 					continue;
 				}
-				player.sendMessage(getPrefix() + died.getDisplayName() + " died and lost: " + taxed + "!");
+				player.sendMessage(getPrefix() + died.getDisplayName() + " died and lost: " + NUMBER_FORMAT.format(taxed) + "!");
 			}
 		}
 	}
@@ -127,7 +133,6 @@ public class ReservePlugin extends JavaPlugin implements Listener {
 		if (!ChatColor.stripColor(sign.getLine(0).trim().toLowerCase()).contains("[reserve]")) {
 			return;
 		}
-		//At this point [Mybank]...or should be
 		final String bankName = ChatColor.stripColor(sign.getLine(1).trim().toLowerCase());
 		new BankPopup(this, sPlayer, ReservePlugin.getReserve().get(bankName.trim(), sPlayer.getWorld().getName()));
 	}
@@ -135,17 +140,20 @@ public class ReservePlugin extends JavaPlugin implements Listener {
 	//TESTING
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-		Player player = null;
-		if (sender instanceof Player) {
-			player = (Player) sender;
+		if (!(sender instanceof Player)) {
+			sender.sendMessage("Cannot open Reserve popup from the console!");
 		}
-
+		final SpoutPlayer player = SpoutManager.getPlayer((Player) sender);
+		if (!player.isSpoutCraftEnabled()) {
+			player.sendMessage("This command opens the Reserve popup, only available for Spoutcraft clients!");
+			return true;
+		}
+		if (!player.hasPermission("reserve.admin")) {
+			player.sendMessage("You do not have permission to open the Reserve popup!");
+			return true;
+		}
 		if (cmd.getName().equalsIgnoreCase("reserve")) {
-			if (player == null) {
-				sender.sendMessage("Reserve cannot be opened from the server console.");
-			} else {
-				((SpoutPlayer) sender).getMainScreen().attachPopupScreen(new ReservePopup(this, (SpoutPlayer) sender));
-			}
+			((SpoutPlayer) sender).getMainScreen().attachPopupScreen(new ReservePopup(this, (SpoutPlayer) sender));
 			return true;
 		}
 		return false;
