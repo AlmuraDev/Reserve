@@ -44,8 +44,7 @@ public class AccountListApplet extends GenericListWidget {
 		numForm = NumberFormat.getCurrencyInstance(caLoc);
 		List<Account> accountNames = selectedBank.getAccountsFor(sPlayer.getName());
 		for (Account account : accountNames) {
-			this.addItem(new ListWidgetItem(account.getName() + " / " + ChatColor.AQUA + account.getType().getName(), ChatColor.GREEN + numForm.format(account.getBalance()), account.getType().getImagePath().trim()));
-			System.out.println(account.getType().getName() + " / " + account.getType().getImagePath());		
+			this.addItem(new ListWidgetItem(account.getName() + " / " + ChatColor.AQUA + account.getType().getName(), ChatColor.GREEN + numForm.format(account.getBalance()), account.getType().getImagePath().trim()));					
 		}
 	}
 }

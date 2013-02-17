@@ -43,8 +43,7 @@ import org.bukkit.ChatColor;
 
 public class DeleteBankGUI extends GenericPopup {
 	private final ReservePlugin plugin;
-	private final SpoutPlayer sPlayer;
-	private final GenericLabel an;
+	private final SpoutPlayer sPlayer;	
 	private ListWidget list;
 	private static NumberFormat numForm;
 	private static Locale caLoc = new Locale("en", "US");
@@ -90,14 +89,6 @@ public class DeleteBankGUI extends GenericPopup {
 		list.setWidth(155).setHeight(60);
 		list.setPriority(RenderPriority.Lowest);
 
-		an = new GenericLabel();
-		numForm = NumberFormat.getCurrencyInstance(caLoc);
-		an.setText("Bank Balance: ");
-		an.setScale(1.0F);
-		an.setAnchor(WidgetAnchor.CENTER_CENTER);
-		an.setHeight(15).setWidth(GenericLabel.getStringWidth(an.getText()));
-		an.shiftXPos(-110).shiftYPos(30);
-
 		GenericButton depositButton = new CommandButton(this, 1, "Remove Bank");
 		GenericButton close = new CommandButton(this, 2, "Close");
 
@@ -107,7 +98,7 @@ public class DeleteBankGUI extends GenericPopup {
 		depositButton.setHeight(16).setWidth(80).shiftXPos(-10).shiftYPos(47);
 		close.setHeight(16).setWidth(40).shiftXPos(75).shiftYPos(47);
 
-		attachWidgets(plugin, border, gl, gg, list, cl, windowLabel, an, depositButton, close);
+		attachWidgets(plugin, border, gl, gg, list, cl, windowLabel, depositButton, close);
 
 		sPlayer.getMainScreen().closePopup();
 		sPlayer.getMainScreen().attachPopupScreen(this);

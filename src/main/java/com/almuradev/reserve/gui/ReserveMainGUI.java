@@ -146,8 +146,13 @@ public class ReserveMainGUI extends GenericPopup {
 				new CreateBankGUI(plugin, sPlayer);
 				break;
 			case 2:
-				sPlayer.getMainScreen().closePopup();
-				//new DepositGUI(plugin, sPlayer);
+				if (list.getSelectedItem() == null) {
+					new AckGUI(plugin, sPlayer, null, "Please Select Bank.", "reservemaingui");
+				} else {
+					String[] split = list.getSelectedItem().getTitle().split("\\/");
+					sPlayer.getMainScreen().closePopup();
+					new RenameBankGUI(plugin, sPlayer, ReservePlugin.getReserve().get(split[0].trim(), ChatColor.stripColor(split[1].trim())));
+				}
 				break;
 			case 3:
 				sPlayer.getMainScreen().closePopup();

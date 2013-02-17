@@ -82,8 +82,7 @@ public class BankStatusGUI extends GenericPopup {
 		gb.setAnchor(WidgetAnchor.CENTER_CENTER);
 		gb.setWidth(200).setHeight(1);
 		gb.shiftXPos(0 - (gb.getWidth() / 2)).shiftYPos(-65);
-
-		System.out.println("SelectedBank:" + selectedBank.getName());
+		
 		list = new MasterAccountListApplet(selectedBank, sPlayer);
 		list.setAnchor(WidgetAnchor.CENTER_CENTER);
 		list.shiftXPos(-100).shiftYPos(-60);
