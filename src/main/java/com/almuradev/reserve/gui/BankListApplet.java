@@ -42,7 +42,6 @@ public class BankListApplet extends GenericListWidget {
 		for (String world : allBanks.keySet()) {
 			for (Bank bank : allBanks.get(world)) {
 				this.addItem(new ListWidgetItem(bank.getName() + " / " + ChatColor.AQUA + world, ChatColor.GOLD + numForm.format(bank.getAccountsBalance())));
-			
 			}
 		}
 	}

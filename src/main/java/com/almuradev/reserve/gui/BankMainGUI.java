@@ -119,7 +119,7 @@ public class BankMainGUI extends GenericPopup {
 		makeWithdraw.setTooltip("Removed money from your specified account.");
 		closeAccount.setTooltip("Closes & Deletes the specified bank account.");
 		faq.setTooltip("Frequently Asked Questions Here");
-		
+
 		createAccount.setAnchor(WidgetAnchor.CENTER_CENTER);
 		makeDeposit.setAnchor(WidgetAnchor.CENTER_CENTER);
 		makeWithdraw.setAnchor(WidgetAnchor.CENTER_CENTER);
@@ -135,7 +135,7 @@ public class BankMainGUI extends GenericPopup {
 		rename.setHeight(16).setWidth(120).shiftXPos(-60).shiftYPos(55);
 		faq.setHeight(16).setWidth(20).shiftXPos(-10).shiftYPos(95);
 		close.setHeight(16).setWidth(40).shiftXPos(70).shiftYPos(95);
-		
+
 		createAccount.setEnabled(sPlayer.hasPermission("reserve.accountadd"));
 		makeDeposit.setEnabled(sPlayer.hasPermission("reserve.deposit") && (selectedBank.getAmountOfAccountsFor(sPlayer.getName()) > 0));
 		makeWithdraw.setEnabled(sPlayer.hasPermission("reserve.withdraw") && (selectedBank.getAmountOfAccountsFor(sPlayer.getName()) > 0));
@@ -148,7 +148,7 @@ public class BankMainGUI extends GenericPopup {
 		sPlayer.getMainScreen().attachPopupScreen(this);
 	}
 
-	public void onClickCommand(int commandGoal) {		
+	public void onClickCommand(int commandGoal) {
 		switch (commandGoal) {
 			case 1:
 				sPlayer.getMainScreen().closePopup();
@@ -182,13 +182,13 @@ public class BankMainGUI extends GenericPopup {
 				sPlayer.getMainScreen().closePopup();
 				if (list.getSelectedItem() == null) {
 					new WithdrawGUI(plugin, sPlayer, selectedBank, selectedAccount);
-				} else {				
+				} else {
 					String[] split = list.getSelectedItem().getTitle().split("\\/");
 					Account myAccount = selectedBank.getAccount(split[0].trim(), sPlayer.getName());
 					if (myAccount.getName().equalsIgnoreCase("Bank Vault")) {
 						new AckGUI(plugin, sPlayer, selectedBank, "You cannot rename Bank Vault.", "bankmaingui");
 					} else {
-					  new RenameAccountGUI(plugin, sPlayer, selectedBank, myAccount);
+						new RenameAccountGUI(plugin, sPlayer, selectedBank, myAccount);
 					}
 				}
 			case 6:

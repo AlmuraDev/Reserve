@@ -47,26 +47,26 @@ public class RenameBankGUI extends GenericPopup {
 	public RenameBankGUI(ReservePlugin plugin, SpoutPlayer sPlayer, Bank bank) {
 		this.plugin = plugin;
 		this.sPlayer = sPlayer;
-		this.selectedBank = bank;	
+		this.selectedBank = bank;
 
 		GenericLabel gl = new GenericLabel();
 		gl.setScale(1.4F).setText("Rename Bank");
 		gl.setAnchor(WidgetAnchor.CENTER_CENTER);
 		gl.setHeight(15).setWidth(GenericLabel.getStringWidth(gl.getText(), gl.getScale()));
 		gl.shiftXPos((GenericLabel.getStringWidth(gl.getText(), gl.getScale()) / 2) * -1).shiftYPos(-70);
-		
+
 		GenericTexture border = new GenericTexture("http://www.almuramc.com/images/playerplus.png");
 		border.setAnchor(WidgetAnchor.CENTER_CENTER);
 		border.setPriority(RenderPriority.High);
 		border.setWidth(gl.getWidth() + 50).setHeight(90);
 		border.shiftXPos(0 - (border.getWidth() / 2)).shiftYPos(-80);
-		
+
 		GenericGradient gg = new GenericGradient();
 		gg.setBottomColor(bottom).setTopColor(bottom);
 		gg.setAnchor(WidgetAnchor.CENTER_CENTER);
 		gg.setWidth(border.getWidth() - 25).setHeight(1);
 		gg.shiftXPos(0 - gg.getWidth() / 2).shiftYPos(-55);
-		
+
 		bankNameField = new GenericTextField();
 		bankNameField.setText(selectedBank.getName().trim());
 		bankNameField.setWidth(110).setHeight(16);
@@ -74,15 +74,15 @@ public class RenameBankGUI extends GenericPopup {
 		bankNameField.shiftXPos(-55).shiftYPos(-45);
 		bankNameField.setMaximumCharacters(30);
 		bankNameField.setMaximumLines(1);
-		
+
 		GenericButton close = new CommandButton(this, 1, "Close");
 		GenericButton save = new CommandButton(this, 2, "Save");
-		
+
 		save.setAnchor(WidgetAnchor.CENTER_CENTER);
 		close.setAnchor(WidgetAnchor.CENTER_CENTER);
-		
+
 		save.setHeight(16).setWidth(40).shiftXPos(-30).shiftYPos(-10);
-		close.setHeight(16).setWidth(40).shiftXPos(20).shiftYPos(-10);		
+		close.setHeight(16).setWidth(40).shiftXPos(20).shiftYPos(-10);
 
 		attachWidgets(plugin, border, gl, gg, bankNameField, save, close);
 
@@ -92,20 +92,20 @@ public class RenameBankGUI extends GenericPopup {
 
 	public void onClickCommand(int commandGoal) {
 		switch (commandGoal) {
-		case 1:	
-			sPlayer.getMainScreen().closePopup();								
-			new ReserveMainGUI(plugin, sPlayer);			
-			break;
-		case 2:
-			if (bankNameField.getText().isEmpty()) {
+			case 1:
 				sPlayer.getMainScreen().closePopup();
-				new AckGUI(plugin, sPlayer, null, "Please specify new name.", "renamebankgui");
-			} else {				
-				selectedBank.setName(bankNameField.getText().trim());
-				sPlayer.getMainScreen().closePopup();
-				new AckGUI(plugin, sPlayer, null, "Changes Saved.", "renamebankgui");
-			}
-			break;
+				new ReserveMainGUI(plugin, sPlayer);
+				break;
+			case 2:
+				if (bankNameField.getText().isEmpty()) {
+					sPlayer.getMainScreen().closePopup();
+					new AckGUI(plugin, sPlayer, null, "Please specify new name.", "renamebankgui");
+				} else {
+					selectedBank.setName(bankNameField.getText().trim());
+					sPlayer.getMainScreen().closePopup();
+					new AckGUI(plugin, sPlayer, null, "Changes Saved.", "renamebankgui");
+				}
+				break;
 		}
 	}
 }

@@ -63,15 +63,15 @@ public class CreateBankGUI extends GenericPopup {
 
 		GenericGradient gg = new GenericGradient();
 		gg.setBottomColor(bottom).setTopColor(bottom);
-		gg.setAnchor(WidgetAnchor.CENTER_CENTER);		
+		gg.setAnchor(WidgetAnchor.CENTER_CENTER);
 		gg.setWidth(130).setHeight(1);
-		gg.shiftXPos(0-(gg.getWidth()/2)).shiftYPos(-55).setMaxWidth(130);
+		gg.shiftXPos(0 - (gg.getWidth() / 2)).shiftYPos(-55).setMaxWidth(130);
 
 		GenericLabel cl = new GenericLabel("-- Create New Bank --");
 		cl.setScale(1.0F);
 		cl.setAnchor(WidgetAnchor.CENTER_CENTER);
 		cl.setHeight(15).setWidth(GenericLabel.getStringWidth(cl.getText()));
-		cl.shiftXPos(0-(cl.getWidth()/2)).shiftYPos(-47);
+		cl.shiftXPos(0 - (cl.getWidth() / 2)).shiftYPos(-47);
 
 		GenericLabel an = new GenericLabel("Name: ");
 		an.setScale(1.0F);
@@ -99,14 +99,13 @@ public class CreateBankGUI extends GenericPopup {
 
 		sPlayer.getMainScreen().closePopup();
 		sPlayer.getMainScreen().attachPopupScreen(this);
-		
+
 		bankNameField.setFocus(true);
-		
 	}
 
 	public void onClickCommand(int commandGoal) {
 		switch (commandGoal) {
-			case 1: 
+			case 1:
 				if (bankNameField.getText().isEmpty()) {
 					new AckGUI(plugin, sPlayer, null, "Please specify name.", "createbankgui");
 				} else {
@@ -115,25 +114,25 @@ public class CreateBankGUI extends GenericPopup {
 					} else {
 						Bank selectedBank = ReservePlugin.getReserve().add(bankNameField.getText().trim(), sPlayer.getName(), sPlayer.getWorld().getName());
 						selectedBank.setBalance(Double.parseDouble("0.0"));
-						
+
 						// Create Bank Vault & Vault Type.						
 						AccountType newAccountType = selectedBank.addType(new AccountType("Vault"));
 						newAccountType.setInterestRate(Double.parseDouble("0.0"));
 						newAccountType.setImagePath("http://www.almuramc.com/images/vault.png");
-						newAccountType.shouldReceiveInterest(false);						
-						
+						newAccountType.shouldReceiveInterest(false);
+
 						AccountType newAccountType1 = selectedBank.addType(new AccountType("Savings"));
 						newAccountType1.setInterestRate(Double.parseDouble("0.0"));
 						newAccountType1.setImagePath("http://www.almuramc.com/images/savings.png");
 						newAccountType1.shouldReceiveInterest(false);
-						
+
 						AccountType newAccountType2 = selectedBank.addType(new AccountType("Checking"));
 						newAccountType2.setInterestRate(Double.parseDouble("0.0"));
-						newAccountType2.setImagePath("http://www.almuramc.com/images/check.png");						
+						newAccountType2.setImagePath("http://www.almuramc.com/images/check.png");
 						newAccountType2.shouldReceiveInterest(false);
-						
+
 						selectedBank.addAccount(new Account(selectedBank.getType("Vault"), "Bank Vault", sPlayer.getName()));
-						
+
 						sPlayer.getMainScreen().closePopup();
 						new AckGUI(plugin, sPlayer, null, "Bank Created Successfully.", "createbankgui");
 					}

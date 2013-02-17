@@ -24,7 +24,6 @@ public class AccountType {
 	private boolean hasInterest = false;
 	private double interestRate = 0.0;
 	private boolean dirty = false;
-	
 
 	public AccountType(String name) {
 		this.name = name;
@@ -57,7 +56,7 @@ public class AccountType {
 	public String getImagePath() {
 		return imagePath;
 	}
-	
+
 	/**
 	 * Sets the image path of this account type.
 	 * @param path The new image path
@@ -68,7 +67,7 @@ public class AccountType {
 		setDirty(true);
 		return this;
 	}
-	
+
 	/**
 	 * Returns whether this account type applies interest or not.
 	 * @return True if it applies interest, false if not
