@@ -20,6 +20,7 @@
 package com.almuradev.reserve.config;
 
 import java.io.File;
+import java.util.Random;
 
 import com.almuradev.reserve.ReservePlugin;
 
@@ -28,6 +29,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 public class ReserveConfiguration {
 	private final ReservePlugin plugin;
 	private FileConfiguration config;
+	private final static Random RANDOM = new Random();
 
 	public ReserveConfiguration(ReservePlugin plugin) {
 		this.plugin = plugin;
@@ -42,7 +44,11 @@ public class ReserveConfiguration {
 	}
 
 	public boolean shouldInterest() {
-		return config.getBoolean("schedule.interest", true);
+		return config.getBoolean("modifier.interest", true);
+	}
+
+	public boolean shouldTaxDeath() {
+		return config.getBoolean("modifier.tax-death", true);
 	}
 
 	public long getInterestInterval() {
@@ -53,11 +59,25 @@ public class ReserveConfiguration {
 		return config.getLong("interval.save", 2400);
 	}
 
-	public boolean shouldTax() {
-		return config.getBoolean("schedule.tax", true);
-	}
-
-	public long getTaxInterval() {
-		return config.getLong("interval.tax", 1728000);
+	public double getDeathTax() {
+		final String raw = config.getString("tax.death-range", "25-75");
+		final String[] parsed = raw.split("-");
+		double lower, upper;
+		lower = upper = 0;
+		//Parse lower and upper
+		try {
+			lower = Double.parseDouble(parsed[0]);
+		} catch (Exception e) {
+			lower = 0;
+		}
+		if (parsed.length == 2) {
+			try {
+				upper = Double.parseDouble(parsed[1]);
+			} catch (Exception e) {
+				upper = 0;
+			}
+		}
+		//Pick random from range
+		return lower + (upper - lower) * RANDOM.nextDouble();
 	}
 }
