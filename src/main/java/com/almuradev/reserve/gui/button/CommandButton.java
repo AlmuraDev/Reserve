@@ -24,6 +24,7 @@ import com.almuradev.reserve.gui.popup.AckPopup;
 import com.almuradev.reserve.gui.popup.BankConfigPopup;
 import com.almuradev.reserve.gui.popup.BankPopup;
 import com.almuradev.reserve.gui.popup.BankStatusPopup;
+import com.almuradev.reserve.gui.popup.ConfigureNPCPopup;
 import com.almuradev.reserve.gui.popup.CreateAccountPopup;
 import com.almuradev.reserve.gui.popup.CreateBankPopup;
 import com.almuradev.reserve.gui.popup.DeleteAccountPopup;
@@ -113,6 +114,10 @@ public class CommandButton extends GenericButton {
 		
 		if (gui instanceof RenameAccountPopup) {
 			((RenameAccountPopup) gui).onClickCommand(commandGoal);
+		}
+		
+		if (gui instanceof ConfigureNPCPopup) {
+			((ConfigureNPCPopup) gui).onClickCommand(commandGoal);
 		}
 	}
 }
