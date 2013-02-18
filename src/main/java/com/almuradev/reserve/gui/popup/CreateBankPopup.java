@@ -23,6 +23,8 @@
  */
 package com.almuradev.reserve.gui.popup;
 
+import java.util.regex.Matcher;
+
 import com.almuradev.reserve.ReservePlugin;
 import com.almuradev.reserve.econ.Account;
 import com.almuradev.reserve.econ.Bank;
@@ -110,10 +112,14 @@ public class CreateBankPopup extends GenericPopup {
 				if (bankNameField.getText().isEmpty()) {
 					new AckPopup(plugin, sPlayer, null, "Please specify name.", "createbankgui");
 				} else {
-					if (ReservePlugin.getReserve().get(bankNameField.getText(), sPlayer.getWorld().getName()) != null) {
+					final String input = bankNameField.getText().trim();
+					final Matcher parse = plugin.INPUT_REGEX.matcher(input);
+					if (parse.find()) {
+						new AckPopup(plugin, sPlayer, null, "Invalid characters entered for bank name.", "createbankgui");
+					} else if (ReservePlugin.getReserve().get(input, sPlayer.getWorld().getName()) != null) {
 						new AckPopup(plugin, sPlayer, null, "Bank name already exists.", "createbankgui");
 					} else {
-						Bank selectedBank = ReservePlugin.getReserve().add(bankNameField.getText().trim(), sPlayer.getName(), sPlayer.getWorld().getName());
+						Bank selectedBank = ReservePlugin.getReserve().add(input, sPlayer.getName(), sPlayer.getWorld().getName());
 						selectedBank.setBalance(Double.parseDouble("0.0"));
 
 						// Create Bank Vault & Vault Type.						

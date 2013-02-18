@@ -155,7 +155,7 @@ public class ReservePopup extends GenericPopup {
 				if (list.getSelectedItem() == null) {
 					new AckPopup(plugin, sPlayer, null, "Please Select Bank.", "reservemaingui");
 				} else {
-					String[] split = list.getSelectedItem().getTitle().split("\\/");
+					String[] split = list.getSelectedItem().getTitle().split("/");
 					sPlayer.getMainScreen().closePopup();
 					new RenameBankPopup(plugin, sPlayer, ReservePlugin.getReserve().get(split[0].trim(), ChatColor.stripColor(split[1].trim())));
 				}
@@ -170,7 +170,7 @@ public class ReservePopup extends GenericPopup {
 					new AckPopup(plugin, sPlayer, null, "Please Select Bank.", "reservemaingui");
 				} else {
 					sPlayer.getMainScreen().closePopup();
-					String[] split = list.getSelectedItem().getTitle().split("\\/");
+					String[] split = list.getSelectedItem().getTitle().split("/");
 					new BankPopup(plugin, sPlayer, ReservePlugin.getReserve().get(split[0].trim(), ChatColor.stripColor(split[1].trim())));
 				}
 				break;
@@ -180,7 +180,7 @@ public class ReservePopup extends GenericPopup {
 					new AckPopup(plugin, sPlayer, null, "Please Select Bank.", "reservemaingui");
 				} else {
 					sPlayer.getMainScreen().closePopup();
-					String[] split = list.getSelectedItem().getTitle().split("\\/");
+					String[] split = list.getSelectedItem().getTitle().split("/");
 					new BankStatusPopup(plugin, sPlayer, ReservePlugin.getReserve().get(split[0].trim(), ChatColor.stripColor(split[1].trim())));
 				}
 				break;
@@ -189,7 +189,7 @@ public class ReservePopup extends GenericPopup {
 					new AckPopup(plugin, sPlayer, null, "Please Select Bank.", "reservemaingui");
 				} else {
 					sPlayer.getMainScreen().closePopup();
-					String[] split = list.getSelectedItem().getTitle().split("\\/");
+					String[] split = list.getSelectedItem().getTitle().split("/");
 					new AccountTypesPopup(plugin, sPlayer, ReservePlugin.getReserve().get(split[0].trim(), ChatColor.stripColor(split[1].trim())));
 				}
 				break;

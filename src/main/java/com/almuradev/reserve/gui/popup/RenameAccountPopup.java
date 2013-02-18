@@ -23,6 +23,8 @@
  */
 package com.almuradev.reserve.gui.popup;
 
+import java.util.regex.Matcher;
+
 import com.almuradev.reserve.ReservePlugin;
 import com.almuradev.reserve.econ.Account;
 import com.almuradev.reserve.econ.Bank;
@@ -103,16 +105,22 @@ public class RenameAccountPopup extends GenericPopup {
 			case 2:
 				if (accountNameField.getText().isEmpty()) {
 					new AckPopup(plugin, sPlayer, selectedBank, "Please specify a new name.", "renameaccountgui");
-				} else if (accountNameField.getText().trim().equalsIgnoreCase("Bank Vault")) {
-					sPlayer.getMainScreen().closePopup();
-					new AckPopup(plugin, sPlayer, selectedBank, "You cannot rename Bank Vault.", "renameaccountgui");
-				} else if (selectedBank.getAccount(accountNameField.getText().trim(), sPlayer.getName()) != null) {
-					sPlayer.getMainScreen().closePopup();
-					new AckPopup(plugin, sPlayer, selectedBank, "That name already exists.", "renameaccountgui");
 				} else {
-					myAccount.setName(accountNameField.getText().trim());
-					sPlayer.getMainScreen().closePopup();
-					new AckPopup(plugin, sPlayer, selectedBank, "Changes Saved.", "renameaccountgui");
+					final String input = accountNameField.getText().trim();
+					final Matcher parse = plugin.INPUT_REGEX.matcher(input);
+					if (parse.find()) {
+						new AckPopup(plugin, sPlayer, selectedBank, "Invalid characters entered for account name.", "renameaccountgui");
+					} else if (input.equalsIgnoreCase("Bank Vault")) {
+						sPlayer.getMainScreen().closePopup();
+						new AckPopup(plugin, sPlayer, selectedBank, "You cannot rename Bank Vault.", "renameaccountgui");
+					} else if (selectedBank.getAccount(input, sPlayer.getName()) != null) {
+						sPlayer.getMainScreen().closePopup();
+						new AckPopup(plugin, sPlayer, selectedBank, "That name already exists.", "renameaccountgui");
+					} else {
+						myAccount.setName(input);
+						sPlayer.getMainScreen().closePopup();
+						new AckPopup(plugin, sPlayer, selectedBank, "Changes Saved.", "renameaccountgui");
+					}
 				}
 				break;
 		}

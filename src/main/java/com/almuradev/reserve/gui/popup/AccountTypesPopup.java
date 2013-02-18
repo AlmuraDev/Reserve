@@ -26,6 +26,7 @@ package com.almuradev.reserve.gui.popup;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.regex.Matcher;
 
 import com.almuradev.reserve.ReservePlugin;
 import com.almuradev.reserve.econ.Bank;
@@ -208,17 +209,23 @@ public class AccountTypesPopup extends GenericPopup {
 					if (accountTypeName.getText().isEmpty()) {
 						newType = false;
 						new AckPopup(plugin, sPlayer, selectedBank, "Specify name.", "accounttypesgui");
-					} else if (selectedBank.getType(accountTypeName.getText().trim()) != null) {
-						newType = false;
-						new AckPopup(plugin, sPlayer, selectedBank, "That name already exists.", "accounttypesgui");
 					} else {
-						AccountType newAccountType = selectedBank.addType(new AccountType(accountTypeName.getText()));
-						newAccountType.setInterestRate(Double.parseDouble((intCycleField.getText().trim())));
-						newAccountType.setImagePath(imageField.getText().trim());
-						newAccountType.shouldReceiveInterest(intsetting.isChecked());
-						newType = false;
-						sPlayer.getMainScreen().closePopup();
-						new AckPopup(plugin, sPlayer, selectedBank, "Account Type Added.", "accounttypesgui");
+						final String input = accountTypeName.getText().trim();
+						final Matcher parse = plugin.INPUT_REGEX.matcher(input);
+						if (parse.find()) {
+							new AckPopup(plugin, sPlayer, selectedBank, "Invalid characters entered for account type.", "accounttypesgui");
+						} else if (selectedBank.getType(input) != null) {
+							newType = false;
+							new AckPopup(plugin, sPlayer, selectedBank, "That name already exists.", "accounttypesgui");
+						} else {
+							AccountType newAccountType = selectedBank.addType(new AccountType(input));
+							newAccountType.setInterestRate(Double.parseDouble((intCycleField.getText().trim())));
+							newAccountType.setImagePath(imageField.getText().trim());
+							newAccountType.shouldReceiveInterest(intsetting.isChecked());
+							newType = false;
+							sPlayer.getMainScreen().closePopup();
+							new AckPopup(plugin, sPlayer, selectedBank, "Account Type Added.", "accounttypesgui");
+						}
 					}
 				}
 

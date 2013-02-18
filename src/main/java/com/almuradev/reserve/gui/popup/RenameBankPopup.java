@@ -23,6 +23,8 @@
  */
 package com.almuradev.reserve.gui.popup;
 
+import java.util.regex.Matcher;
+
 import com.almuradev.reserve.ReservePlugin;
 import com.almuradev.reserve.econ.Bank;
 import com.almuradev.reserve.gui.button.CommandButton;
@@ -102,9 +104,15 @@ public class RenameBankPopup extends GenericPopup {
 					sPlayer.getMainScreen().closePopup();
 					new AckPopup(plugin, sPlayer, null, "Please specify new name.", "renamebankgui");
 				} else {
-					selectedBank.setName(bankNameField.getText().trim());
-					sPlayer.getMainScreen().closePopup();
-					new AckPopup(plugin, sPlayer, null, "Changes Saved.", "renamebankgui");
+					final String input = bankNameField.getText().trim();
+					final Matcher parse = plugin.INPUT_REGEX.matcher(input);
+					if (parse.find()) {
+						new AckPopup(plugin, sPlayer, null, "Invalid characters entered for bank name.", "renamebankgui");
+					} else {
+						selectedBank.setName(input);
+						sPlayer.getMainScreen().closePopup();
+						new AckPopup(plugin, sPlayer, null, "Changes Saved.", "renamebankgui");
+					}
 				}
 				break;
 		}

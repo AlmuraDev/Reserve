@@ -21,6 +21,7 @@ package com.almuradev.reserve;
 
 import java.text.NumberFormat;
 import java.util.Locale;
+import java.util.regex.Pattern;
 
 import com.almuradev.reserve.config.ReserveConfiguration;
 import com.almuradev.reserve.econ.Bank;
@@ -54,6 +55,7 @@ import org.bukkit.scheduler.BukkitScheduler;
 public class ReservePlugin extends JavaPlugin implements Listener {
 	public static final Locale CURRENCY_LOCALE = new Locale("en", "US");
 	public static final NumberFormat NUMBER_FORMAT = NumberFormat.getCurrencyInstance(CURRENCY_LOCALE);
+	public static final Pattern INPUT_REGEX = Pattern.compile("\\d|\\\\|>|<|/|\\?|\\$|#|%|@|!|\\(|\\)|_|\\+|=|\\^|&|\\*|;|:|~|`|\\{|}|\\[|]|,|\\.|\\|");
 	private static Reserve reserve;
 	private static Storage storage;
 	private static ReserveConfiguration config;

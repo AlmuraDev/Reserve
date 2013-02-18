@@ -26,6 +26,7 @@ package com.almuradev.reserve.gui.popup;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.regex.Matcher;
 
 import com.almuradev.reserve.ReservePlugin;
 import com.almuradev.reserve.econ.Account;
@@ -144,12 +145,16 @@ public class CreateAccountPopup extends GenericPopup {
 					if (accountNameField.getText().isEmpty()) {
 						new AckPopup(plugin, sPlayer, selectedBank, "Please specify name.", "createaccountgui");
 					} else {
-						if (selectedBank.getAccount(accountNameField.getText().trim(), sPlayer.getName()) != null) {
+						final String input = accountNameField.getText().trim();
+						final Matcher parse = plugin.INPUT_REGEX.matcher(input);
+						if (parse.find()) {
+							new AckPopup(plugin, sPlayer, selectedBank, "Invalid characters entered for account name.", "createaccountgui");
+						} else if (selectedBank.getAccount(input, sPlayer.getName()) != null) {
 							new AckPopup(plugin, sPlayer, selectedBank, "Account with that name already exists.", "createaccountgui");
 						} else if (selectedBank.typeExistsFor(sPlayer.getName(), box.getSelectedItem())) {
 							new AckPopup(plugin, sPlayer, selectedBank, "You already have an account of that type.", "createaccountgui");
 						} else {
-							selectedBank.addAccount(new Account(selectedBank.getType(box.getSelectedItem()), accountNameField.getText(), sPlayer.getName()));
+							selectedBank.addAccount(new Account(selectedBank.getType(box.getSelectedItem()), input, sPlayer.getName()));
 							sPlayer.getMainScreen().closePopup();
 							new AckPopup(plugin, sPlayer, selectedBank, "Account Created Successfully.", "createaccountgui");
 						}
