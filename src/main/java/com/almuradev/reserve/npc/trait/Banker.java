@@ -22,6 +22,7 @@ package com.almuradev.reserve.npc.trait;
 import com.almuradev.reserve.ReservePlugin;
 import com.almuradev.reserve.econ.Bank;
 import com.almuradev.reserve.gui.popup.BankPopup;
+import com.almuradev.reserve.gui.popup.ConfigureNPCPopup;
 
 import net.citizensnpcs.api.ai.speech.SpeechContext;
 import net.citizensnpcs.api.event.NPCRightClickEvent;
@@ -75,7 +76,7 @@ public class Banker extends Trait implements Listener {
 		final SpoutPlayer player = SpoutManager.getPlayer(event.getClicker());
 		if (player.isSpoutCraftEnabled()) {
 			if (bankName == null || bankName.isEmpty()) {
-
+				new ConfigureNPCPopup(plugin, player, event.getNPC());
 			} else {
 				final Bank bank = plugin.getReserve().get(bankName, player.getWorld().getName());
 				if (bank == null) {
