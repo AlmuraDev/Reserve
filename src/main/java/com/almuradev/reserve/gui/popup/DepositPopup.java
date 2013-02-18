@@ -23,6 +23,7 @@
  */
 package com.almuradev.reserve.gui.popup;
 
+import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -143,7 +144,8 @@ public class DepositPopup extends GenericPopup {
 		depositAmountField.setWidth(110).setHeight(16);
 		depositAmountField.setAnchor(WidgetAnchor.CENTER_CENTER);
 		depositAmountField.shiftXPos(-10).shiftYPos(27);
-		depositAmountField.setText("0.00");
+		depositAmountField.setPlaceholder("0.00");
+		depositAmountField.setTooltip("Do not include commas in deposit value.");
 		depositAmountField.setMaximumCharacters(15);
 		depositAmountField.setMaximumLines(1);
 
@@ -179,9 +181,11 @@ public class DepositPopup extends GenericPopup {
 				} else {
 
 					Account myAccount = selectedBank.getAccount(box.getSelectedItem(), sPlayer.getName());
-					double deposit = 0;
-					try {
-						deposit = Math.abs(Double.parseDouble(depositAmountField.getText()));
+					double deposit = 0;	
+					DecimalFormat df = new DecimalFormat("#.##");					
+					try {						
+						String myDeposit = df.format(Math.abs(Double.parseDouble(depositAmountField.getText())));
+						deposit = Double.parseDouble(myDeposit);						
 					} catch (Exception e) {
 						//do nothing
 					}
@@ -196,7 +200,7 @@ public class DepositPopup extends GenericPopup {
 							myAccount.add(deposit);
 							VaultUtil.add(sPlayer.getName(), 0 - deposit);
 							sPlayer.getMainScreen().closePopup();
-							new AckPopup(plugin, sPlayer, selectedBank, "Funds Deposited Successfully", "depositgui");
+							new AckPopup(plugin, sPlayer, selectedBank, "Funds Deposited Successfully.", "depositgui");
 						}
 					}
 				}

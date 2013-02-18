@@ -23,6 +23,7 @@
  */
 package com.almuradev.reserve.gui.popup;
 
+import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -57,7 +58,7 @@ public class WithdrawPopup extends GenericPopup {
 	private final Account selectedAccount;
 	private final ComboBox box;
 	private final GenericLabel at, att;
-	private final GenericTextField depositAmountField;
+	private final GenericTextField withdrawAmountField;
 	private static NumberFormat numForm;
 	private static Locale caLoc = new Locale("en", "US");
 	private final Color bottom = new Color(1.0F, 1.0F, 1.0F, 0.50F);
@@ -138,13 +139,14 @@ public class WithdrawPopup extends GenericPopup {
 		an.setHeight(15).setWidth(GenericLabel.getStringWidth(an.getText()));
 		an.shiftXPos(-95).shiftYPos(31);
 
-		depositAmountField = new GenericTextField();
-		depositAmountField.setWidth(110).setHeight(16);
-		depositAmountField.setAnchor(WidgetAnchor.CENTER_CENTER);
-		depositAmountField.shiftXPos(-10).shiftYPos(27);
-		depositAmountField.setText("0.00");
-		depositAmountField.setMaximumCharacters(15);
-		depositAmountField.setMaximumLines(1);
+		withdrawAmountField = new GenericTextField();
+		withdrawAmountField.setWidth(110).setHeight(16);
+		withdrawAmountField.setAnchor(WidgetAnchor.CENTER_CENTER);
+		withdrawAmountField.shiftXPos(-10).shiftYPos(27);
+		withdrawAmountField.setPlaceholder("0.00");
+		withdrawAmountField.setTooltip("Do not include commas in withdraw values.");
+		withdrawAmountField.setMaximumCharacters(15);
+		withdrawAmountField.setMaximumLines(1);
 
 		GenericButton depositButton = new CommandButton(this, 1, "Withdraw");
 		GenericButton close = new CommandButton(this, 2, "Close");
@@ -157,7 +159,7 @@ public class WithdrawPopup extends GenericPopup {
 
 		populateList();
 
-		attachWidgets(plugin, border, gl, gg, ag, ab, at, att, gm, box, cl, depositAmountField, an, depositButton, close);
+		attachWidgets(plugin, border, gl, gg, ag, ab, at, att, gm, box, cl, withdrawAmountField, an, depositButton, close);
 
 		sPlayer.getMainScreen().closePopup();
 		sPlayer.getMainScreen().attachPopupScreen(this);
@@ -179,14 +181,16 @@ public class WithdrawPopup extends GenericPopup {
 
 					Account myAccount = selectedBank.getAccount(box.getSelectedItem(), sPlayer.getName());
 					double withdraw = 0;
-					try {
-						withdraw = Math.abs(Double.parseDouble(depositAmountField.getText()));
+					DecimalFormat df = new DecimalFormat("#.##");					
+					try {						
+						String myWithdraw = df.format(Math.abs(Double.parseDouble(withdrawAmountField.getText())));					
+						withdraw = Double.parseDouble(myWithdraw);
 					} catch (Exception e) {
 						//do nothing
 					}
 					if (withdraw == 0) {
 						sPlayer.getMainScreen().closePopup();
-						new AckPopup(plugin, sPlayer, selectedBank, "Deposit amount has to be more than zero.", "withdrawgui");
+						new AckPopup(plugin, sPlayer, selectedBank, "Withdraw amount has to be more than zero.", "withdrawgui");
 					} else {
 						if (myAccount.getBalance() < withdraw) {
 							new AckPopup(plugin, sPlayer, selectedBank, "Withdraw amount cannot be greater than current balance.", "withdrawgui");

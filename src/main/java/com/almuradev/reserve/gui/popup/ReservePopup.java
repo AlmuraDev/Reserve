@@ -115,16 +115,9 @@ public class ReservePopup extends GenericPopup {
 		options.setTooltip("Displays Configuration options for Reserve.");
 		openBank.setTooltip("Opens and Accesses selected bank.");
 		accountTypes.setTooltip("Account Types Configuration per Bank");
-		bankStatus.setTooltip("Displays selected bank status.");
-
-		createNewBank.setEnabled(sPlayer.hasPermission("reserve.addbank"));
-		renameBank.setEnabled(sPlayer.hasPermission("reserve.addbank"));
-		deleteBank.setEnabled(sPlayer.hasPermission("reserve.removebank"));
-		options.setEnabled(sPlayer.hasPermission("reserve.admin"));
-		openBank.setEnabled(sPlayer.hasPermission("reserve.viewbank"));
-		bankStatus.setEnabled(sPlayer.hasPermission("reserve.viewbank"));
-
-		accountTypes.setEnabled(sPlayer.hasPermission("reserve.admin"));
+		bankStatus.setTooltip("Displays selected bank status.");		
+		
+		options.setEnabled(sPlayer.hasPermission("reserve.admin"));		
 
 		if (list.getSelectedItem() == null) {
 			openBank.setEnabled(false);
@@ -138,6 +131,12 @@ public class ReservePopup extends GenericPopup {
 			bankStatus.setEnabled(true);
 			renameBank.setEnabled(true);
 			accountTypes.setEnabled(true);
+			openBank.setEnabled(sPlayer.hasPermission("reserve.admin"));
+			bankStatus.setEnabled(sPlayer.hasPermission("reserve.admin"));
+			createNewBank.setEnabled(sPlayer.hasPermission("reserve.admin"));
+			renameBank.setEnabled(sPlayer.hasPermission("reserve.admin"));
+			deleteBank.setEnabled(sPlayer.hasPermission("reserve.admin"));
+			accountTypes.setEnabled(sPlayer.hasPermission("reserve.admin"));
 		}
 
 		attachWidgets(plugin, border, gl, gg, gb, createNewBank, list, renameBank, deleteBank, openBank, accountTypes, bankStatus, options, close);

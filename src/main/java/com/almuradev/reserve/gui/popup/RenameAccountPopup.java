@@ -72,12 +72,12 @@ public class RenameAccountPopup extends GenericPopup {
 		gg.shiftXPos(0 - gg.getWidth() / 2).shiftYPos(-55);
 
 		accountNameField = new GenericTextField();
-		accountNameField.setText(myAccount.getName().trim());
+		accountNameField.setPlaceholder(myAccount.getName().trim());
 		accountNameField.setWidth(110).setHeight(16);
 		accountNameField.setAnchor(WidgetAnchor.CENTER_CENTER);
 		accountNameField.shiftXPos(-55).shiftYPos(-45);
 		accountNameField.setMaximumCharacters(30);
-		accountNameField.setMaximumLines(1);
+		accountNameField.setMaximumLines(1);		
 
 		GenericButton close = new CommandButton(this, 1, "Close");
 		GenericButton save = new CommandButton(this, 2, "Save");
@@ -98,7 +98,7 @@ public class RenameAccountPopup extends GenericPopup {
 		switch (commandGoal) {
 			case 1:
 				sPlayer.getMainScreen().closePopup();
-				new ReservePopup(plugin, sPlayer);
+				new BankPopup(plugin, sPlayer, selectedBank);
 				break;
 			case 2:
 				if (accountNameField.getText().isEmpty()) {
@@ -106,6 +106,9 @@ public class RenameAccountPopup extends GenericPopup {
 				} else if (accountNameField.getText().trim().equalsIgnoreCase("Bank Vault")) {
 					sPlayer.getMainScreen().closePopup();
 					new AckPopup(plugin, sPlayer, selectedBank, "You cannot rename Bank Vault.", "renameaccountgui");
+				} else if (selectedBank.getAccount(accountNameField.getText().trim(), sPlayer.getName()) != null) {
+					sPlayer.getMainScreen().closePopup();
+					new AckPopup(plugin, sPlayer, selectedBank, "That name already exists.", "renameaccountgui");
 				} else {
 					myAccount.setName(accountNameField.getText().trim());
 					sPlayer.getMainScreen().closePopup();

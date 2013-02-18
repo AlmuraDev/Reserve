@@ -142,7 +142,7 @@ public class BankPopup extends GenericPopup {
 		makeDeposit.setEnabled(sPlayer.hasPermission("reserve.deposit") && (selectedBank.getAmountOfAccountsFor(sPlayer.getName()) > 0));
 		makeWithdraw.setEnabled(sPlayer.hasPermission("reserve.withdraw") && (selectedBank.getAmountOfAccountsFor(sPlayer.getName()) > 0));
 		closeAccount.setEnabled(sPlayer.hasPermission("reserve.accountremove") && (selectedBank.getAmountOfAccountsFor(sPlayer.getName()) > 0));
-		rename.setEnabled(sPlayer.hasPermission("reserve.admin") && (selectedBank.getAmountOfAccountsFor(sPlayer.getName()) > 0));
+		rename.setEnabled(sPlayer.hasPermission("reserve.accountadd") && (selectedBank.getAmountOfAccountsFor(sPlayer.getName()) > 0));
 
 		attachWidgets(plugin, border, gl, bankNameLabel, gg, gb, createAccount, list, bankAccountsLabel, makeDeposit, rename, makeWithdraw, closeAccount, close);  //faq & options not displayed at this time.
 

@@ -106,13 +106,13 @@ public class ReservePlugin extends JavaPlugin implements Listener {
 		final double carrying = VaultUtil.getBalance(died.getName());
 		final double taxed = carrying - (carrying * deathTax);
 		VaultUtil.add(died.getName(), -taxed);
-		died.sendMessage(getPrefix() + "You lost: " + NUMBER_FORMAT.format(taxed) + "!");
+		died.sendMessage("You lost: " + ChatColor.RED + NUMBER_FORMAT.format(taxed) + "!");
 		if (died.hasPermission("reserve.tax.death.broadcast")) {
 			for (Player player : Bukkit.getOnlinePlayers()) {
 				if (player.getName().equalsIgnoreCase(event.getEntity().getName())) {
 					continue;
 				}
-				player.sendMessage(getPrefix() + died.getDisplayName() + " died and lost: " + NUMBER_FORMAT.format(taxed) + "!");
+				player.sendMessage(ChatColor.AQUA + died.getDisplayName() + " died and lost: " + ChatColor.GOLD + NUMBER_FORMAT.format(taxed) + "!");
 			}
 		}
 	}

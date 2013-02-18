@@ -147,7 +147,7 @@ public class DeleteAccountPopup extends GenericPopup {
 					} else {
 						selectedBank.removeAccount(box.getSelectedItem(), sPlayer.getName());
 						sPlayer.getMainScreen().closePopup();
-						new AckPopup(plugin, sPlayer, selectedBank, "Account Removed", "deleteaccountgui");
+						new AckPopup(plugin, sPlayer, selectedBank, "Account Removed.", "deleteaccountgui");
 					}
 				}
 				break;

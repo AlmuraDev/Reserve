@@ -113,6 +113,13 @@ public class CreateAccountPopup extends GenericPopup {
 
 		populateList();
 		box.setSelection(0);
+		
+		plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
+			@Override
+			public void run() {
+				setDirty(true);
+			}
+		}, 5L);
 
 		if (box.getSelectedItem() == null) {
 			createAccount.setEnabled(false);
@@ -132,18 +139,20 @@ public class CreateAccountPopup extends GenericPopup {
 
 	public void onClickCommand(int commandGoal) {
 		switch (commandGoal) {
-			case 1:
-				if (accountNameField.getText().isEmpty()) {
-					new AckPopup(plugin, sPlayer, selectedBank, "Please specify name.", "createaccountgui");
-				} else {
-					if (selectedBank.getAccount(accountNameField.getText().trim(), sPlayer.getName()) != null) {
-						new AckPopup(plugin, sPlayer, selectedBank, "Account with that name already exists.", "createaccountgui");
-					} else if (selectedBank.typeExistsFor(sPlayer.getName(), box.getSelectedItem())) {
-						new AckPopup(plugin, sPlayer, selectedBank, "You already have an account of that type.", "createaccountgui");
+			case 1:				
+				if (box.getSelectedItem() != null) {
+					if (accountNameField.getText().isEmpty()) {
+						new AckPopup(plugin, sPlayer, selectedBank, "Please specify name.", "createaccountgui");
 					} else {
-						selectedBank.addAccount(new Account(selectedBank.getType(box.getSelectedItem()), accountNameField.getText(), sPlayer.getName()));
-						sPlayer.getMainScreen().closePopup();
-						new AckPopup(plugin, sPlayer, selectedBank, "Account Created Successfully", "createaccountgui");
+						if (selectedBank.getAccount(accountNameField.getText().trim(), sPlayer.getName()) != null) {
+							new AckPopup(plugin, sPlayer, selectedBank, "Account with that name already exists.", "createaccountgui");
+						} else if (selectedBank.typeExistsFor(sPlayer.getName(), box.getSelectedItem())) {
+							new AckPopup(plugin, sPlayer, selectedBank, "You already have an account of that type.", "createaccountgui");
+						} else {
+							selectedBank.addAccount(new Account(selectedBank.getType(box.getSelectedItem()), accountNameField.getText(), sPlayer.getName()));
+							sPlayer.getMainScreen().closePopup();
+							new AckPopup(plugin, sPlayer, selectedBank, "Account Created Successfully.", "createaccountgui");
+						}
 					}
 				}
 				break;
@@ -159,6 +168,9 @@ public class CreateAccountPopup extends GenericPopup {
 		List<AccountType> accountTypes = selectedBank.retrieveTypes();
 
 		for (AccountType allAccountTypes : accountTypes) {
+			if (allAccountTypes.getName().equalsIgnoreCase("Vault")) {
+				continue;
+			}
 			items.add(allAccountTypes.getName());
 		}
 

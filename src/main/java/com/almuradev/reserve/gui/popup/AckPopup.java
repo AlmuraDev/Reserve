@@ -103,6 +103,8 @@ public class AckPopup extends GenericPopup {
 					new ReservePopup(plugin, sPlayer);
 				} else if (ackMessage.equalsIgnoreCase("Deposit amount has to be more than zero.") && previousWindow.equalsIgnoreCase("depositgui")) {
 					new DepositPopup(plugin, sPlayer, selectedBank, null);
+				} else if (ackMessage.equalsIgnoreCase("Withdraw amount has to be more than zero.") && previousWindow.equalsIgnoreCase("withdrawgui")) {
+					new DepositPopup(plugin, sPlayer, selectedBank, null);
 				} else if (ackMessage.equalsIgnoreCase("Insuffient funds available for deposit.") && previousWindow.equalsIgnoreCase("depositgui")) {
 					new DepositPopup(plugin, sPlayer, selectedBank, null);
 				} else if (ackMessage.equalsIgnoreCase("Withdraw amount cannot be greater than current balance.") && previousWindow.equalsIgnoreCase("withdrawgui")) {
@@ -143,12 +145,22 @@ public class AckPopup extends GenericPopup {
 					new BankPopup(plugin, sPlayer, selectedBank);
 				} else if (ackMessage.equalsIgnoreCase("Please specify a new name.") && previousWindow.equalsIgnoreCase("renameaccountgui")) {
 					new BankPopup(plugin, sPlayer, selectedBank);
+				} else if (ackMessage.equalsIgnoreCase("That name already exists.") && previousWindow.equalsIgnoreCase("renameaccountgui")) {
+					new BankPopup(plugin, sPlayer, selectedBank);
 				} else if (ackMessage.equalsIgnoreCase("Changes Saved.") && previousWindow.equalsIgnoreCase("renameaccountgui")) {
 					new BankPopup(plugin, sPlayer, selectedBank);
 				} else if (ackMessage.equalsIgnoreCase("You cannot rename Bank Vault.") && previousWindow.equalsIgnoreCase("renameaccountgui")) {
 					new BankPopup(plugin, sPlayer, selectedBank);
 				} else if (ackMessage.equalsIgnoreCase("Reserve Configuration Saved.") && previousWindow.equalsIgnoreCase("reserveconfiggui")) {
 					new ReservePopup(plugin, sPlayer);
+				} else if (ackMessage.equalsIgnoreCase("Account Created Successfully.") && previousWindow.equalsIgnoreCase("createaccountgui")) {
+					new BankPopup(plugin, sPlayer, selectedBank);
+				} else if (ackMessage.equalsIgnoreCase("Funds Deposited Successfully.") && previousWindow.equalsIgnoreCase("depositgui")) {
+					new BankPopup(plugin, sPlayer, selectedBank);
+				} else if (ackMessage.equalsIgnoreCase("Funds Withdrawn Successfully.") && previousWindow.equalsIgnoreCase("withdrawgui")) {
+					new BankPopup(plugin, sPlayer, selectedBank);
+				} else if (ackMessage.equalsIgnoreCase("Account Removed.") && previousWindow.equalsIgnoreCase("deleteaccountgui")) {
+					new BankPopup(plugin, sPlayer, selectedBank);
 				} else {
 					// unhandled return, don't start another screen.
 				}

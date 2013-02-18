@@ -30,6 +30,7 @@ import com.almuradev.reserve.gui.popup.DeleteAccountPopup;
 import com.almuradev.reserve.gui.popup.DeleteBankPopup;
 import com.almuradev.reserve.gui.popup.DepositPopup;
 import com.almuradev.reserve.gui.popup.OptionsPopup;
+import com.almuradev.reserve.gui.popup.RenameAccountPopup;
 import com.almuradev.reserve.gui.popup.RenameBankPopup;
 import com.almuradev.reserve.gui.popup.ReserveConfigPopup;
 import com.almuradev.reserve.gui.popup.ReservePopup;
@@ -108,6 +109,10 @@ public class CommandButton extends GenericButton {
 
 		if (gui instanceof RenameBankPopup) {
 			((RenameBankPopup) gui).onClickCommand(commandGoal);
+		}
+		
+		if (gui instanceof RenameAccountPopup) {
+			((RenameAccountPopup) gui).onClickCommand(commandGoal);
 		}
 	}
 }
