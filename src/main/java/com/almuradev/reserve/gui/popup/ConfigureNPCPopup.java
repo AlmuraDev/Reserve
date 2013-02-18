@@ -117,6 +117,9 @@ public class ConfigureNPCPopup extends GenericPopup {
 					final String input = bankNameField.getText().trim();
 					if (!input.matches(plugin.INPUT_REGEX)) {
 						new AckPopup(plugin, sPlayer, null, "Invalid characters entered for bank name.", "configurenpcpopup");
+					} else if (!sPlayer.hasPermission("reserve.createbank")) {
+						//TODO Dockter, wanna handle this better elsewhere?
+						new AckPopup(plugin, sPlayer, null, "You do not have permission to set the NPC's bank!", "configurenpcpopup");
 					} else {
 						final Bank bank = plugin.getReserve().get(bankNameField.getText(), sPlayer.getWorld().getName());
 						if (bank == null) {
