@@ -41,7 +41,7 @@ public class BankListApplet extends GenericListWidget {
 		numForm = NumberFormat.getCurrencyInstance(caLoc);
 		for (String world : allBanks.keySet()) {
 			for (Bank bank : allBanks.get(world)) {
-				this.addItem(new ListWidgetItem(bank.getName() + " / " + ChatColor.AQUA + world, ChatColor.GOLD + numForm.format(bank.getAccountsBalance())));
+				this.addItem(new ListWidgetItem(bank.getName() + " / " + ChatColor.AQUA + world, ChatColor.GOLD + numForm.format(bank.getAccountsBalance()), "http://face.mmo.me.uk/" + bank.getHolder().trim() + ".png"));
 			}
 		}
 	}

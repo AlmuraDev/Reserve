@@ -108,6 +108,9 @@ public class ConfigureNPCPopup extends GenericPopup {
 		switch (commandGoal) {
 			case 1:
 				// NinjaZidane Win goes here.
+				
+				//new AckPopup(plugin, sPlayer, null, "Specified Bank Not Found!", "withdrawgui");  << Call this for Invalid Name
+				
 				break;
 			case 2:
 				sPlayer.getMainScreen().closePopup();
