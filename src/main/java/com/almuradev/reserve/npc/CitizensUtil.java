@@ -17,35 +17,25 @@
  * You should have received a copy of the GNU General Public License. If not,
  * see <http://www.gnu.org/licenses/> for the GNU General Public License.
  */
-package com.almuradev.reserve;
+package com.almuradev.reserve.npc;
 
-import com.almuradev.reserve.storage.Reserve;
-import com.almuradev.reserve.storage.Storage;
+import com.almuradev.reserve.npc.trait.Banker;
 
-import org.junit.Test;
-import org.powermock.api.mockito.PowerMockito;
+import net.citizensnpcs.api.CitizensAPI;
+import net.citizensnpcs.api.command.Command;
+import net.citizensnpcs.api.command.CommandContext;
+import net.citizensnpcs.api.command.CommandManager;
+import net.citizensnpcs.api.command.Requirements;
+import net.citizensnpcs.api.command.exception.CommandException;
+import net.citizensnpcs.api.npc.NPC;
+import net.citizensnpcs.api.trait.TraitInfo;
 
-public class ReserveTest {
-	private static Reserve reserve;
-	private static Storage storage;
+import org.bukkit.command.CommandExecutor;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
-	public ReserveTest() {
-		storage = PowerMockito.mock(Storage.class);
-		reserve = new Reserve(storage);
-	}
-
-	@Test
-	public void testReserve() {
-
-	}
-
-	@Test
-	public void testBank() {
-
-	}
-
-	@Test
-	public void testAccount() {
-
+public class CitizensUtil {
+	public void onEnable() {
+		CitizensAPI.getTraitFactory().registerTrait(TraitInfo.create(Banker.class).withName("Banker"));
 	}
 }

@@ -27,6 +27,7 @@ import com.almuradev.reserve.econ.Bank;
 import com.almuradev.reserve.econ.VaultUtil;
 import com.almuradev.reserve.gui.popup.BankPopup;
 import com.almuradev.reserve.gui.popup.ReservePopup;
+import com.almuradev.reserve.npc.CitizensUtil;
 import com.almuradev.reserve.storage.Reserve;
 import com.almuradev.reserve.storage.Storage;
 import com.almuradev.reserve.task.InterestTask;
@@ -46,6 +47,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitScheduler;
 
@@ -82,6 +84,10 @@ public class ReservePlugin extends JavaPlugin implements Listener {
 		scheduler.scheduleSyncRepeatingTask(this, reserve, 0, config.getSaveInterval());
 		//Register listeners
 		getServer().getPluginManager().registerEvents(this, this);
+		final Plugin plugin = getServer().getPluginManager().getPlugin("Citizens");
+		if (plugin != null) {
+			new CitizensUtil().onEnable();
+		}
 	}
 
 	public static Reserve getReserve() {

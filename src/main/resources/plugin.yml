@@ -6,6 +6,7 @@ website: ${project.organization.url}
 
 main: ${mainClass}
 depend: [Spout, Vault]
+softdepend: [Citizens]
 load: POSTWORLD
 
 commands:   

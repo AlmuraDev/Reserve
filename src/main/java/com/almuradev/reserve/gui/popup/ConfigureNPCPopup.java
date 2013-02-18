@@ -28,7 +28,9 @@ import com.almuradev.reserve.econ.Account;
 import com.almuradev.reserve.econ.Bank;
 import com.almuradev.reserve.econ.type.AccountType;
 import com.almuradev.reserve.gui.button.CommandButton;
+import com.almuradev.reserve.npc.trait.Banker;
 
+import net.citizensnpcs.api.npc.NPC;
 import org.getspout.spoutapi.gui.Color;
 import org.getspout.spoutapi.gui.GenericButton;
 import org.getspout.spoutapi.gui.GenericGradient;
@@ -43,12 +45,14 @@ import org.getspout.spoutapi.player.SpoutPlayer;
 public class ConfigureNPCPopup extends GenericPopup {
 	private final ReservePlugin plugin;
 	private final SpoutPlayer sPlayer;
+	private final NPC npc;
 	private GenericTextField bankNameField;
 	private final Color bottom = new Color(1.0F, 1.0F, 1.0F, 0.50F);
 
-	public ConfigureNPCPopup(ReservePlugin plugin, SpoutPlayer sPlayer) {
+	public ConfigureNPCPopup(ReservePlugin plugin, SpoutPlayer sPlayer, NPC npc) {
 		this.plugin = plugin;
 		this.sPlayer = sPlayer;
+		this.npc = npc;
 
 		GenericTexture border = new GenericTexture("http://www.almuramc.com/images/playerplus.png");
 		border.setAnchor(WidgetAnchor.CENTER_CENTER);
@@ -107,10 +111,16 @@ public class ConfigureNPCPopup extends GenericPopup {
 	public void onClickCommand(int commandGoal) {
 		switch (commandGoal) {
 			case 1:
-				// NinjaZidane Win goes here.
-				
-				//new AckPopup(plugin, sPlayer, null, "Specified Bank Not Found!", "withdrawgui");  << Call this for Invalid Name
-				
+				if (bankNameField.getText().isEmpty()) {
+					new AckPopup(plugin, sPlayer, null, "Specified Bank Not Found!", "configurenpcpopup");
+					break;
+				}
+				final Bank bank = plugin.getReserve().get(bankNameField.getText(), sPlayer.getWorld().getName());
+				if (bank == null) {
+					new AckPopup(plugin, sPlayer, null, "Specified Bank Not Found!", "configurenpcpopup");
+					break;
+				}
+				npc.getTrait(Banker.class).setBankName(bankNameField.getText());
 				break;
 			case 2:
 				sPlayer.getMainScreen().closePopup();

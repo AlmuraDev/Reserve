@@ -161,8 +161,6 @@ public class AckPopup extends GenericPopup {
 					new BankPopup(plugin, sPlayer, selectedBank);
 				} else if (ackMessage.equalsIgnoreCase("Account Removed.") && previousWindow.equalsIgnoreCase("deleteaccountgui")) {
 					new BankPopup(plugin, sPlayer, selectedBank);
-				} else if (ackMessage.equalsIgnoreCase("Specified Bank Not Found!") && previousWindow.equalsIgnoreCase("configurenpcpopup")) {
-					//new ConfigureNPCPopup(plugin, sPlayer);
 				} else {
 					// unhandled return, don't start another screen.
 				}
