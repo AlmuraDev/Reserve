@@ -155,10 +155,6 @@ public class ReservePlugin extends JavaPlugin implements Listener {
 				player.sendMessage("This command opens the Reserve popup, only available for Spoutcraft clients!");
 				return true;
 			}
-			if (!player.hasPermission("reserve.admin")) {
-				player.sendMessage("You do not have permission to open the Reserve popup!");
-				return true;
-			}
 			player.getMainScreen().attachPopupScreen(new ReservePopup(this, player));
 			return true;
 		}
