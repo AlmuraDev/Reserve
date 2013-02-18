@@ -134,12 +134,12 @@ public class ReservePlugin extends JavaPlugin implements Listener {
 		if (interacted.getState() == null || !(interacted.getState() instanceof Sign)) {
 			return;
 		}
-		event.setCancelled(true); //Don't want to place the block
 		final Sign sign = (Sign) interacted.getState();
 		//Not a reserve sign
 		if (!ChatColor.stripColor(sign.getLine(0).trim().toLowerCase()).contains("[reserve]")) {
 			return;
 		}
+		event.setCancelled(true); //Don't want to place the block
 		final String bankName = ChatColor.stripColor(sign.getLine(1).trim().toLowerCase());
 		final Bank bank = reserve.get(bankName, sPlayer.getWorld().getName());
 		if (bank == null) {
