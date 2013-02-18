@@ -23,6 +23,7 @@ import java.text.NumberFormat;
 import java.util.Locale;
 
 import com.almuradev.reserve.config.ReserveConfiguration;
+import com.almuradev.reserve.econ.Bank;
 import com.almuradev.reserve.econ.VaultUtil;
 import com.almuradev.reserve.gui.popup.BankPopup;
 import com.almuradev.reserve.gui.popup.ReservePopup;
@@ -134,7 +135,11 @@ public class ReservePlugin extends JavaPlugin implements Listener {
 			return;
 		}
 		final String bankName = ChatColor.stripColor(sign.getLine(1).trim().toLowerCase());
-		new BankPopup(this, sPlayer, ReservePlugin.getReserve().get(bankName.trim(), sPlayer.getWorld().getName()));
+		final Bank bank = reserve.get(bankName.trim(), sPlayer.getWorld().getName());
+		if (bank == null) {
+			return;
+		}
+		new BankPopup(this, sPlayer, bank);
 	}
 
 	//TESTING
