@@ -146,8 +146,7 @@ public class CreateAccountPopup extends GenericPopup {
 						new AckPopup(plugin, sPlayer, selectedBank, "Please specify name.", "createaccountgui");
 					} else {
 						final String input = accountNameField.getText().trim();
-						final Matcher parse = plugin.INPUT_REGEX.matcher(input);
-						if (parse.find()) {
+						if (!input.matches(plugin.INPUT_REGEX)) {
 							new AckPopup(plugin, sPlayer, selectedBank, "Invalid characters entered for account name.", "createaccountgui");
 						} else if (selectedBank.getAccount(input, sPlayer.getName()) != null) {
 							new AckPopup(plugin, sPlayer, selectedBank, "Account with that name already exists.", "createaccountgui");

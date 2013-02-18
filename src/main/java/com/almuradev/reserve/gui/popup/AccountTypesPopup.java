@@ -211,8 +211,7 @@ public class AccountTypesPopup extends GenericPopup {
 						new AckPopup(plugin, sPlayer, selectedBank, "Specify name.", "accounttypesgui");
 					} else {
 						final String input = accountTypeName.getText().trim();
-						final Matcher parse = plugin.INPUT_REGEX.matcher(input);
-						if (parse.find()) {
+						if (!input.matches(plugin.INPUT_REGEX)) {
 							new AckPopup(plugin, sPlayer, selectedBank, "Invalid characters entered for account type.", "accounttypesgui");
 						} else if (selectedBank.getType(input) != null) {
 							newType = false;

@@ -113,8 +113,7 @@ public class CreateBankPopup extends GenericPopup {
 					new AckPopup(plugin, sPlayer, null, "Please specify name.", "createbankgui");
 				} else {
 					final String input = bankNameField.getText().trim();
-					final Matcher parse = plugin.INPUT_REGEX.matcher(input);
-					if (parse.find()) {
+					if (!input.matches(plugin.INPUT_REGEX)) {
 						new AckPopup(plugin, sPlayer, null, "Invalid characters entered for bank name.", "createbankgui");
 					} else if (ReservePlugin.getReserve().get(input, sPlayer.getWorld().getName()) != null) {
 						new AckPopup(plugin, sPlayer, null, "Bank name already exists.", "createbankgui");

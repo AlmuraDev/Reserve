@@ -113,15 +113,20 @@ public class ConfigureNPCPopup extends GenericPopup {
 			case 1:
 				if (bankNameField.getText().isEmpty()) {
 					new AckPopup(plugin, sPlayer, null, "Specified Bank Not Found!", "configurenpcpopup");
-					break;
+				} else {
+					final String input = bankNameField.getText().trim();
+					if (!input.matches(plugin.INPUT_REGEX)) {
+						new AckPopup(plugin, sPlayer, null, "Invalid characters entered for bank name.", "configurenpcpopup");
+					} else {
+						final Bank bank = plugin.getReserve().get(bankNameField.getText(), sPlayer.getWorld().getName());
+						if (bank == null) {
+							new AckPopup(plugin, sPlayer, null, "Specified Bank Not Found!", "configurenpcpopup");
+						} else {
+							npc.getTrait(Banker.class).setBankName(bankNameField.getText());
+							sPlayer.getMainScreen().closePopup();
+						}
+					}
 				}
-				final Bank bank = plugin.getReserve().get(bankNameField.getText(), sPlayer.getWorld().getName());
-				if (bank == null) {
-					new AckPopup(plugin, sPlayer, null, "Specified Bank Not Found!", "configurenpcpopup");
-					break;
-				}
-				npc.getTrait(Banker.class).setBankName(bankNameField.getText());
-				sPlayer.getMainScreen().closePopup();
 				break;
 			case 2:
 				sPlayer.getMainScreen().closePopup();

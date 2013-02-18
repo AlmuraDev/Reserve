@@ -107,8 +107,7 @@ public class RenameAccountPopup extends GenericPopup {
 					new AckPopup(plugin, sPlayer, selectedBank, "Please specify a new name.", "renameaccountgui");
 				} else {
 					final String input = accountNameField.getText().trim();
-					final Matcher parse = plugin.INPUT_REGEX.matcher(input);
-					if (parse.find()) {
+					if (!input.matches(plugin.INPUT_REGEX)) {
 						new AckPopup(plugin, sPlayer, selectedBank, "Invalid characters entered for account name.", "renameaccountgui");
 					} else if (input.equalsIgnoreCase("Bank Vault")) {
 						sPlayer.getMainScreen().closePopup();
