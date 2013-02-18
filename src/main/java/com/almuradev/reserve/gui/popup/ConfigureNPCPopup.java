@@ -121,10 +121,10 @@ public class ConfigureNPCPopup extends GenericPopup {
 					break;
 				}
 				npc.getTrait(Banker.class).setBankName(bankNameField.getText());
+				sPlayer.getMainScreen().closePopup();
 				break;
 			case 2:
 				sPlayer.getMainScreen().closePopup();
-				new ReservePopup(plugin, sPlayer);
 				break;
 		}
 	}
