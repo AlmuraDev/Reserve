@@ -135,7 +135,7 @@ public class ReservePlugin extends JavaPlugin implements Listener {
 			return;
 		}
 		final String bankName = ChatColor.stripColor(sign.getLine(1).trim().toLowerCase());
-		final Bank bank = reserve.get(bankName.trim(), sPlayer.getWorld().getName());
+		final Bank bank = reserve.get(bankName, sPlayer.getWorld().getName());
 		if (bank == null) {
 			return;
 		}
