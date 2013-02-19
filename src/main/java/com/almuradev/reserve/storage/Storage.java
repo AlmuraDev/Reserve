@@ -48,12 +48,13 @@ public class Storage implements Listener {
 	}
 
 	public void onEnable() {
+		final File dir = new File(plugin.getDataFolder(), "banks");
 		try {
-			Files.createDirectory(new File(plugin.getDataFolder(), "banks").toPath());
+			Files.createDirectory(dir.toPath());
 		} catch (FileAlreadyExistsException fafe) {
 			;
 		} catch (IOException e) {
-			plugin.getLogger().severe("Could not create banks directory! Disabling...");
+			plugin.getLogger().severe("Could not create " + dir.getPath() + "! Disabling...");
 			plugin.getServer().getPluginManager().disablePlugin(plugin);
 		}
 	}

@@ -8,13 +8,12 @@
 	<version>1.0-SNAPSHOT</version>
 	<name>Reserve</name>
 	<url>http://www.almuradev.com</url>
-	<description>Reserve is a plugin for Bukkit that uses SpoutPlugin to give a server a GUI-powered banking system.</description>
+	<description>The Premiere Spoutcraft Banking System.</description>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<bukkitVersion>1.4.6-R0.2-SNAPSHOT</bukkitVersion>
+		<bukkitVersion>1.4.7-R1.1-SNAPSHOT</bukkitVersion>
 		<mainClass>com.almuradev.reserve.ReservePlugin</mainClass>
-		<buildNumber>Unknown</buildNumber>
 	</properties>
 
 	<!-- Organization -->
