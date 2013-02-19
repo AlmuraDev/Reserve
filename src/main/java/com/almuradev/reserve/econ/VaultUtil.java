@@ -25,7 +25,7 @@ import net.milkbowl.vault.permission.Permission;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.RegisteredServiceProvider;
 
-public class VaultUtil {
+public final class VaultUtil {
 	private static final Economy economy;
 	private static final Permission permission;
 

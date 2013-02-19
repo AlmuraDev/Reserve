@@ -21,7 +21,7 @@ package com.almuradev.reserve.econ;
 
 import com.almuradev.reserve.econ.type.AccountType;
 
-public class Account {
+public final class Account {
 	private AccountType type;
 	private String name;
 	private String holder;

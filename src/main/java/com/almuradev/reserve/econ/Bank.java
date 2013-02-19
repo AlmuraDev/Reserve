@@ -29,7 +29,7 @@ import com.almuradev.reserve.econ.type.AccountType;
 /**
  * A wrapper class that keeps track of accounts
  */
-public class Bank {
+public final class Bank {
 	private String name;
 	private String holder;
 	private double balance = 0;
