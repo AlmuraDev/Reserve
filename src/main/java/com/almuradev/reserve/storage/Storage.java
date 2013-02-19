@@ -118,7 +118,7 @@ public class Storage implements Listener {
 
 	protected void load() {
 		try {
-			Files.walkFileTree(new File(plugin.getDataFolder(), "banks").toPath(), new BankFileSaveVisitor(plugin));
+			Files.walkFileTree(new File(plugin.getDataFolder(), "banks").toPath(), new FileSavingVisitor(plugin));
 		} catch (IOException ignore) {
 			plugin.getLogger().severe("Encountered a major issue when attempting to traverse the bank's files. Disabling...");
 			plugin.getServer().getPluginManager().disablePlugin(plugin);
@@ -127,7 +127,7 @@ public class Storage implements Listener {
 
 	protected void cleanup() {
 		try {
-			Files.walkFileTree(new File(plugin.getDataFolder(), "banks").toPath(), new CleanupVisitor(plugin));
+			Files.walkFileTree(new File(plugin.getDataFolder(), "banks").toPath(), new FileCleaningVisitor(plugin));
 		} catch (IOException ignore) {
 			plugin.getLogger().severe("Encountered a major issue when attempting to traverse the bank's files. Disabling...");
 			plugin.getServer().getPluginManager().disablePlugin(plugin);
@@ -135,10 +135,10 @@ public class Storage implements Listener {
 	}
 }
 
-class CleanupVisitor extends SimpleFileVisitor<Path> {
+class FileCleaningVisitor extends SimpleFileVisitor<Path> {
 	private final ReservePlugin plugin;
 
-	public CleanupVisitor(ReservePlugin plugin) {
+	public FileCleaningVisitor(ReservePlugin plugin) {
 		this.plugin = plugin;
 	}
 
@@ -163,10 +163,10 @@ class CleanupVisitor extends SimpleFileVisitor<Path> {
 	}
 }
 
-class BankFileSaveVisitor extends SimpleFileVisitor<Path> {
+class FileSavingVisitor extends SimpleFileVisitor<Path> {
 	private final ReservePlugin plugin;
 
-	public BankFileSaveVisitor(ReservePlugin plugin) {
+	public FileSavingVisitor(ReservePlugin plugin) {
 		this.plugin = plugin;
 	}
 
