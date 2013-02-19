@@ -55,7 +55,7 @@ import org.bukkit.scheduler.BukkitScheduler;
 public class ReservePlugin extends JavaPlugin implements Listener {
 	public static final Locale CURRENCY_LOCALE = new Locale("en", "US");
 	public static final NumberFormat NUMBER_FORMAT = NumberFormat.getCurrencyInstance(CURRENCY_LOCALE);
-	public static final String INPUT_REGEX = "([a-zA-Z-\\s]+)";
+	public static final String INPUT_REGEX = "([a-zA-Z-\\s0-9]+)";
 	private static Reserve reserve;
 	private static Storage storage;
 	private static ReserveConfiguration config;
