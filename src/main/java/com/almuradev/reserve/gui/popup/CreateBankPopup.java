@@ -23,8 +23,6 @@
  */
 package com.almuradev.reserve.gui.popup;
 
-import java.util.regex.Matcher;
-
 import com.almuradev.reserve.ReservePlugin;
 import com.almuradev.reserve.econ.Account;
 import com.almuradev.reserve.econ.Bank;

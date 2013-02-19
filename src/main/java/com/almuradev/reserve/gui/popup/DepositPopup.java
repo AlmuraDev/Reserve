@@ -181,11 +181,11 @@ public class DepositPopup extends GenericPopup {
 				} else {
 
 					Account myAccount = selectedBank.getAccount(box.getSelectedItem(), sPlayer.getName());
-					double deposit = 0;	
-					DecimalFormat df = new DecimalFormat("#.##");					
-					try {						
+					double deposit = 0;
+					DecimalFormat df = new DecimalFormat("#.##");
+					try {
 						String myDeposit = df.format(Math.abs(Double.parseDouble(depositAmountField.getText())));
-						deposit = Double.parseDouble(myDeposit);						
+						deposit = Double.parseDouble(myDeposit);
 					} catch (Exception e) {
 						//do nothing
 					}

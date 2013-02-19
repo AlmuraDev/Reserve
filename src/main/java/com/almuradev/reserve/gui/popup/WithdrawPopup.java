@@ -181,9 +181,9 @@ public class WithdrawPopup extends GenericPopup {
 
 					Account myAccount = selectedBank.getAccount(box.getSelectedItem(), sPlayer.getName());
 					double withdraw = 0;
-					DecimalFormat df = new DecimalFormat("#.##");					
-					try {						
-						String myWithdraw = df.format(Math.abs(Double.parseDouble(withdrawAmountField.getText())));					
+					DecimalFormat df = new DecimalFormat("#.##");
+					try {
+						String myWithdraw = df.format(Math.abs(Double.parseDouble(withdrawAmountField.getText())));
 						withdraw = Double.parseDouble(myWithdraw);
 					} catch (Exception e) {
 						//do nothing

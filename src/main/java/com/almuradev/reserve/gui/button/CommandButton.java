@@ -111,11 +111,11 @@ public class CommandButton extends GenericButton {
 		if (gui instanceof RenameBankPopup) {
 			((RenameBankPopup) gui).onClickCommand(commandGoal);
 		}
-		
+
 		if (gui instanceof RenameAccountPopup) {
 			((RenameAccountPopup) gui).onClickCommand(commandGoal);
 		}
-		
+
 		if (gui instanceof ConfigureNPCPopup) {
 			((ConfigureNPCPopup) gui).onClickCommand(commandGoal);
 		}

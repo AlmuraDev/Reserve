@@ -29,7 +29,6 @@ import com.almuradev.reserve.gui.button.CommandButton;
 import com.almuradev.reserve.gui.checkbox.ConfigMultipleCheckBox;
 import com.almuradev.reserve.gui.checkbox.ConfigShareCheckBox;
 
-import org.getspout.spoutapi.gui.CheckBox;
 import org.getspout.spoutapi.gui.Color;
 import org.getspout.spoutapi.gui.GenericButton;
 import org.getspout.spoutapi.gui.GenericCheckBox;
@@ -74,7 +73,7 @@ public class ReserveConfigPopup extends GenericPopup {
 		gg.setWidth(130).setHeight(1);
 
 		deathCheckBox = new ConfigMultipleCheckBox(sPlayer, plugin);
-		deathCheckBox.setText("Player Death Penalty");		
+		deathCheckBox.setText("Player Death Penalty");
 		deathCheckBox.setEnabled(ReservePlugin.getConfiguration().shouldTaxDeath());
 		deathCheckBox.setAnchor(WidgetAnchor.CENTER_CENTER);
 		deathCheckBox.setHeight(20).setWidth(19);
@@ -97,15 +96,15 @@ public class ReserveConfigPopup extends GenericPopup {
 		saveTime.setWidth(50).setHeight(16);
 		saveTime.setText(Double.toString(ReservePlugin.getConfiguration().getSaveInterval()));
 		saveTime.setAnchor(WidgetAnchor.CENTER_CENTER);
-		saveTime.shiftXPos(30).shiftYPos(13);		
+		saveTime.shiftXPos(30).shiftYPos(13);
 		saveTime.setMaximumCharacters(5);
 		saveTime.setMaximumLines(1);
-		
+
 		intTime = new GenericTextField();
 		intTime.setWidth(50).setHeight(16);
 		intTime.setText(Double.toString(ReservePlugin.getConfiguration().getInterestInterval()));
 		intTime.setAnchor(WidgetAnchor.CENTER_CENTER);
-		intTime.shiftXPos(30).shiftYPos(33);		
+		intTime.shiftXPos(30).shiftYPos(33);
 		intTime.setMaximumCharacters(5);
 		intTime.setMaximumLines(1);
 

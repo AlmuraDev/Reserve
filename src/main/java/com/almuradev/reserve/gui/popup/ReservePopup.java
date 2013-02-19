@@ -115,9 +115,9 @@ public class ReservePopup extends GenericPopup {
 		options.setTooltip("Displays Configuration options for Reserve.");
 		openBank.setTooltip("Opens and Accesses selected bank.");
 		accountTypes.setTooltip("Account Types Configuration per Bank");
-		bankStatus.setTooltip("Displays selected bank status.");		
-		
-		options.setEnabled(sPlayer.hasPermission("reserve.admin"));		
+		bankStatus.setTooltip("Displays selected bank status.");
+
+		options.setEnabled(sPlayer.hasPermission("reserve.admin"));
 
 		if (list.getSelectedItem() == null) {
 			openBank.setEnabled(false);

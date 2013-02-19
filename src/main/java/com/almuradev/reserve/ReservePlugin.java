@@ -21,7 +21,6 @@ package com.almuradev.reserve;
 
 import java.text.NumberFormat;
 import java.util.Locale;
-import java.util.regex.Pattern;
 
 import com.almuradev.reserve.config.ReserveConfiguration;
 import com.almuradev.reserve.econ.Bank;
@@ -128,7 +127,7 @@ public class ReservePlugin extends JavaPlugin implements Listener {
 		}
 		final Block interacted = event.getClickedBlock();
 		final SpoutPlayer sPlayer = (SpoutPlayer) event.getPlayer();
-		
+
 		if (interacted.getState() == null || !(interacted.getState() instanceof Sign)) {
 			return;
 		}

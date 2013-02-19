@@ -24,9 +24,7 @@
 package com.almuradev.reserve.gui.popup;
 
 import com.almuradev.reserve.ReservePlugin;
-import com.almuradev.reserve.econ.Account;
 import com.almuradev.reserve.econ.Bank;
-import com.almuradev.reserve.econ.type.AccountType;
 import com.almuradev.reserve.gui.button.CommandButton;
 import com.almuradev.reserve.npc.trait.Banker;
 

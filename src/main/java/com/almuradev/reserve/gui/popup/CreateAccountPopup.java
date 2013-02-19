@@ -26,7 +26,6 @@ package com.almuradev.reserve.gui.popup;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.regex.Matcher;
 
 import com.almuradev.reserve.ReservePlugin;
 import com.almuradev.reserve.econ.Account;
@@ -114,7 +113,7 @@ public class CreateAccountPopup extends GenericPopup {
 
 		populateList();
 		box.setSelection(0);
-		
+
 		plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
 			@Override
 			public void run() {
@@ -140,7 +139,7 @@ public class CreateAccountPopup extends GenericPopup {
 
 	public void onClickCommand(int commandGoal) {
 		switch (commandGoal) {
-			case 1:				
+			case 1:
 				if (box.getSelectedItem() != null) {
 					if (accountNameField.getText().isEmpty()) {
 						new AckPopup(plugin, sPlayer, selectedBank, "Please specify name.", "createaccountgui");

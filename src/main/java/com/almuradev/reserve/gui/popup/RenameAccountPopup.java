@@ -23,8 +23,6 @@
  */
 package com.almuradev.reserve.gui.popup;
 
-import java.util.regex.Matcher;
-
 import com.almuradev.reserve.ReservePlugin;
 import com.almuradev.reserve.econ.Account;
 import com.almuradev.reserve.econ.Bank;
@@ -79,7 +77,7 @@ public class RenameAccountPopup extends GenericPopup {
 		accountNameField.setAnchor(WidgetAnchor.CENTER_CENTER);
 		accountNameField.shiftXPos(-55).shiftYPos(-45);
 		accountNameField.setMaximumCharacters(30);
-		accountNameField.setMaximumLines(1);		
+		accountNameField.setMaximumLines(1);
 
 		GenericButton close = new CommandButton(this, 1, "Close");
 		GenericButton save = new CommandButton(this, 2, "Save");

@@ -38,7 +38,6 @@ import org.apache.commons.lang.StringUtils;
 
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.event.Listener;
 
 public final class Storage {
 	private final ReservePlugin plugin;

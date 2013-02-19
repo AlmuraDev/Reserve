@@ -37,7 +37,8 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
 public class Banker extends Trait implements Listener {
-	@Persist(value = "reserve.bank", required = true) String bankName;
+	@Persist(value = "reserve.bank", required = true)
+	String bankName;
 	private final ReservePlugin plugin;
 
 	public Banker() {

@@ -22,17 +22,7 @@ package com.almuradev.reserve.npc;
 import com.almuradev.reserve.npc.trait.Banker;
 
 import net.citizensnpcs.api.CitizensAPI;
-import net.citizensnpcs.api.command.Command;
-import net.citizensnpcs.api.command.CommandContext;
-import net.citizensnpcs.api.command.CommandManager;
-import net.citizensnpcs.api.command.Requirements;
-import net.citizensnpcs.api.command.exception.CommandException;
-import net.citizensnpcs.api.npc.NPC;
 import net.citizensnpcs.api.trait.TraitInfo;
-
-import org.bukkit.command.CommandExecutor;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 
 public class CitizensUtil {
 	public void onEnable() {
