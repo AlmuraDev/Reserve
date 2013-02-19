@@ -40,7 +40,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.event.Listener;
 
-public class Storage implements Listener {
+public final class Storage {
 	private final ReservePlugin plugin;
 	private final File dir;
 
