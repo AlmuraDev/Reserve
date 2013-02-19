@@ -42,13 +42,14 @@ import org.bukkit.event.Listener;
 
 public class Storage implements Listener {
 	private final ReservePlugin plugin;
+	private final File dir;
 
 	public Storage(ReservePlugin plugin) {
 		this.plugin = plugin;
+		dir = new File(plugin.getDataFolder(), "banks");
 	}
 
 	public void onEnable() {
-		final File dir = new File(plugin.getDataFolder(), "banks");
 		try {
 			Files.createDirectory(dir.toPath());
 		} catch (FileAlreadyExistsException fafe) {
@@ -118,18 +119,18 @@ public class Storage implements Listener {
 
 	protected void load() {
 		try {
-			Files.walkFileTree(new File(plugin.getDataFolder(), "banks").toPath(), new FileSavingVisitor(plugin));
+			Files.walkFileTree(dir.toPath(), new FileSavingVisitor(plugin));
 		} catch (IOException ignore) {
-			plugin.getLogger().severe("Encountered a major issue when attempting to traverse the bank's files. Disabling...");
+			plugin.getLogger().severe("Encountered a major issue while attempting to traverse " + dir.toPath() + ". Disabling...");
 			plugin.getServer().getPluginManager().disablePlugin(plugin);
 		}
 	}
 
 	protected void cleanup() {
 		try {
-			Files.walkFileTree(new File(plugin.getDataFolder(), "banks").toPath(), new FileCleaningVisitor(plugin));
+			Files.walkFileTree(dir.toPath(), new FileCleaningVisitor(plugin));
 		} catch (IOException ignore) {
-			plugin.getLogger().severe("Encountered a major issue when attempting to traverse the bank's files. Disabling...");
+			plugin.getLogger().severe("Encountered a major issue while attempting to traverse " + dir.toPath() + ". Disabling...");
 			plugin.getServer().getPluginManager().disablePlugin(plugin);
 		}
 	}
@@ -236,7 +237,7 @@ class FileSavingVisitor extends SimpleFileVisitor<Path> {
 		for (String accountTypeName : accountTypeNames) {
 			final AccountType type = bankToInject.getType(accountTypeName);
 			if (type == null) {
-				plugin.getLogger().severe("Account type " + accountTypeName + " in accounts section isn't found in this bank! Skipping...");
+				plugin.getLogger().severe("Account type " + accountTypeName + " in accounts section is not found in this bank! Skipping...");
 				continue;
 			}
 			final ConfigurationSection accountTypeSection = accounts.getConfigurationSection(accountTypeName);
