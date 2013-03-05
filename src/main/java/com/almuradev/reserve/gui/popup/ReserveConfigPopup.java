@@ -45,7 +45,7 @@ public class ReserveConfigPopup extends GenericPopup {
 	private final ReservePlugin plugin;
 	private final SpoutPlayer sPlayer;
 	private final Bank selectedBank;
-	private final GenericTextField saveTime, intTime;
+	private final GenericTextField saveTime, intTime, deathTax;
 	private final GenericCheckBox deathCheckBox, gainInterest;
 	private final Color bottom = new Color(1.0F, 1.0F, 1.0F, 0.50F);
 
@@ -57,56 +57,76 @@ public class ReserveConfigPopup extends GenericPopup {
 		GenericTexture border = new GenericTexture("http://www.almuramc.com/images/playerplus.png");
 		border.setAnchor(WidgetAnchor.CENTER_CENTER);
 		border.setPriority(RenderPriority.High);
-		border.setWidth(255).setHeight(150);
-		border.shiftXPos(-105).shiftYPos(-80);
+		border.setWidth(255).setHeight(200);
+		border.shiftXPos(0-(border.getWidth()/2)).shiftYPos(-130);
 
 		GenericLabel gl = new GenericLabel("Reserve Configuration");
 		gl.setScale(1.2F);
 		gl.setAnchor(WidgetAnchor.CENTER_CENTER);
 		gl.setHeight(15).setWidth(GenericLabel.getStringWidth(gl.getText()));
-		gl.shiftXPos(-60).shiftYPos(-70);
+		gl.shiftXPos(0-(gl.getWidth()/2)).shiftYPos(-120);
 
 		GenericGradient gg = new GenericGradient();
 		gg.setBottomColor(bottom).setTopColor(bottom);
 		gg.setAnchor(WidgetAnchor.CENTER_CENTER);
-		gg.shiftXPos(-45).shiftYPos(-55).setMaxWidth(130);
 		gg.setWidth(130).setHeight(1);
+		gg.shiftXPos(0-(gg.getWidth()/2)).shiftYPos(-105).setMaxWidth(130);		
 
 		deathCheckBox = new ConfigMultipleCheckBox(sPlayer, plugin);
 		deathCheckBox.setText("Player Death Penalty");
-		deathCheckBox.setEnabled(ReservePlugin.getConfiguration().shouldTaxDeath());
+		deathCheckBox.setChecked(ReservePlugin.getConfiguration().shouldTaxDeath());
 		deathCheckBox.setAnchor(WidgetAnchor.CENTER_CENTER);
 		deathCheckBox.setHeight(20).setWidth(19);
-		deathCheckBox.shiftXPos(-45).shiftYPos(-42);
+		deathCheckBox.shiftXPos(-55).shiftYPos(-92);
 
 		gainInterest = new ConfigShareCheckBox(sPlayer, plugin);
 		gainInterest.setText("Account Gain Interest");
-		gainInterest.setEnabled(ReservePlugin.getConfiguration().shouldInterest());
+		gainInterest.setChecked(ReservePlugin.getConfiguration().shouldInterest());
 		gainInterest.setAnchor(WidgetAnchor.CENTER_CENTER);
 		gainInterest.setHeight(20).setWidth(19);
-		gainInterest.shiftXPos(-45).shiftYPos(-17);
-
-		GenericLabel an = new GenericLabel("Interest Time Interval: ");
+		gainInterest.shiftXPos(-55).shiftYPos(-70);
+		
+		GenericLabel an = new GenericLabel("Interest Calculator Time(ms): ");
 		an.setScale(1.0F);
 		an.setAnchor(WidgetAnchor.CENTER_CENTER);
 		an.setHeight(15).setWidth(GenericLabel.getStringWidth(an.getText()));
-		an.shiftXPos(-65).shiftYPos(16);
-
-		saveTime = new GenericTextField();
-		saveTime.setWidth(50).setHeight(16);
-		saveTime.setText(Double.toString(ReservePlugin.getConfiguration().getSaveInterval()));
-		saveTime.setAnchor(WidgetAnchor.CENTER_CENTER);
-		saveTime.shiftXPos(30).shiftYPos(13);
-		saveTime.setMaximumCharacters(5);
-		saveTime.setMaximumLines(1);
+		an.shiftXPos(-115).shiftYPos(4);
 
 		intTime = new GenericTextField();
-		intTime.setWidth(50).setHeight(16);
-		intTime.setText(Double.toString(ReservePlugin.getConfiguration().getInterestInterval()));
+		intTime.setWidth(60).setHeight(16);
+		intTime.setText(Long.toString(ReservePlugin.getConfiguration().getInterestInterval()));
 		intTime.setAnchor(WidgetAnchor.CENTER_CENTER);
-		intTime.shiftXPos(30).shiftYPos(33);
-		intTime.setMaximumCharacters(5);
+		intTime.shiftXPos(40).shiftYPos(0);
+		intTime.setMaximumCharacters(10);
 		intTime.setMaximumLines(1);
+		
+		GenericLabel ana = new GenericLabel("Save DB Time(ms): ");
+		ana.setScale(1.0F);
+		ana.setAnchor(WidgetAnchor.CENTER_CENTER);
+		ana.setHeight(15).setWidth(GenericLabel.getStringWidth(an.getText()));
+		ana.shiftXPos(-55).shiftYPos(30);
+		
+		saveTime = new GenericTextField();
+		saveTime.setWidth(60).setHeight(16);
+		saveTime.setText(Long.toString(ReservePlugin.getConfiguration().getSaveInterval()));
+		saveTime.setAnchor(WidgetAnchor.CENTER_CENTER);
+		saveTime.shiftXPos(40).shiftYPos(25);
+		saveTime.setMaximumCharacters(10);
+		saveTime.setMaximumLines(1);
+		
+		GenericLabel anb = new GenericLabel("Death Tax Range: ");
+		anb.setScale(1.0F);
+		anb.setAnchor(WidgetAnchor.CENTER_CENTER);
+		anb.setHeight(15).setWidth(GenericLabel.getStringWidth(an.getText()));
+		anb.shiftXPos(-55).shiftYPos(-20);
+		
+		deathTax = new GenericTextField();
+		deathTax.setWidth(60).setHeight(16);
+		deathTax.setText(Double.toString(ReservePlugin.getConfiguration().getDeathTax()));
+		deathTax.setAnchor(WidgetAnchor.CENTER_CENTER);
+		deathTax.shiftXPos(40).shiftYPos(-25);
+		deathTax.setMaximumCharacters(10);
+		deathTax.setMaximumLines(1);		
 
 		GenericButton depositButton = new CommandButton(this, 1, "Save");
 		GenericButton close = new CommandButton(this, 2, "Close");
@@ -114,10 +134,10 @@ public class ReserveConfigPopup extends GenericPopup {
 		depositButton.setAnchor(WidgetAnchor.CENTER_CENTER);
 		close.setAnchor(WidgetAnchor.CENTER_CENTER);
 
-		depositButton.setHeight(16).setWidth(50).shiftXPos(30).shiftYPos(47);
-		close.setHeight(16).setWidth(40).shiftXPos(85).shiftYPos(47);
+		depositButton.setHeight(16).setWidth(50).shiftXPos(20).shiftYPos(47);
+		close.setHeight(16).setWidth(40).shiftXPos(75).shiftYPos(47);
 
-		attachWidgets(plugin, border, gl, gg, deathCheckBox, gainInterest, saveTime, intTime, an, depositButton, close);
+		attachWidgets(plugin, border, gl, gg, deathCheckBox, gainInterest, saveTime, intTime, deathTax, anb, an, ana, depositButton, close);
 
 		sPlayer.getMainScreen().closePopup();
 		sPlayer.getMainScreen().attachPopupScreen(this);
@@ -125,8 +145,8 @@ public class ReserveConfigPopup extends GenericPopup {
 
 	public void onClickCommand(int commandGoal) {
 		switch (commandGoal) {
-			case 1: //Create
-				sPlayer.getMainScreen().closePopup();
+			case 1: //Create				
+				sPlayer.getMainScreen().closePopup();				
 				new AckPopup(plugin, sPlayer, selectedBank, "Reserve Configuration Saved", "reserveconfiggui");
 				break;
 			case 2:

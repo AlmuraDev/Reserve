@@ -113,14 +113,16 @@ public class BankPopup extends GenericPopup {
 		GenericButton makeWithdraw = new CommandButton(this, 3, "Withdraw");
 		GenericButton closeAccount = new CommandButton(this, 4, "Close Account");
 		GenericButton rename = new CommandButton(this, 5, "Rename Account");
-		GenericButton faq = new CommandButton(this, 5, "?");
+		GenericButton faq = new CommandButton(this, 5, "?");		
 		GenericButton close = new CommandButton(this, 6, "Close");
+		GenericButton options = new CommandButton(this, 7, "Options");
 
 		createAccount.setTooltip("Creates a New Bank Accounts");
 		makeDeposit.setTooltip("Takes money you are carrying and deposits into specified account.");
 		makeWithdraw.setTooltip("Removed money from your specified account.");
 		closeAccount.setTooltip("Closes & Deletes the specified bank account.");
 		faq.setTooltip("Frequently Asked Questions Here");
+		options.setTooltip("Configure Bank Options");
 
 		createAccount.setAnchor(WidgetAnchor.CENTER_CENTER);
 		makeDeposit.setAnchor(WidgetAnchor.CENTER_CENTER);
@@ -129,6 +131,7 @@ public class BankPopup extends GenericPopup {
 		rename.setAnchor(WidgetAnchor.CENTER_CENTER);
 		faq.setAnchor(WidgetAnchor.CENTER_CENTER);
 		close.setAnchor(WidgetAnchor.CENTER_CENTER);
+		options.setAnchor(WidgetAnchor.CENTER_CENTER);
 
 		createAccount.setHeight(16).setWidth(120).shiftXPos(-60).shiftYPos(15);
 		makeDeposit.setHeight(16).setWidth(60).shiftXPos(-60).shiftYPos(35);
@@ -137,12 +140,14 @@ public class BankPopup extends GenericPopup {
 		rename.setHeight(16).setWidth(120).shiftXPos(-60).shiftYPos(55);
 		faq.setHeight(16).setWidth(20).shiftXPos(-10).shiftYPos(95);
 		close.setHeight(16).setWidth(40).shiftXPos(70).shiftYPos(95);
+		options.setHeight(16).setWidth(40).shiftXPos(-70).shiftYPos(95);
 
 		createAccount.setEnabled(sPlayer.hasPermission("reserve.accountadd"));
 		makeDeposit.setEnabled(sPlayer.hasPermission("reserve.deposit") && (selectedBank.getAmountOfAccountsFor(sPlayer.getName()) > 0));
 		makeWithdraw.setEnabled(sPlayer.hasPermission("reserve.withdraw") && (selectedBank.getAmountOfAccountsFor(sPlayer.getName()) > 0));
 		closeAccount.setEnabled(sPlayer.hasPermission("reserve.accountremove") && (selectedBank.getAmountOfAccountsFor(sPlayer.getName()) > 0));
 		rename.setEnabled(sPlayer.hasPermission("reserve.accountadd") && (selectedBank.getAmountOfAccountsFor(sPlayer.getName()) > 0));
+		options.setEnabled(sPlayer.hasPermission("reserve.admin"));
 
 		attachWidgets(plugin, border, gl, bankNameLabel, gg, gb, createAccount, list, bankAccountsLabel, makeDeposit, rename, makeWithdraw, closeAccount, close);  //faq & options not displayed at this time.
 
@@ -197,6 +202,11 @@ public class BankPopup extends GenericPopup {
 				Screen screen = sPlayer.getMainScreen();
 				screen.removeWidget(this);
 				sPlayer.closeActiveWindow();
+				break;
+				
+			case 7:
+				sPlayer.getMainScreen().closePopup();
+				new BankConfigPopup(plugin, sPlayer, selectedBank);				
 				break;
 		}
 	}

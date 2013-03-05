@@ -140,7 +140,7 @@ public class WithdrawPopup extends GenericPopup {
 		an.shiftXPos(-95).shiftYPos(31);
 
 		withdrawAmountField = new GenericTextField();
-		withdrawAmountField.setWidth(110).setHeight(16);
+		withdrawAmountField.setWidth(90).setHeight(16);
 		withdrawAmountField.setAnchor(WidgetAnchor.CENTER_CENTER);
 		withdrawAmountField.shiftXPos(-10).shiftYPos(27);
 		withdrawAmountField.setPlaceholder("0.00");
@@ -149,17 +149,20 @@ public class WithdrawPopup extends GenericPopup {
 		withdrawAmountField.setMaximumLines(1);
 
 		GenericButton depositButton = new CommandButton(this, 1, "Withdraw");
-		GenericButton close = new CommandButton(this, 2, "Close");
+		GenericButton allButton = new CommandButton(this, 2, "All");
+		GenericButton close = new CommandButton(this, 3, "Close");
 
 		depositButton.setAnchor(WidgetAnchor.CENTER_CENTER);
+		allButton.setAnchor(WidgetAnchor.CENTER_CENTER);
 		close.setAnchor(WidgetAnchor.CENTER_CENTER);
 
 		depositButton.setHeight(16).setWidth(50).shiftXPos(20).shiftYPos(50);
+		allButton.setHeight(16).setWidth(25).shiftXPos(90).shiftYPos(27);
 		close.setHeight(16).setWidth(40).shiftXPos(75).shiftYPos(50);
 
 		populateList();
 
-		attachWidgets(plugin, border, gl, gg, ag, ab, at, att, gm, box, cl, withdrawAmountField, an, depositButton, close);
+		attachWidgets(plugin, border, gl, gg, ag, ab, at, att, gm, box, cl, allButton, withdrawAmountField, an, depositButton, close);
 
 		sPlayer.getMainScreen().closePopup();
 		sPlayer.getMainScreen().attachPopupScreen(this);
@@ -204,13 +207,14 @@ public class WithdrawPopup extends GenericPopup {
 				}
 				break;
 			case 2: // Close
-				sPlayer.getMainScreen().closePopup();
-				new BankPopup(plugin, sPlayer, selectedBank);
+				Account myAccount = selectedBank.getAccount(box.getSelectedItem(), sPlayer.getName());
+				withdrawAmountField.setText(Double.toString(myAccount.getBalance()));
 				break;
 
 			case 3:
-				//box.setText(box.getSelectedItem());
-				box.setDirty(true);
+				sPlayer.getMainScreen().closePopup();
+				new BankPopup(plugin, sPlayer, selectedBank);
+				break;
 		}
 	}
 

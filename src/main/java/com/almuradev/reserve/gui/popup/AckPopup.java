@@ -113,6 +113,8 @@ public class AckPopup extends GenericPopup {
 					new CreateAccountPopup(plugin, sPlayer, selectedBank);
 				} else if (ackMessage.equalsIgnoreCase("Account with that name already exists.") && previousWindow.equalsIgnoreCase("createaccountgui")) {
 					new CreateAccountPopup(plugin, sPlayer, selectedBank);
+				} else if (ackMessage.equalsIgnoreCase("Invalid Characters in Name.") && previousWindow.equalsIgnoreCase("createaccountgui")) {
+					new CreateAccountPopup(plugin, sPlayer, selectedBank);
 				} else if (ackMessage.equalsIgnoreCase("You already have an account of that type.") && previousWindow.equalsIgnoreCase("createaccountgui")) {
 					new CreateAccountPopup(plugin, sPlayer, selectedBank);
 				} else if (ackMessage.equalsIgnoreCase("Account balance is not zero.") && previousWindow.equalsIgnoreCase("deleteaccountgui")) {
@@ -161,6 +163,14 @@ public class AckPopup extends GenericPopup {
 					new BankPopup(plugin, sPlayer, selectedBank);
 				} else if (ackMessage.equalsIgnoreCase("Account Removed.") && previousWindow.equalsIgnoreCase("deleteaccountgui")) {
 					new BankPopup(plugin, sPlayer, selectedBank);
+				} else if (ackMessage.equalsIgnoreCase("Invalid Characters in Name.") && previousWindow.equalsIgnoreCase("renameaccountgui")) {
+					new BankPopup(plugin, sPlayer, selectedBank);
+				} else if (ackMessage.equalsIgnoreCase("Invalid Characters in Name.") && previousWindow.equalsIgnoreCase("renamebankgui")) {
+					new ReservePopup(plugin, sPlayer);
+				} else if (ackMessage.equalsIgnoreCase("Invalid Characters in Name.") && previousWindow.equalsIgnoreCase("createbankgui")) {
+					new ReservePopup(plugin, sPlayer);
+				} else if (ackMessage.equalsIgnoreCase("Please specify new name.") && previousWindow.equalsIgnoreCase("renamebankgui")) {
+					new ReservePopup(plugin, sPlayer);
 				} else {
 					// unhandled return, don't start another screen.
 				}

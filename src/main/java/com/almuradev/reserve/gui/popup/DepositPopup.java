@@ -141,7 +141,7 @@ public class DepositPopup extends GenericPopup {
 		an.shiftXPos(-95).shiftYPos(31);
 
 		depositAmountField = new GenericTextField();
-		depositAmountField.setWidth(110).setHeight(16);
+		depositAmountField.setWidth(90).setHeight(16);
 		depositAmountField.setAnchor(WidgetAnchor.CENTER_CENTER);
 		depositAmountField.shiftXPos(-10).shiftYPos(27);
 		depositAmountField.setPlaceholder("0.00");
@@ -150,17 +150,20 @@ public class DepositPopup extends GenericPopup {
 		depositAmountField.setMaximumLines(1);
 
 		GenericButton depositButton = new CommandButton(this, 1, "Deposit");
-		GenericButton close = new CommandButton(this, 2, "Close");
+		GenericButton allButton = new CommandButton(this, 2, "All");
+		GenericButton close = new CommandButton(this, 3, "Close");
 
 		depositButton.setAnchor(WidgetAnchor.CENTER_CENTER);
+		allButton.setAnchor(WidgetAnchor.CENTER_CENTER);
 		close.setAnchor(WidgetAnchor.CENTER_CENTER);
 
 		depositButton.setHeight(16).setWidth(50).shiftXPos(20).shiftYPos(50);
+		allButton.setHeight(16).setWidth(25).shiftXPos(90).shiftYPos(27);
 		close.setHeight(16).setWidth(40).shiftXPos(75).shiftYPos(50);
 
 		populateList();
 
-		attachWidgets(plugin, border, gl, gg, ag, ab, at, att, gm, box, cl, depositAmountField, an, depositButton, close);
+		attachWidgets(plugin, border, gl, gg, ag, ab, at, att, gm, box, cl, depositAmountField, an, allButton, depositButton, close);
 
 		sPlayer.getMainScreen().closePopup();
 		sPlayer.getMainScreen().attachPopupScreen(this);
@@ -205,7 +208,13 @@ public class DepositPopup extends GenericPopup {
 					}
 				}
 				break;
-			case 2: // Close
+			case 2: // Deposit All				
+				DecimalFormat df = new DecimalFormat("#.##");
+				String myDeposit = df.format(Math.abs(Double.parseDouble(Double.toString(VaultUtil.getBalance(sPlayer.getName())))-0.01));
+				depositAmountField.setText(myDeposit);
+				break;
+				
+			case 3: // Close
 				sPlayer.getMainScreen().closePopup();
 				new BankPopup(plugin, sPlayer, selectedBank);
 				break;
