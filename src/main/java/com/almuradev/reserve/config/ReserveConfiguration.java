@@ -20,16 +20,16 @@
 package com.almuradev.reserve.config;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Random;
 
 import com.almuradev.reserve.ReservePlugin;
 
 import org.bukkit.configuration.file.FileConfiguration;
 
-public class ReserveConfiguration {
+public final class ReserveConfiguration {
 	private final ReservePlugin plugin;
 	private FileConfiguration config;
-	private final static Random RANDOM = new Random();
 
 	public ReserveConfiguration(ReservePlugin plugin) {
 		this.plugin = plugin;
@@ -47,23 +47,42 @@ public class ReserveConfiguration {
 		return config.getBoolean("modifier.interest", true);
 	}
 
+	public ReserveConfiguration setShouldInterest(boolean shouldInterest) {
+		config.set("modifier.interest", shouldInterest);
+		return this;
+	}
+
 	public boolean shouldTaxDeath() {
 		return config.getBoolean("modifier.tax-death", true);
+	}
+
+	public ReserveConfiguration setShouldTaxDeath(boolean shouldTaxDeath) {
+		config.set("modifier.tax-death", shouldTaxDeath);
+		return this;
 	}
 
 	public long getInterestInterval() {
 		return config.getLong("interval.interest", 1728000);
 	}
 
+	public ReserveConfiguration setInterestInterval(long interestInterval) {
+		config.set("interval.interest", interestInterval);
+		return this;
+	}
+
 	public long getSaveInterval() {
 		return config.getLong("interval.save", 2400);
+	}
+
+	public ReserveConfiguration setSaveInterval(long saveInterval) {
+		config.set("interval.save", saveInterval);
+		return this;
 	}
 
 	public double getDeathTax() {
 		final String raw = config.getString("tax.death-range", "25-75");
 		final String[] parsed = raw.split("-");
-		double lower, upper;
-		lower = upper = 0;
+		double lower, upper = 0;
 		//Parse lower and upper
 		try {
 			lower = Double.parseDouble(parsed[0]);
@@ -78,6 +97,31 @@ public class ReserveConfiguration {
 			}
 		}
 		//Pick random from range
-		return (lower + (upper - lower) * RANDOM.nextDouble()) / 100;
+		return (lower + (upper - lower) * ReservePlugin.RANDOM.nextDouble()) / 100;
+	}
+
+	public ReserveConfiguration setDeathTax(double min, double max) {
+		String parsedMin, parsedMax;
+		try {
+			parsedMin = Double.toString(min);
+		} catch (Exception e) {
+			throw new IllegalArgumentException("Min isn't a valid double!");
+		}
+
+		try {
+			parsedMax = Double.toString(max);
+		} catch (Exception e) {
+			throw new IllegalStateException("Max isn't a valid double!");
+		}
+		config.set("tax.death-range", parsedMin + "-" + parsedMax);
+		return this;
+	}
+
+	public void save() {
+		try {
+			config.save(new File(plugin.getDataFolder(), "config.yml"));
+		} catch (Exception e) {
+			throw new IllegalStateException("Could not save configuration changes to file!");
+		}
 	}
 }

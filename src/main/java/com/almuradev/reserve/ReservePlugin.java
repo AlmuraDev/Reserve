@@ -21,6 +21,7 @@ package com.almuradev.reserve;
 
 import java.text.NumberFormat;
 import java.util.Locale;
+import java.util.Random;
 
 import com.almuradev.reserve.config.ReserveConfiguration;
 import com.almuradev.reserve.econ.Bank;
@@ -55,6 +56,7 @@ public class ReservePlugin extends JavaPlugin implements Listener {
 	public static final Locale CURRENCY_LOCALE = new Locale("en", "US");
 	public static final NumberFormat NUMBER_FORMAT = NumberFormat.getCurrencyInstance(CURRENCY_LOCALE);
 	public static final String INPUT_REGEX = "([a-zA-Z-\\s0-9]+)";
+	public static final Random RANDOM = new Random();
 	private static Reserve reserve;
 	private static Storage storage;
 	private static ReserveConfiguration config;
