@@ -23,6 +23,7 @@ accounts:
         gregabyte:
             name: greg backup
             balance: 100
+            interest-holder: true  ***OPTIONAL***
 types:
     checking:
         interest: true

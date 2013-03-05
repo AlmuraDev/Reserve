@@ -36,23 +36,39 @@ public class InterestTask implements Runnable {
 		this.reserve = reserve;
 	}
 
-	@Override  // 
+	@Override
 	public void run() {
 		final Map<String, List<Bank>> BANKS = reserve.retrieveBanks();
 		for (String world : BANKS.keySet()) {
 			for (Bank bank : BANKS.get(world)) {
+				final Account interestPayable = bank.getInterestHoldingAccount();
 				for (Account account : bank.retrieveAccounts()) {
-					if (bank.getBalance() <= 0) {
+					if (!account.getType().receivesInterest()) {
 						continue;
 					}
 					//I = P r t
-					if (account.getType().receivesInterest()) {
-						double interest = account.getBalance() * account.getType().getInterestRate() * (1 / 365);
+					//Rate is per account basis, time is based on 6 times daily (once every 4 hours).
+					//TODO Make this configurable for Reserve 1.0
+					double interest = account.getBalance() * account.getType().getInterestRate() * (1 / 2190);
+					//Have the bank's balance payout interest if no account is specified to do interest payouts.
+					if (interestPayable == null) {
+						if (bank.getBalance() <= 0) {
+							continue;
+						}
 						if (bank.getBalance() - interest <= 0) {
 							interest = bank.getBalance();
 						}
 						account.add(interest);
 						bank.setBalance(bank.getBalance() - interest);
+					} else {
+						if (interestPayable.getBalance() <= 0) {
+							continue;
+						}
+						if (interestPayable.getBalance() - interest <= 0) {
+							interest = account.getBalance();
+						}
+						account.add(interest);
+						interestPayable.add(-interest);
 					}
 				}
 			}

@@ -26,7 +26,8 @@ public final class Account {
 	private String name;
 	private String holder;
 	private double balance = 0;
-	private boolean dirty = false;
+	private boolean interestHolder;
+	private boolean dirty;
 
 	public Account(AccountType type, String name, String holder) {
 		this.type = type;
@@ -112,6 +113,25 @@ public final class Account {
 	}
 
 	/**
+	 * Returns if this account pays interest payouts.
+	 * @return True if the account pays interest payouts, false if not.
+	 */
+	public boolean isInterestHolder() {
+		return interestHolder;
+	}
+
+	/**
+	 * Sets this account as the interest payout holder.
+	 * @param interestHolder Sets whether this account pays interest payouts or not.
+	 * @return This account
+	 */
+	public Account setInterestHolder(boolean interestHolder) {
+		this.interestHolder = interestHolder;
+		setDirty(true);
+		return this;
+	}
+
+	/**
 	 * Adds an amount to this account's balance.
 	 * @param amount Amount to add
 	 * @return This account
@@ -158,6 +178,6 @@ public final class Account {
 
 	@Override
 	public String toString() {
-		return "Account{type= {" + type.toString() + "}, name= " + name + ", holder= " + holder + ", balance= " + balance + ", dirty= " + dirty + "} ";
+		return "Account{type= {" + type.toString() + "}, name= " + name + ", holder= " + holder + ", balance= " + balance + ", interestHolder= " + interestHolder + ", dirty= " + dirty + "} ";
 	}
 }

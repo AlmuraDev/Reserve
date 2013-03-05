@@ -267,6 +267,32 @@ public final class Bank {
 	}
 
 	/**
+	 * Returns if this bank has a interest holding account.
+	 * @return True if the bank has an interest holding account, false if not
+	 */
+	public boolean hasInterestHoldingAccount() {
+		for (Account account : accounts) {
+			if (account.isInterestHolder()) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * Gets the account that is the interest holder.
+	 * @return The account that pays interest payouts or null if the bank doesn't have one
+	 */
+	public Account getInterestHoldingAccount() {
+		for (Account account : accounts) {
+			if (account.isInterestHolder()) {
+				return account;
+			}
+		}
+		return null;
+	}
+
+	/**
 	 * Wipes this bank, setting all account balances to 0.0.
 	 * @return This bank, wiped.
 	 */
