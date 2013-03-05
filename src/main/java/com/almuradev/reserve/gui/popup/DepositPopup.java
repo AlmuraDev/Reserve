@@ -210,10 +210,10 @@ public class DepositPopup extends GenericPopup {
 				break;
 			case 2: // Deposit All				
 				DecimalFormat df = new DecimalFormat("#.##");
-				String myDeposit = df.format(Math.abs(Double.parseDouble(Double.toString(VaultUtil.getBalance(sPlayer.getName())))-0.01));
+				String myDeposit = df.format(Math.abs(Double.parseDouble(Double.toString(VaultUtil.getBalance(sPlayer.getName()))) - 0.01));
 				depositAmountField.setText(myDeposit);
 				break;
-				
+
 			case 3: // Close
 				sPlayer.getMainScreen().closePopup();
 				new BankPopup(plugin, sPlayer, selectedBank);

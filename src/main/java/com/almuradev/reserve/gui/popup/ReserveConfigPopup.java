@@ -58,19 +58,19 @@ public class ReserveConfigPopup extends GenericPopup {
 		border.setAnchor(WidgetAnchor.CENTER_CENTER);
 		border.setPriority(RenderPriority.High);
 		border.setWidth(255).setHeight(200);
-		border.shiftXPos(0-(border.getWidth()/2)).shiftYPos(-130);
+		border.shiftXPos(0 - (border.getWidth() / 2)).shiftYPos(-130);
 
 		GenericLabel gl = new GenericLabel("Reserve Configuration");
 		gl.setScale(1.2F);
 		gl.setAnchor(WidgetAnchor.CENTER_CENTER);
 		gl.setHeight(15).setWidth(GenericLabel.getStringWidth(gl.getText()));
-		gl.shiftXPos(0-(gl.getWidth()/2)).shiftYPos(-120);
+		gl.shiftXPos(0 - (gl.getWidth() / 2)).shiftYPos(-120);
 
 		GenericGradient gg = new GenericGradient();
 		gg.setBottomColor(bottom).setTopColor(bottom);
 		gg.setAnchor(WidgetAnchor.CENTER_CENTER);
 		gg.setWidth(130).setHeight(1);
-		gg.shiftXPos(0-(gg.getWidth()/2)).shiftYPos(-105).setMaxWidth(130);		
+		gg.shiftXPos(0 - (gg.getWidth() / 2)).shiftYPos(-105).setMaxWidth(130);
 
 		deathCheckBox = new ConfigMultipleCheckBox(sPlayer, plugin);
 		deathCheckBox.setText("Player Death Penalty");
@@ -85,7 +85,7 @@ public class ReserveConfigPopup extends GenericPopup {
 		gainInterest.setAnchor(WidgetAnchor.CENTER_CENTER);
 		gainInterest.setHeight(20).setWidth(19);
 		gainInterest.shiftXPos(-55).shiftYPos(-70);
-		
+
 		GenericLabel an = new GenericLabel("Interest Calculator Time(ms): ");
 		an.setScale(1.0F);
 		an.setAnchor(WidgetAnchor.CENTER_CENTER);
@@ -99,13 +99,13 @@ public class ReserveConfigPopup extends GenericPopup {
 		intTime.shiftXPos(40).shiftYPos(0);
 		intTime.setMaximumCharacters(10);
 		intTime.setMaximumLines(1);
-		
+
 		GenericLabel ana = new GenericLabel("Save DB Time(ms): ");
 		ana.setScale(1.0F);
 		ana.setAnchor(WidgetAnchor.CENTER_CENTER);
 		ana.setHeight(15).setWidth(GenericLabel.getStringWidth(an.getText()));
 		ana.shiftXPos(-55).shiftYPos(30);
-		
+
 		saveTime = new GenericTextField();
 		saveTime.setWidth(60).setHeight(16);
 		saveTime.setText(Long.toString(ReservePlugin.getConfiguration().getSaveInterval()));
@@ -113,20 +113,20 @@ public class ReserveConfigPopup extends GenericPopup {
 		saveTime.shiftXPos(40).shiftYPos(25);
 		saveTime.setMaximumCharacters(10);
 		saveTime.setMaximumLines(1);
-		
+
 		GenericLabel anb = new GenericLabel("Death Tax Range: ");
 		anb.setScale(1.0F);
 		anb.setAnchor(WidgetAnchor.CENTER_CENTER);
 		anb.setHeight(15).setWidth(GenericLabel.getStringWidth(an.getText()));
 		anb.shiftXPos(-55).shiftYPos(-20);
-		
+
 		deathTax = new GenericTextField();
 		deathTax.setWidth(60).setHeight(16);
 		deathTax.setText(Double.toString(ReservePlugin.getConfiguration().getDeathTax()));
 		deathTax.setAnchor(WidgetAnchor.CENTER_CENTER);
 		deathTax.shiftXPos(40).shiftYPos(-25);
 		deathTax.setMaximumCharacters(10);
-		deathTax.setMaximumLines(1);		
+		deathTax.setMaximumLines(1);
 
 		GenericButton depositButton = new CommandButton(this, 1, "Save");
 		GenericButton close = new CommandButton(this, 2, "Close");
@@ -146,7 +146,7 @@ public class ReserveConfigPopup extends GenericPopup {
 	public void onClickCommand(int commandGoal) {
 		switch (commandGoal) {
 			case 1: //Create				
-				sPlayer.getMainScreen().closePopup();				
+				sPlayer.getMainScreen().closePopup();
 				new AckPopup(plugin, sPlayer, selectedBank, "Reserve Configuration Saved", "reserveconfiggui");
 				break;
 			case 2:

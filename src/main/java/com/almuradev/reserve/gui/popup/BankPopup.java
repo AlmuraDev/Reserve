@@ -113,7 +113,7 @@ public class BankPopup extends GenericPopup {
 		GenericButton makeWithdraw = new CommandButton(this, 3, "Withdraw");
 		GenericButton closeAccount = new CommandButton(this, 4, "Close Account");
 		GenericButton rename = new CommandButton(this, 5, "Rename Account");
-		GenericButton faq = new CommandButton(this, 5, "?");		
+		GenericButton faq = new CommandButton(this, 5, "?");
 		GenericButton close = new CommandButton(this, 6, "Close");
 		GenericButton options = new CommandButton(this, 7, "Options");
 
@@ -203,10 +203,10 @@ public class BankPopup extends GenericPopup {
 				screen.removeWidget(this);
 				sPlayer.closeActiveWindow();
 				break;
-				
+
 			case 7:
 				sPlayer.getMainScreen().closePopup();
-				new BankConfigPopup(plugin, sPlayer, selectedBank);				
+				new BankConfigPopup(plugin, sPlayer, selectedBank);
 				break;
 		}
 	}
