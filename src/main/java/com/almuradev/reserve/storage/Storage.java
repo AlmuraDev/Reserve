@@ -99,8 +99,8 @@ public final class Storage {
 			final ConfigurationSection accountHolderSection = accountTypeSection.createSection(account.getHolder());
 			accountHolderSection.set("name", account.getName());
 			accountHolderSection.set("balance", account.getBalance());
-			if (account.isInterestHolder()) {
-				accountHolderSection.set("interest-holder", true);
+			if (account.isInterestPayable()) {
+				accountHolderSection.set("interest-payable", true);
 			}
 		}
 		final ConfigurationSection types = reader.createSection("types");
@@ -252,12 +252,14 @@ class FileSavingVisitor extends SimpleFileVisitor<Path> {
 				//Grab the account holder's balance.
 				final double accountBalance = accountHolderSection.getDouble("balance", 0.0);
 				//Grab the interest holder status.
-				final boolean interestHolder = accountHolderSection.getBoolean("interest-holder", false);
+				final boolean interestPayable = accountHolderSection.getBoolean("interest-payable", false);
 				//Create the account.
 				final Account accountToInject = new Account(type, accountName, accountHolderName);
 				accountToInject
-						.setBalance(accountBalance)
-						.setInterestHolder(interestHolder);
+						.setBalance(accountBalance);
+				if (interestPayable) {
+					bankToInject.setInterestPayable(accountToInject);
+				}
 				//Finally add it.
 				bankToInject.addAccount(accountToInject);
 			}

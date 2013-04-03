@@ -35,6 +35,7 @@ public final class Bank {
 	private double balance = 0;
 	private List<Account> accounts;
 	private List<AccountType> types;
+	private Account interestPayable = null;
 	private boolean dirty = false;
 
 	public Bank(String name, String holder) {
@@ -267,32 +268,6 @@ public final class Bank {
 	}
 
 	/**
-	 * Returns if this bank has a interest holding account.
-	 * @return True if the bank has an interest holding account, false if not
-	 */
-	public boolean hasInterestHoldingAccount() {
-		for (Account account : accounts) {
-			if (account.isInterestHolder()) {
-				return true;
-			}
-		}
-		return false;
-	}
-
-	/**
-	 * Gets the account that is the interest holder.
-	 * @return The account that pays interest payouts or null if the bank doesn't have one
-	 */
-	public Account getInterestHoldingAccount() {
-		for (Account account : accounts) {
-			if (account.isInterestHolder()) {
-				return account;
-			}
-		}
-		return null;
-	}
-
-	/**
 	 * Wipes this bank, setting all account balances to 0.0.
 	 * @return This bank, wiped.
 	 */
@@ -387,6 +362,33 @@ public final class Bank {
 			}
 		}
 		return accounts;
+	}
+
+	/**
+	 * Returns the account designated as the interest payable (pays interest allotments).
+	 * @return The account designated as interest payable or null if one isn't set
+	 */
+	public Account getInterestPayable() {
+		return interestPayable;
+	}
+
+	/**
+	 * Sets an account as the interest payable (The account that pays interest allotments).
+	 *
+	 * Providing a null account will void the interest account (hereby causing interest to be removed from the Bank's account).
+	 * @param interestPayable The account that will pay interest allotments
+	 * @return This account
+	 */
+	public Account setInterestPayable(Account interestPayable) {
+		if (this.interestPayable != null) {
+			this.interestPayable.setInterestPayable(false);
+		}
+		this.interestPayable = interestPayable;
+		if (interestPayable != null) {
+			interestPayable.setInterestPayable(true);
+		}
+		setDirty(true);
+		return interestPayable;
 	}
 
 	/**

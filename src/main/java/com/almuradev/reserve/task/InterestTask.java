@@ -41,7 +41,7 @@ public class InterestTask implements Runnable {
 		final Map<String, List<Bank>> BANKS = reserve.retrieveBanks();
 		for (String world : BANKS.keySet()) {
 			for (Bank bank : BANKS.get(world)) {
-				final Account interestPayable = bank.getInterestHoldingAccount();
+				final Account interestPayable = bank.getInterestPayable();
 				for (Account account : bank.retrieveAccounts()) {
 					if (!account.getType().receivesInterest()) {
 						continue;
