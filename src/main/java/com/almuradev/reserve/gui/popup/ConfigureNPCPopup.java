@@ -17,10 +17,6 @@
  * You should have received a copy of the GNU General Public License. If not,
  * see <http://www.gnu.org/licenses/> for the GNU General Public License.
  */
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.almuradev.reserve.gui.popup;
 
 import com.almuradev.reserve.ReservePlugin;
