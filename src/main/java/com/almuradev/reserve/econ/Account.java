@@ -26,7 +26,7 @@ public final class Account {
 	private String name;
 	private String holder;
 	private double balance = 0;
-	private boolean interestHolder;
+	private boolean interestPayable;
 	private boolean dirty;
 
 	public Account(AccountType type, String name, String holder) {
@@ -116,19 +116,8 @@ public final class Account {
 	 * Returns if this account pays interest payouts.
 	 * @return True if the account pays interest payouts, false if not.
 	 */
-	public boolean isInterestHolder() {
-		return interestHolder;
-	}
-
-	/**
-	 * Sets this account as the interest payout holder.
-	 * @param interestHolder Sets whether this account pays interest payouts or not.
-	 * @return This account
-	 */
-	public Account setInterestHolder(boolean interestHolder) {
-		this.interestHolder = interestHolder;
-		setDirty(true);
-		return this;
+	public boolean isInterestPayable() {
+		return interestPayable;
 	}
 
 	/**
@@ -157,6 +146,14 @@ public final class Account {
 	}
 
 	/**
+	 * Sets the interest payable status. INTERNAL USE ONLY.
+	 * @param interestPayable Interest payable status
+	 */
+	protected void setInterestPayable(boolean interestPayable) {
+		this.interestPayable = interestPayable;
+	}
+
+	/**
 	 * Sets the account's dirty status. Great caution should be used as unintentionally setting a dirty account to false means
 	 * the storage system won't save it. On the flip side, setting an account to always dirty will kill SSD computers. In short,
 	 * if un-decided, leave it alone.
@@ -178,6 +175,6 @@ public final class Account {
 
 	@Override
 	public String toString() {
-		return "Account{type= {" + type.toString() + "}, name= " + name + ", holder= " + holder + ", balance= " + balance + ", interestHolder= " + interestHolder + ", dirty= " + dirty + "} ";
+		return "Account{type= {" + type.toString() + "}, name= " + name + ", holder= " + holder + ", balance= " + balance + ", interestPayable= " + interestPayable + ", dirty= " + dirty + "} ";
 	}
 }
