@@ -73,14 +73,14 @@ public class ReserveConfigPopup extends GenericPopup {
 		gg.shiftXPos(0 - (gg.getWidth() / 2)).shiftYPos(-105).setMaxWidth(130);
 
 		deathCheckBox = new ConfigMultipleCheckBox(sPlayer, plugin);
-		deathCheckBox.setText("Player Death Penalty");
+		deathCheckBox.setText("Global Player Death Penalty");
 		deathCheckBox.setChecked(ReservePlugin.getConfiguration().shouldTaxDeath());
 		deathCheckBox.setAnchor(WidgetAnchor.CENTER_CENTER);
 		deathCheckBox.setHeight(20).setWidth(19);
 		deathCheckBox.shiftXPos(-55).shiftYPos(-92);
 
 		gainInterest = new ConfigShareCheckBox(sPlayer, plugin);
-		gainInterest.setText("Account Gain Interest");
+		gainInterest.setText("Global Account Interest");
 		gainInterest.setChecked(ReservePlugin.getConfiguration().shouldInterest());
 		gainInterest.setAnchor(WidgetAnchor.CENTER_CENTER);
 		gainInterest.setHeight(20).setWidth(19);
@@ -99,6 +99,7 @@ public class ReserveConfigPopup extends GenericPopup {
 		intTime.shiftXPos(40).shiftYPos(0);
 		intTime.setMaximumCharacters(10);
 		intTime.setMaximumLines(1);
+		intTime.setTooltip("Value Range: 1200 - 12000 ms");
 
 		GenericLabel ana = new GenericLabel("Save DB Time(ms): ");
 		ana.setScale(1.0F);
@@ -113,6 +114,7 @@ public class ReserveConfigPopup extends GenericPopup {
 		saveTime.shiftXPos(40).shiftYPos(25);
 		saveTime.setMaximumCharacters(10);
 		saveTime.setMaximumLines(1);
+		saveTime.setTooltip("Value Range: 1200 - 12000 ms");
 
 		GenericLabel anb = new GenericLabel("Death Tax Range: ");
 		anb.setScale(1.0F);
@@ -122,7 +124,7 @@ public class ReserveConfigPopup extends GenericPopup {
 
 		deathTax = new GenericTextField();
 		deathTax.setWidth(60).setHeight(16);
-		deathTax.setText(Double.toString(ReservePlugin.getConfiguration().getDeathTax()));
+		deathTax.setText(ReservePlugin.getConfiguration().getDeathTaxCfg());
 		deathTax.setAnchor(WidgetAnchor.CENTER_CENTER);
 		deathTax.shiftXPos(40).shiftYPos(-25);
 		deathTax.setMaximumCharacters(10);
@@ -147,7 +149,19 @@ public class ReserveConfigPopup extends GenericPopup {
 		switch (commandGoal) {
 			case 1: //Create				
 				sPlayer.getMainScreen().closePopup();
-				new AckPopup(plugin, sPlayer, selectedBank, "Reserve Configuration Saved", "reserveconfiggui");
+				ReservePlugin.getConfiguration().setDeathTaxCfg(deathTax.getText());
+				ReservePlugin.getConfiguration().setShouldTaxDeath(deathCheckBox.isChecked());
+				ReservePlugin.getConfiguration().setShouldInterest(gainInterest.isChecked());
+				
+				if (Long.parseLong(saveTime.getText()) > 1200 && Long.parseLong(saveTime.getText()) < 12000) {
+					ReservePlugin.getConfiguration().setSaveInterval(Long.parseLong(saveTime.getText()));
+				}
+				
+				if (Long.parseLong(intTime.getText()) > 1200 && Long.parseLong(intTime.getText()) < 12000) {
+					ReservePlugin.getConfiguration().setInterestInterval(Long.parseLong(saveTime.getText()));
+				}
+				
+				new AckPopup(plugin, sPlayer, selectedBank, "Reserve Configuration Saved.", "reserveconfiggui");
 				break;
 			case 2:
 				sPlayer.getMainScreen().closePopup();
