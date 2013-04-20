@@ -149,8 +149,8 @@ public class AckPopup extends GenericPopup {
 					new BankPopup(plugin, sPlayer, selectedBank);
 				} else if (ackMessage.equalsIgnoreCase("You cannot rename Bank Vault.") && previousWindow.equalsIgnoreCase("renameaccountgui")) {
 					new BankPopup(plugin, sPlayer, selectedBank);
-				} else if (ackMessage.equalsIgnoreCase("Reserve Configuration Saved.") && previousWindow.equalsIgnoreCase("reserveconfiggui")) {
-					new ReservePopup(plugin, sPlayer);
+				} else if (ackMessage.equalsIgnoreCase("Reserve Configuration Saved.") && previousWindow.equalsIgnoreCase("reserveconfiggui")) {					
+					new OptionsPopup(plugin, sPlayer);
 				} else if (ackMessage.equalsIgnoreCase("Account Created Successfully.") && previousWindow.equalsIgnoreCase("createaccountgui")) {
 					new BankPopup(plugin, sPlayer, selectedBank);
 				} else if (ackMessage.equalsIgnoreCase("Funds Deposited Successfully.") && previousWindow.equalsIgnoreCase("depositgui")) {
@@ -169,6 +169,7 @@ public class AckPopup extends GenericPopup {
 					new ReservePopup(plugin, sPlayer);
 				} else {
 					// unhandled return, don't start another screen.
+					System.out.println("Window: " + previousWindow);
 				}
 				break;
 		}

@@ -77,6 +77,15 @@ public final class ReserveConfiguration {
 		return this;
 	}
 
+	public String getDeathTaxCfg() {
+		return config.getString("tax.death-range");		
+	}
+	
+	public ReserveConfiguration setDeathTaxCfg(String range) {
+		config.set("tax.death-range", range);
+		return this;
+	}
+	
 	public double getDeathTax() {
 		final String raw = config.getString("tax.death-range", "25-75");
 		final String[] parsed = raw.split("-");
